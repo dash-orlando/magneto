@@ -4,19 +4,15 @@
    and the immediately surrounding area by taking a baseline average for each axis
    and then subtracting each them from the readings to give a calibrated reading
    independent of the ambient magnetic field.
-
    AUTHOR                  : Edward Daniel Nichols
    LAST CONTRIBUTION DATE  : Nov. 6th, 2017, Year of Our Lord
-
    AUTHOR                  : Mohammad Odeh
    LAST CONTRIBUTION DATE  : Nov. 7th, 2017 Year of Our Lord
-
    CHANGELOG:-
     1- Both possible addresses for the IMUs are implemented.
     2- Calibration speed has significantly improved.
     3- All six sensors have been added.
     4- Implemented an EMA filter for smoothing data output.
-
     There is room to add more sensors.
 */
 
@@ -25,7 +21,7 @@
 #include <SPI.h>
 #include <SparkFunLSM9DS1.h>
 #include <WiFi.h>                                       // WiFi Library
-#include <PubSubClient.h>                               // MQTT Library
+//#include <PubSubClient.h>                               // MQTT Library
 
 /************************* WiFi Access Point *********************************/
 #define WLAN_SSID             "pd3d_panels"

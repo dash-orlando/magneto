@@ -29,21 +29,18 @@
 # Tracking + Solver Modules
 import  paho.mqtt.client            as      mqtt
 import  numpy                       as      np              # Import Numpy
+import  os, platform                                        # Directory/file manipulation
 from    time                        import  sleep, clock    # Sleep for stability, clock for profiling
 from    time                        import  time            # Time for timing (like duh!)
 from    scipy.optimize              import  root            # Solve System of Eqns for (x, y, z)
 from    scipy.linalg                import  norm            # Calculate vector norms (magnitude)
 from    threading                   import  Thread          # Used to thread processes
 
-
 try:
     import Queue as queue
 except ImportError:
     import queue
 
-#from    bluetoothProtocol_teensy32  import  createBTPort, closeBTPort
-#from    stethoscopeProtocol         import  statusEnquiry   # Status Enquiry
-import  os, platform                                        # Directory/file manipulation
 
 # ************************************************************************
 # =====================> DEFINE NECESSARY FUNCTIONS <====================*
@@ -326,7 +323,6 @@ def compute_coordinate():
     else:
         initialGuess = np.array( (sol.x[0]+dx, sol.x[1]+dx,         # Update the initial guess as the
                                   sol.x[2]+dx), dtype='float64' )   # current position and feed back to LMA
-        trigSteth( position )
         return( position )                                          # Return position
 
 # --------------------------
@@ -371,90 +367,6 @@ def storeData( data ):
 
     print( "SUCCESS!" )
 
-# --------------------------
-
-def trigSteth( pos ):
-    global stethON, lastROI
-    x, y, z, _ = pos                                    # Unpack position
-
-    # __START__: Get ROI
-    # Region 2
-    if(
-        (-40<=x  and x<=-20) and
-        ( 80<=y  and y<=110) and
-        (z<100)
-        ):
-        crntROI = 2
-
-    # Region 3
-    elif( (-10<=x and x<= 10) and
-          ( 90<=y and y<=120) and
-          ( z<120 )
-        ):
-        crntROI = 3
-
-    # Region 4
-    elif(
-          ( 25<=x and x<=45 ) and
-          ( 85<=y and y<=115) and
-          ( z<120 )
-        ):
-        crntROI = 4
-
-    # Region 5
-    elif(
-          ( 55<=x and x<=75 ) and
-          (110<=y and y<=150) and
-          ( z<120 )
-        ):
-        crntROI = 5
-
-    # Region 6
-    elif(
-          ( 50<=x and x<=85 ) and
-          (160<=y and y<=180) and
-          ( z<120 )
-        ):
-        crntROI = 6
-
-    else: crntROI = 0
-    # __END__: Get ROI
-
-    # __START__: Send byte
-    if( crntROI != lastROI ):                           # Check if we need to send a byte
-
-        if( crntROI == 0):
-            print( "NOT INSIDE ANY REGION" )
-##            statusEnquiry( steth )
-
-        elif( crntROI == 2):
-            print( "We are in region #2" )
-##            statusEnquiry( steth )
-
-        elif( crntROI == 3):
-            print( "We are in region #3" )
-##            statusEnquiry( steth )
-
-        elif( crntROI == 4):
-            print( "We are in region #4" )
-##            statusEnquiry( steth )
-
-        elif( crntROI == 5):
-            print( "We are in region #5" )
-##            statusEnquiry( steth )
-
-        elif( crntROI == 6):
-            print( "We are in region #6" )
-##            statusEnquiry( steth )
-
-    else: pass
-    # __END__: Send byte
-
-    lastROI = crntROI                                   # Update lastROI with the current one
-
-    return                                              # Exit function
-# --------------------------
-
 # ************************************************************************
 # ===========================> SETUP PROGRAM <===========================
 # ************************************************************************
@@ -465,11 +377,11 @@ global initialGuess
 
 CALIBRATING = True                                      # Boolean to indicate that device is calibrating
 
-K           = 1.09e-6                                   # Big magnet's constant             (K) || Units { G^2.m^6}
+#K           = 1.09e-6                                   # Big magnet's constant             (K) || Units { G^2.m^6}
 ##K           = 5.55e-6                                   # Cylindrical magnet's constant             (K) || Units { G^2.m^6}
 ##K           = 2.46e-7                                   # Spherical magnet's constant       (K) || Units { G^2.m^6}
 ##K           = 1.87e-7                                   # Small magnet's constant (w\hole)  (K) || Units { G^2.m^6}
-##K           = 1.29e-7                                   # Small magnet's constant  (flat)   (K) || Units { G^2.m^6}
+K           = 1.29e-7                                   # Small magnet's constant  (flat)   (K) || Units { G^2.m^6}
 dx          = 1e-7                                      # Differential step size (Needed for solver)
 calcPos     = []                                        # Empty array to hold calculated positions
 
@@ -498,33 +410,11 @@ try:
 
 # Error handling in case serial communcation fails (2/2)
 except Exception as e:
-    print( "Could NOT open serial port" )
+    print( "Could NOT connect to MQTT." )
     print( "Error type %s" %str(type(e)) )
     print( "Error Arguments " + str(e.args) )
     sleep( 2.5 )
     quit()                                              # Shutdown entire program
-
-### Establish communication with stethoscope
-##addr = "00:06:66:D0:C9:60"
-##port = 1
-##
-### Error handling in case BTooth communcation fails (1/2)
-##try:
-##    steth = createBTPort( addr, port )
-##
-##    if( steth != 0 ):
-##        statusEnquiry( steth )
-##        print( "Connection established" )
-##    else:
-##        raise Exception
-##
-### Error handling in case BTooth communcation fails (2/2)
-##except Exception as e:
-##    print( "Could NOT communicate with stethoscope" )
-##    print( "Error type %s" %str(type(e)) )
-##    print( "Error Arguments " + str(e.args) )
-##    sleep( 2.5 )
-##    quit()
 
 lastROI = 0                                             # Start an empty variable for the last recorded IMU
 
@@ -537,7 +427,7 @@ z, t = np.array([]), np.array([])                       # for x, y, z, and t
 
 print( "System Ready." )                                # Inform user to place magnet
 sleep( 1.0 )                                            # Allow user time to react
-var = raw_input( "Start? (Y/N): " )                     # Prompt user if ready or nah!
+var = input( "Start? (Y/N): " )                     # Prompt user if ready or nah!
 
 if( var=='Y' or var=='y' ):
     print( "\n******************************************" )

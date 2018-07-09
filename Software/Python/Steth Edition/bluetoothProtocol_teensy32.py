@@ -16,7 +16,7 @@ Changes     : Modified protocol to use PyBluez instead of PySerial
 import bluetooth
 """
         Implementation of the "bluetooth" module may require the installation of the python-bluez package
-        >> sudp apt-get install python-bluez
+        >> sudo apt-get install python-bluez
 """
 import  os, time, serial
 import  protocolDefinitions as definitions
@@ -108,7 +108,7 @@ def closeBTPort( socket ):
 # ==========================================================================================
 # ================================== PySerial Stuff ========================================
 def createPort(deviceName,portNumber,deviceBTAddress,baudrate,attempts):
-    print fullStamp() + " createPort()"
+    print( fullStamp() + " createPort()" ) 
     portRelease("rfcomm",portNumber)                                                        # The program performs a port-release to ensure that the desired rf port is available
     portBind("rfcomm",portNumber,deviceBTAddress)
     rfObject = serial.Serial(
@@ -128,27 +128,27 @@ def connectionCheck(rfObject,deviceName,portNumber,deviceBTAddress,baudrate,atte
     rfObject.write(outByte)
     inByte = rfObject.read(size=1)
     if inByte == definitions.ACK:                                                           # Check for ACK / NAK response
-        print fullStamp() + " ACK Connection Established"
+        print( fullStamp() + " ACK Connection Established" )
         rfObject.close()
         return rfObject
     
     elif inByte == definitions.NAK:
-        print fullStamp() + " NAK device NOT READY"
+        print( fullStamp() + " NAK device NOT READY" )
 
     else:
         rfObject.close()
         if attempts is not 0:
             return createPort(deviceName,portNumber,deviceBTAddress,baudrate,attempts-1,q)
         elif attempts is 0:
-            print fullStamp() + " Attempts limit reached"
-            print fullStamp() + " Please troubleshoot devices"
+            print( fullStamp() + " Attempts limit reached" )
+            print( fullStamp() + " Please troubleshoot devices" )
 
 # Port Bind
 #   This function binds the specified bluetooth device to a rfcomm port
 #   Input   ::  {string} port type, {int} port number, {string} bluetooth address of device
 #   Output  ::  None -- Terminal messages
 def portBind(portType, portNumber, deviceBTAddress):
-    print fullStamp() + " Connecting device to " + portType + str(portNumber)               # Terminal message, program status
+    print( fullStamp() + " Connecting device to " + portType + str(portNumber))             # Terminal message, program status
     os.system("sudo " + portType + " bind /dev/" + portType + str(portNumber) + " " + deviceBTAddress)     # Bind bluetooth device to control system
 
 # Port Release
@@ -156,5 +156,5 @@ def portBind(portType, portNumber, deviceBTAddress):
 #   Input   ::  {string} "portType", {int} "portNumber"
 #   Output  ::  None -- Terminal messages
 def portRelease(portType, portNumber):
-    print fullStamp() + " Releasing " + portType + str(portNumber)                          # Terminal message, program status
+    print( fullStamp() + " Releasing " + portType + str(portNumber) )                       # Terminal message, program status
     os.system("sudo " + portType + " release " + str(portNumber))                           # Releasing port through terminal commands
