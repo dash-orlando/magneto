@@ -16,7 +16,7 @@ void setupIMU() {
   high.settings.mag.enabled          = true;            // Enable magnetometer
   high.settings.temp.enabled         = true;            // Enable temperature sensor
 
-  high.settings.mag.scale            = 16;              // Set mag scale to +/-12 Gs
+  high.settings.mag.scale            = 4;              // Set mag scale to +/-12 Gs
   high.settings.mag.sampleRate       = 7;               // Set sampling rate to 80Hz
   high.settings.mag.tempCompensationEnable = true;      // Enable temperature compensation (good stuff!)
 
@@ -37,7 +37,7 @@ void setupIMU() {
   low.settings.mag.enabled          = true;             // Enable magnetometer
   low.settings.temp.enabled         = true;             // Enable temperature sensor
 
-  low.settings.mag.scale            = 16;               // Set mag scale to +/-12 Gs
+  low.settings.mag.scale            = 4;               // Set mag scale to +/-12 Gs
   low.settings.mag.sampleRate       = 7;                // Set sampling rate to 80Hz
   low.settings.mag.tempCompensationEnable = true;       // Enable temperature compensation (good stuff!)
 

@@ -154,9 +154,10 @@ void setup() {
 }
 
 void loop() {
+  delay(25);
 
   if ( !mqtt.connected() )                              // Ensure we are connected
-    MQTT_connect(500);                                  // to MQTT server
+    MQTT_connect(250);                                  // to MQTT server
 
   for (int whichPair = 1; whichPair <= NSENS / 2; whichPair++)
   {
@@ -173,11 +174,11 @@ void loop() {
 
   //When all of the values have been collected, print them all at once!
   //Adjusting for the calibration baseline!
-  char    buff[115] = {'\0'};                           // String buffer
+  char    buff[156] = {'\0'};                           // String buffer
   strcat( buff, "<" );
   for (int i = 0; i < NSENS; i++){
     for (int j = 0; j < NAXES; j++){
-      dtostrf( sens[i][j] - cal[i][j], 7, 4, &buff[strlen(buff)]);
+      dtostrf( sens[i][j] - cal[i][j], 9, 6, &buff[strlen(buff)]);
       if (i == NSENS - 1 && j == NAXES - 1)
         continue;
       else

@@ -377,11 +377,12 @@ global initialGuess
 
 CALIBRATING = True                                      # Boolean to indicate that device is calibrating
 
-#K           = 1.09e-6                                   # Big magnet's constant             (K) || Units { G^2.m^6}
+K           = 1.09e-6                                   # Big magnet's constant             (K) || Units { G^2.m^6}
 ##K           = 5.55e-6                                   # Cylindrical magnet's constant             (K) || Units { G^2.m^6}
 ##K           = 2.46e-7                                   # Spherical magnet's constant       (K) || Units { G^2.m^6}
-##K           = 1.87e-7                                   # Small magnet's constant (w\hole)  (K) || Units { G^2.m^6}
-K           = 1.29e-7                                   # Small magnet's constant  (flat)   (K) || Units { G^2.m^6}
+#K           = 1.87e-7                                   # Small magnet's constant (w\hole)  (K) || Units { G^2.m^6}
+##K           = 1.29e-7                                   # Small magnet's constant  (flat)   (K) || Units { G^2.m^6}
+K= 6.7118e-7
 dx          = 1e-7                                      # Differential step size (Needed for solver)
 calcPos     = []                                        # Empty array to hold calculated positions
 
@@ -389,7 +390,7 @@ calcPos     = []                                        # Empty array to hold ca
 # Error handling in case serial communcation fails (1/2)
 try:
     # Setup MQTT
-    addr = "192.168.42.1"
+    addr = "192.168.0.24"
     client = mqtt.Client()
     client.max_inflight_messages_set( 60 )                  # Max number of messages that can be part of network flow at once
     client.max_queued_messages_set( 0 )                     # Size 0 == unlimited
