@@ -5,11 +5,9 @@
 * Position tracking of magnet based on Finexus
 * https://ubicomplab.cs.washington.edu/pdfs/finexus.pdf
 *
-*   - 3 Modes of operations
-*       (1) Point-by-Point (Data Sampling)
-*       (2) 2D Static Plot (Data Sampling)
-*       (3) 3D Static Plot (Data Sampling)
-*       (4) 3D Continuous Live Plot
+*   - 1 Mode of operation
+*       (a) Track position of stethosopce       ( NO PLOTTING )
+*       (b) Trigger stethoscope at set regions  ( REQUIRES BT )
 *
 * VERSION: 1.1
 *   - ADDED   : Move things over to MQTT
@@ -21,7 +19,7 @@
 * LAST CONTRIBUTION DATE    :   Jan. 25th, 2017 Year of Our Lord
 *
 * AUTHOR                    :   Mohammad Odeh
-* LAST CONTRIBUTION DATE    :   Apr. 19th, 2018 Year of Our Lord
+* LAST CONTRIBUTION DATE    :   Jul. 17th, 2018 Year of Our Lord
 *
 '''
 
