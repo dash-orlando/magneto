@@ -11,9 +11,8 @@
 *       (3) 3D Static Plot (Data Sampling)
 *       (4) 3D Continuous Live Plot
 *
-* VERSION: 1.0
-*   - ADDED   : Define ROI where specific specific sounds
-*               are being simulated.
+* VERSION: 1.1
+*   - ADDED   : Move things over to MQTT
 *
 * KNOWN ISSUES:
 *   - Non atm
@@ -27,7 +26,7 @@
 '''
 
 # Tracking + Solver Modules
-import  paho.mqtt.client            as      mqtt
+import  paho.mqtt.client            as      mqtt            # MQTT Communications
 import  numpy                       as      np              # Import Numpy
 from    time                        import  sleep, clock    # Sleep for stability, clock for profiling
 from    time                        import  time            # Time for timing (like duh!)
@@ -35,14 +34,13 @@ from    scipy.optimize              import  root            # Solve System of Eq
 from    scipy.linalg                import  norm            # Calculate vector norms (magnitude)
 from    threading                   import  Thread          # Used to thread processes
 
-
 try:
     import Queue as queue
 except ImportError:
     import queue
 
-#from    bluetoothProtocol_teensy32  import  createBTPort, closeBTPort
-#from    stethoscopeProtocol         import  statusEnquiry   # Status Enquiry
+from    bluetoothProtocol_teensy32  import  createBTPort, closeBTPort
+from    stethoscopeProtocol         import  statusEnquiry   # Status Enquiry
 import  os, platform                                        # Directory/file manipulation
 
 # ************************************************************************
@@ -171,16 +169,19 @@ def getData():
 
 
 # --------------------------
-
+x1, y1, z1 =  0.00e-3,  0.00e-3, 0.00e-3
+x2, y2, z2 = 42.00e-3, 11.75e-3, 0.00e-3
+x3, y3, z3 = 76.00e-3, 43.75e-3, 0.00e-3
+x4, y4, z4 = 87.50e-3, 87.40e-3, 0.00e-3
 def LHS( root, K, norms ):
     '''
     Construct the left hand side (LHS) of the equations
     to numerically solve for.
     Recall that in order to solve a system numerically it
     must have the form of,
-
+    
                 >$\  f(x, y, z, ...) = LHS = 0
-
+    
     INPUTS:
         - root  : a numpy array contating the initial guesses of the roots.
         - K     : K is a property of the magnet and has units of { G^2.m^6 }.
@@ -192,19 +193,19 @@ def LHS( root, K, norms ):
           3 sensors' equations are going to be used with the LMA solver.
           The sorting is based on which 3 sensors are closest to the magnet.
     '''
-
+    
     # Extract x, y, and z
     x, y, z = root
-
+    
     # Construct the (r) terms for each sensor
     # NOTE: Relative distance terms are in meters
     #     : Standing on sensor(n), how many units in
     #       the x/y/z direction should I march to get
     #       back to sensor1 (origin)?
-    r1 = float( ( (x+0.000  )**2. + (y+0.000)**2. + (z+0.00)**2. )**(1/2.) )  # Sensor 1 (ORIGIN)
-    r2 = float( ( (x-0.02475)**2. + (y+0.000)**2. + (z+0.00)**2. )**(1/2.) )  # Sensor 2
-    r3 = float( ( (x+0.000  )**2. + (y-0.027)**2. + (z+0.00)**2. )**(1/2.) )  # Sensor 3
-    r4 = float( ( (x-0.02475)**2. + (y-0.027)**2. + (z+0.00)**2. )**(1/2.) )  # Sensor 4
+    r1 = float( ( (x + x1)**2. + (y + y1)**2. + (z + z1)**2. )**(1/2.) )    # Sensor 1 (ORIGIN)
+    r2 = float( ( (x - x2)**2. + (y - y2)**2. + (z + z2)**2. )**(1/2.) )    # Sensor 2
+    r3 = float( ( (x - x3)**2. + (y - y3)**2. + (z + z3)**2. )**(1/2.) )    # Sensor 3
+    r4 = float( ( (x - x4)**2. + (y - y4)**2. + (z + z4)**2. )**(1/2.) )    # Sensor 4
 
     # Construct the equations
     Eqn1 = ( K*( r1 )**(-6.) * ( 3.*( z/r1 )**2. + 1 ) ) - norms[0]**2.     # Sensor 1
@@ -216,13 +217,13 @@ def LHS( root, K, norms ):
     Eqns = [Eqn1, Eqn2, Eqn3, Eqn4]
 
     # Determine which sensors to use based on magnetic field value (smallValue==noBueno!)
-    sort = argsort( norms )             # Auxiliary function sorts norms from smallest to largest
-    sort.reverse()                      # Python built-in function reverses elements of list
-    f=[]                                # Declare vector to hold relevant functions
+    sort = argsort( HNorm )                                         # Auxiliary function sorts norms from smallest to largest
+    sort.reverse()                                                  # Python built-in function reverses elements of list
+    f=[]                                                            # Declare vector to hold relevant functions
 
-    for i in range(0, 3):               # Fill functions' array with the equations that correspond to
-        f.append( Eqns[sort[i]] )       # the sensors with the highest norm, thus closest to magnet
-
+    for i in range(0, 3):                                           # Fill functions' array with the equations that correspond to
+        f.append( Eqns[sort[i]] )                                   # the sensors with the highest norm, thus closest to magnet
+        
     # Return vector
     return ( f )
 
@@ -235,35 +236,35 @@ def findIG( magFields ):
     A high magnitude reading indicates magnet is close to some 3
     sensors, the centroid of the traingle created by said sensors
     is fed as the initial guess.
-
+    
     INPUTS:
         - magfield: a numpy array containing all the magnetic field readings.
 
     OUTPUT:
         - A numpy array containing <x, y, z> values for the initial guess.
     '''
-
+    
     # Define IMU positions on the grid
     #      / sensor 1: (x, y, z)
     #     /  sensor 2: (x, y, z)
     # Mat=      :          :
     #     \     :          :
-    #      \ sensor N: (x, y, z)
-    IMU_pos = np.array(((0.000  , 0.000,   0.0) ,
-                        (0.02475, 0.000,   0.0) ,
-                        (0.000  , 0.027,   0.0) ,
-                        (0.02475, 0.027,   0.0)), dtype='float64')
+    #      \ sensor 6: (x, y, z)
+    IMU_pos = np.array(((x1, y1, z1) ,
+                        (x2, y2, z2) ,
+                        (x3, y3, z3) ,
+                        (x4, y4, z4)), dtype='float64')
 
     # Read current magnetic field from MCU
-    (H1, H2, H3, H4) = magFields
+    (H1, H2, H3, H4 ) = magFields
 
     # Compute L2 vector norms
     HNorm = [ float( norm(H1) ), float( norm(H2) ),
               float( norm(H3) ), float( norm(H4) ) ]
-
+    
     # Determine which sensors to use based on magnetic field value (smallValue==noBueno!)
-    sort = argsort( HNorm )             # Auxiliary function sorts norms from smallest to largest
-    sort.reverse()                      # Python built-in function reverses elements of list
+    sort = argsort( HNorm )                                         # Auxiliary function sorts norms from smallest to largest
+    sort.reverse()                                                  # Python built-in function reverses elements of list
 
     IMUS = bubbleSort( sort, 3 )
 
@@ -290,7 +291,7 @@ def compute_coordinate():
     start = time()                                                  # Call clock() for accurate time readings
 
     # Data acquisition
-    (H1, H2, H3, H4) = getData()                                 # Get data from MCU
+    (H1, H2, H3, H4) = getData()                                    # Get data from MCU
 
     # Compute norms
     HNorm = [ float(norm(H1)), float(norm(H2)),                     # Compute L2 vector norms
@@ -319,7 +320,7 @@ def compute_coordinate():
 
     # Check if solution makes sense
     if (abs(sol.x[0]*1000) > 500) or (abs(sol.x[1]*1000) > 500) or (abs(sol.x[2]*1000) > 500):
-        initialGuess = findIG( getData() )                       # Determine initial guess based on magnet's location
+        initialGuess = findIG( getData() )                          # Determine initial guess based on magnet's location
         return( compute_coordinate() )                              # Recursive call of function()
 
     # Update initial guess with current position and feed back to solver
@@ -375,84 +376,78 @@ def storeData( data ):
 
 def trigSteth( pos ):
     global stethON, lastROI
-    x, y, z, _ = pos                                    # Unpack position
+    x, y, z, _ = pos                                        # Unpack position
 
     # __START__: Get ROI
-    # Region 2
+    # Region 1
     if(
-        (-40<=x  and x<=-20) and
-        ( 80<=y  and y<=110) and
+        (100<=x  and x<=150) and
+        ( 75<=y  and y<=125) and
         (z<100)
+        ):
+        crntROI = 1
+
+    # Region 2
+    elif( ( 50<=x and x<=100) and
+          (-50<=y and y<=  0) and
+          ( z<120 )
         ):
         crntROI = 2
 
     # Region 3
-    elif( (-10<=x and x<= 10) and
-          ( 90<=y and y<=120) and
+    elif(
+          (125<=x and x<=175) and
+          ( 25<=y and y<= 75) and
           ( z<120 )
         ):
         crntROI = 3
-
+        
     # Region 4
     elif(
-          ( 25<=x and x<=45 ) and
-          ( 85<=y and y<=115) and
+          (- 25<=x and x<= 25) and
+          (-100<=y and y<=-50) and
           ( z<120 )
         ):
         crntROI = 4
-
-    # Region 5
-    elif(
-          ( 55<=x and x<=75 ) and
-          (110<=y and y<=150) and
-          ( z<120 )
-        ):
-        crntROI = 5
-
-    # Region 6
-    elif(
-          ( 50<=x and x<=85 ) and
-          (160<=y and y<=180) and
-          ( z<120 )
-        ):
-        crntROI = 6
 
     else: crntROI = 0
     # __END__: Get ROI
 
     # __START__: Send byte
-    if( crntROI != lastROI ):                           # Check if we need to send a byte
+    if( crntROI != lastROI ):                               # Check if we need to send a byte
 
         if( crntROI == 0):
             print( "NOT INSIDE ANY REGION" )
+            sleep( 1.0 )
+##            statusEnquiry( steth )
+            
+        elif( crntROI == 1):
+            print( "We are in region #1" )
+            sleep( 1.0 )
 ##            statusEnquiry( steth )
 
         elif( crntROI == 2):
             print( "We are in region #2" )
+            sleep( 1.0 )
 ##            statusEnquiry( steth )
 
         elif( crntROI == 3):
             print( "We are in region #3" )
+            sleep( 1.0 )
 ##            statusEnquiry( steth )
 
         elif( crntROI == 4):
             print( "We are in region #4" )
+            sleep( 1.0 )
 ##            statusEnquiry( steth )
 
-        elif( crntROI == 5):
-            print( "We are in region #5" )
-##            statusEnquiry( steth )
-
-        elif( crntROI == 6):
-            print( "We are in region #6" )
-##            statusEnquiry( steth )
 
     else: pass
     # __END__: Send byte
 
-    lastROI = crntROI                                   # Update lastROI with the current one
+    lastROI = crntROI                                       # Update lastROI with the current one
 
-    return                                              # Exit function
+    return                                                  # Exit function
 # --------------------------
 
 # ************************************************************************
@@ -463,18 +458,19 @@ def trigSteth( pos ):
 global CALIBRATING
 global initialGuess
 
-CALIBRATING = True                                      # Boolean to indicate that device is calibrating
+CALIBRATING = True                                          # Boolean to indicate that device is calibrating
 
-K           = 1.09e-6                                   # Big magnet's constant             (K) || Units { G^2.m^6}
-##K           = 5.55e-6                                   # Cylindrical magnet's constant             (K) || Units { G^2.m^6}
-##K           = 2.46e-7                                   # Spherical magnet's constant       (K) || Units { G^2.m^6}
-##K           = 1.87e-7                                   # Small magnet's constant (w\hole)  (K) || Units { G^2.m^6}
-##K           = 1.29e-7                                   # Small magnet's constant  (flat)   (K) || Units { G^2.m^6}
-dx          = 1e-7                                      # Differential step size (Needed for solver)
-calcPos     = []                                        # Empty array to hold calculated positions
+K           = 1.09e-6                                       # Big magnet's constant             (K) || Units { G^2.m^6}
+##K           = 5.55e-6                                       # Cylindrical magnet's constant     (K) || Units { G^2.m^6}
+##K           = 2.46e-7                                       # Spherical magnet's constant       (K) || Units { G^2.m^6}
+##K           = 1.87e-7                                       # Small magnet's constant (w\hole)  (K) || Units { G^2.m^6}
+##K           = 1.29e-7                                       # Small magnet's constant  (flat)   (K) || Units { G^2.m^6}
+##K           = 1.29e-7                                       # Michael's magnet's constant       (K) || Units { G^2.m^6}
+dx          = 1e-7                                          # Differential step size (Needed for solver)
+calcPos     = []                                            # Empty array to hold calculated positions
 
 
-# Error handling in case serial communcation fails (1/2)
+# Error handling in case MQTT communcation setup fails (1/2)
 try:
     # Setup MQTT
     addr = "192.168.42.1"
@@ -485,79 +481,81 @@ try:
                      qos=1, retain=True )                   # ...lost (aka, disconnect was not called)
     client.reconnect_delay_set( min_delay=1, max_delay=2)   # Min/max wait time in case of reconnection
 
-    client.connect( addr, port=1883, keepalive=60 )
+    client.on_connect = on_connect                          # Assign callback functions
+    client.on_message = on_message                          # ...
+    
+    client.connect( addr, port=1883, keepalive=60 )         # Connect to MQTT network
+    client.loop_start()                                     # Start loop
+    sleep( 1.0 )                                            # Allow some time for data to be published
 
-    client.on_connect = on_connect
-    client.on_message = on_message
+    initialGuess = findIG( getData() )                      # Determine initial guess based on magnet's location
 
-    client.loop_start()
-
-    sleep( 2.5 )
-
-    initialGuess = findIG( getData() )               # Determine initial guess based on magnet's location
-
-# Error handling in case serial communcation fails (2/2)
+# Error handling in case MQTT communcation setup fails (2/2)
 except Exception as e:
-    print( "Could NOT open serial port" )
-    print( "Error type %s" %str(type(e)) )
-    print( "Error Arguments " + str(e.args) )
-    sleep( 2.5 )
-    quit()                                              # Shutdown entire program
+    print( "Could NOT setup MQTT communications" )
+    print( "Error Type      : {}".format(type(e)))
+    print( "Error Arguments : {}".format(e.args) )
+    sleep( 1.5 )
+    quit()                                                  # Shutdown entire program
 
-### Establish communication with stethoscope
-##addr = "00:06:66:D0:C9:60"
-##port = 1
-##
-### Error handling in case BTooth communcation fails (1/2)
-##try:
-##    steth = createBTPort( addr, port )
-##
-##    if( steth != 0 ):
-##        statusEnquiry( steth )
-##        print( "Connection established" )
-##    else:
-##        raise Exception
-##
-### Error handling in case BTooth communcation fails (2/2)
-##except Exception as e:
-##    print( "Could NOT communicate with stethoscope" )
-##    print( "Error type %s" %str(type(e)) )
-##    print( "Error Arguments " + str(e.args) )
-##    sleep( 2.5 )
-##    quit()
+# Establish communication with stethoscope
+addr = "00:06:66:D0:C9:60"
+port = 1
 
-lastROI = 0                                             # Start an empty variable for the last recorded IMU
+# Error handling in case BTooth communcation fails (1/2)
+try:
+    steth = createBTPort( addr, port )
+
+    if( steth != 0 ):
+        statusEnquiry( steth )
+        print( "Connection established" )
+    else:
+        raise Exception
+
+# Error handling in case BTooth communcation fails (2/2)
+except Exception as e:
+    print( "Could NOT communicate with stethoscope" )
+    print( "Error Type      : {}".format(type(e)))
+    print( "Error Arguments : {}".format(e.args) )
+    sleep( 1.5 )
+    quit()                                                  # Shutdown entire program
+
+lastROI = 0                                                 # Start an empty variable for the last recorded IMU
 
 # ************************************************************************
 # =========================> MAKE IT ALL HAPPEN <=========================
 # ************************************************************************
 
-x, y = np.array([]), np.array([])                       # Initialize empty numpy arrays
-z, t = np.array([]), np.array([])                       # for x, y, z, and t
+x, y = np.array([]), np.array([])                           # Initialize empty numpy arrays
+z, t = np.array([]), np.array([])                           # for x, y, z, and t
 
-print( "System Ready." )                                # Inform user to place magnet
-sleep( 1.0 )                                            # Allow user time to react
-var = raw_input( "Start? (Y/N): " )                     # Prompt user if ready or nah!
+print( "System Ready." )                                    # Inform user to place magnet
+sleep( 0.5 )                                                # Allow user time to react
 
-if( var=='Y' or var=='y' ):
-    print( "\n******************************************" )
-    print( "*NOTE: Press Ctrl-C to save data and exit."   )
-    print( "******************************************\n" )
-    sleep( 1.0 )                                        # Allow user to read note
+while( True ):                                              # Loop until we get a valid user input
+    var = raw_input( "Start? (Y/N): " )                     #   Prompt user if ready or nah!
+    if  ( var=='Y' or var=='y' ): break                     #   ...
+    elif( var=='N' or var=='n' ): pass                      #   ...
+    else: print( "Invalid Choice" )                         #   ...
+        
+print( "\n******************************************" )
+print( "*NOTE: Press Ctrl-C to save data and exit."   )
+print( "******************************************\n" )
+sleep( 1.0 )                                                # Allow user to read note
 
-    while( True ):                                      # Loop 43va
-        try:
-            pos = compute_coordinate()                  # Get updated magnet position
+while( True ):                                              # Loop 43va
+    try:
+        pos = compute_coordinate()                          # Get updated magnet position
 
-            x = np.append( x, pos[0] )                  # Append computed values
-            y = np.append( y, pos[1] )                  # of x, y, z, and t
-            z = np.append( z, pos[2] )                  # to their respective
-            t = np.append( t, pos[3] )                  # arrays.
+        x = np.append( x, pos[0] )                          # Append computed values
+        y = np.append( y, pos[1] )                          # of x, y, z, and t
+        z = np.append( z, pos[2] )                          # to their respective
+        t = np.append( t, pos[3] )                          # arrays.
 
 
-        except KeyboardInterrupt:
-            print( '' )                                 # Start with a newline for aesthetics
-            storeData( (x, y, z, t) )                   # Store data points in text file
-            break                                       # Break from loop!
+    except KeyboardInterrupt:
+        print( '' )                                         # Start with a newline for aesthetics
+##        storeData( (x, y, z, t) )                           # Store data points in text file
+        break                                               # Break from loop!
 
 # --------------------------------------------------------------------------------------
