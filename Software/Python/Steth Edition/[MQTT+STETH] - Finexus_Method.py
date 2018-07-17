@@ -215,7 +215,7 @@ def LHS( root, K, norms ):
     Eqns = [Eqn1, Eqn2, Eqn3, Eqn4]
 
     # Determine which sensors to use based on magnetic field value (smallValue==noBueno!)
-    sort = argsort( HNorm )                                         # Auxiliary function sorts norms from smallest to largest
+    sort = argsort( norms )                                         # Auxiliary function sorts norms from smallest to largest
     sort.reverse()                                                  # Python built-in function reverses elements of list
     f=[]                                                            # Declare vector to hold relevant functions
 
