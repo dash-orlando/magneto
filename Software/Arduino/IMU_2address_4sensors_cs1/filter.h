@@ -20,7 +20,8 @@ static double exp_avg[NSENS][NAXES] =  { {0, 0, 0},    //  {1x, 1y, 1z}
                                          {0, 0, 0},    //  {2x, 2y, 2z}
                                          {0, 0, 0},    //  {3x, 3y, 3z}
                                          {0, 0, 0} };  //  {4x, 4y, 4z}
-                                          
+
+// ============================  EMA Filter  ===========================
 double ema_filter( double current_value, byte sens, byte axis ) {
 
   // Filter data

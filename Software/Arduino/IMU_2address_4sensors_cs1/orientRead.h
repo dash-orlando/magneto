@@ -3,7 +3,7 @@
  */
 
 //This is for a setup
-void orientRead(int pair) {
+void orientRead( int pair ) {
   // No orientation attempt has been made. RHR is not enforced.
   // Single Exponential Smoothing has implemented.
   switch (pair) {
