@@ -7,10 +7,10 @@
 #include "Adafruit_MQTT_Client.h"
 
 /************************* WiFi Access Point *********************************/
-//#define WLAN_SSID             "pd3d_panels"                   // Wi-Fi SSID
-//#define WLAN_PASS             "pd3d@ist"                      // Wi-Fi Password
-#define WLAN_SSID             "pd3d"                          // Wi-Fi SSID
-#define WLAN_PASS             "n3w.pas."                      // Wi-Fi Password
+#define WLAN_SSID             "pd3d_magneto"                   // Wi-Fi SSID
+#define WLAN_PASS             "pd3d@ist"                      // Wi-Fi Password
+//#define WLAN_SSID             "pd3d"                          // Wi-Fi SSID
+//#define WLAN_PASS             "n3w.pas."                      // Wi-Fi Password
 
 /************************* MQTT Server Setup *********************************/
 #define MQTT_SERVER           "192.168.42.1"                  // URL to the RPi running MQTT

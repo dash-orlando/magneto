@@ -49,7 +49,7 @@ void setup() {
   EEPROM.begin( EEPROM_SIZE );
   EEPROM_readAnything( 0, calibration );                      // Use this if you don't want to print to serial
   //read_EEPROM(); delay( 1500 );                               // Load EEPROM and display on serial
-
+  //calibration.Calibrated = false;
   /*  Connect to Wi-Fi and setup MQTT communications */
   setup_WiFi();                                               // Connect to WiFi
   MQTT_connect( 250 );                                        // Connecto to MQTT broker
