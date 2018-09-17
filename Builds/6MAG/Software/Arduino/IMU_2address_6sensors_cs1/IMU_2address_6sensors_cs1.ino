@@ -39,9 +39,9 @@
 #define DEBOUNCE                      1       // To ensure select pin voltage has enough time to settle.
 
 // MUX lines are on these pins.
-#define S0                            8
-#define S1                            9
-#define S2                            10
+#define S0                            7
+#define S1                            6
+#define S2                            5
 // S2 is grounded.
 // MUX lines are selected in binary.
 // For example, Y0 -> S0=LOW, S1=LOW, S2=LOW -> 000.
