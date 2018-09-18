@@ -136,8 +136,12 @@ def getData( ser ):
                 print( "Calibrating...\n" )
                 CALIBRATING = False
             if ser.in_waiting > 0:  
-                inData = ser.read()  
-                if inData == '<':
+                inData = ser.read()
+
+                #if inData == '<':                                      # Windows
+                #    break
+                
+                if inData == b'<':                                      # Linux
                     break  
 
         # Read the actual data value. Stop at End of Data specifier '>'. 
@@ -145,9 +149,14 @@ def getData( ser ):
         while( True ):
             if ser.in_waiting > 0:
                 inData = ser.read()
-                if inData == '>':
+                
+                #if inData == '>':                                      # Windows
+                #    break                                              # Linux
+                
+                if inData == b'>':
                     break
-                line = line + inData
+                #line = line + inData                                   # Windows
+                line = line + inData.decode("ascii")                    # Linux
 
         # Split line into the constituent components
 
@@ -331,13 +340,14 @@ K           = 1.09e-6                           # Big magnet's constant     (K) 
 dx          = 1e-7                              # Differential step size (Needed for solver)
 
 # Establish connection with Arduino
-DEVC = "Arduino"                                # Device Name (not very important)
-PORT = 3                                       # Port number (VERY important)
-BAUD = 115200                                   # Baudrate    (VERY VERY important)
+DEVC    = "Arduino"                                # Device Name (not very important)
+PORTPRE = "/dev/ttyACM"                                       # Port number (VERY important)
+PORTNUM = 0
+BAUD    = 115200                                   # Baudrate    (VERY VERY important)
 
 # Error handling in case serial communcation fails (1/2)
 try:
-    IMU = createUSBPort( DEVC, PORT, BAUD )     # Create serial connection
+    IMU = createUSBPort( DEVC, PORTPRE, PORTNUM, BAUD )     # Create serial connection
     if IMU.is_open == False:                    # Make sure port is open
         IMU.open()
     print( "Serial Port OPEN" )

@@ -14,11 +14,27 @@ Fluvio L Lobo Fenoglietto
 import  os, serial, time
 #from    timeStamp           import  *
 
-# Create USB Port
-def createUSBPort( deviceName, portNumber, baudrate):
+"""
+FUNCTIONS
+"""
+
+def createUSBPort( deviceName, portPrefix, portNumber, baudrate):
+    """
+    CREATE USB PORT
+        input;
+            deviceName (string) --name of the input device (for reference)
+            portPrefix (string) --prefix based on the operating system of the control system/computer
+                                = /dev/ttyACM --Linux
+                                = COM --Windows
+            portNumber (num)    --communication port number
+            baudrate   (num)    --communication baudrate (bps)
+            
+        output;
+            usbObject  (object) --serial object
+    """
     #print fullStamp() + " createUSBPort()"
     usbObject = serial.Serial(
-        port = "COM" + str(portNumber),
+        port = portPrefix + str(portNumber),
         baudrate = baudrate)
     time.sleep(1)
     #usbConnectionCheck(usbObject,deviceName,portNumber,baudrate,attempts)
