@@ -48,12 +48,13 @@ echo ">> Installing MayaVi"
 #sudo python -m pip install mayavi
 #sudo python3 -m pip install mayavi
 
+## Install PyQt support
+echo ">>Installing PyQt support"
+sudo apt-get install python-qt4 -y
+
 ## Install Pyserial
 echo ">> Installing Pyserial for USB Communication"
 #sudo python -m pip install pyserial
 #sudo python3 -m pip install pyserial
-
-echo ">> Installing Multiprocessing"
-sudo pip3 install multiprocessing
 
 
