@@ -645,13 +645,14 @@ calcPos     = []                                        # Empty array to hold ca
 
 
 # Establish connection with Arduino
-DEVC = "Arduino"                                        # Device Name (not very important)
-PORT = 4                                                # Port number (VERY important)
-BAUD = 115200                                           # Baudrate    (VERY VERY important)
+DEVC    = "Arduino"                                # Device Name (not very important)
+PORTPRE = "/dev/ttyACM"                                       # Port number (VERY important)
+PORTNUM = 0
+BAUD    = 115200                                   # Baudrate    (VERY VERY important)
 
 # Error handling in case serial communcation fails (1/2)
 try:
-    IMU = createUSBPort( DEVC, PORT, BAUD )             # Create serial connection
+    IMU = createUSBPort( DEVC, PORTPRE, PORTNUM, BAUD ) # Create serial connection
     if IMU.is_open == False:                            # Make sure port is open
         IMU.open()
     print( "Serial Port OPEN" )
