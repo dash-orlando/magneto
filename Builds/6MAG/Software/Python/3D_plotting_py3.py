@@ -678,7 +678,7 @@ print( "2. 2D Static Plot (Data Sampling)." )           # all the possible ...
 print( "3. 3D Static Plot (Data Sampling)" )            # plotting modes.
 print( "4. 3D Continuous Live Plot." )                  # ...
 
-mode = raw_input(">\ ")                                 # Wait for user input
+mode = input(">\ ")                                     # Wait for user input
 
 print( "\n******************************************" )
 print( "*NOTE: Press Ctrl-C to save data and exit."   )
