@@ -38,7 +38,7 @@ from    scipy.optimize          import  root            # Solve System of Eqns f
 from    scipy.linalg            import  norm            # Calculate vector norms (magnitude)
 from    usbProtocol             import  createUSBPort   # Create USB port (serial comm. w\ Arduino)
 from    threading               import  Thread          # Used to thread processes
-from    Queue                   import  queue           # Used to queue input/output
+from    queue                   import  Queue           # Used to queue input/output
 import  os, platform                                    # Directory/file manipulation
 
 # ************************************************************************
