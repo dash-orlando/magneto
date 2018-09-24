@@ -125,17 +125,26 @@ def getData( ser ):
                 CALIBRATING = False
             if ser.in_waiting > 0:  
                 inData = ser.read()  
-                if inData == '<':
-                    break  
+
+                #if inData == '<':                                      # Windows
+                #    break
+                
+                if inData == b'<':                                      # Linux
+                    break   
 
         # Read the actual data value. Stop at End of Data specifier '>'. 
         line = ''
         while( True ):
             if ser.in_waiting > 0:
                 inData = ser.read()
-                if inData == '>':
+                
+                #if inData == '>':                                      # Windows
+                #    break                                              # Linux
+                
+                if inData == b'>':
                     break
-                line = line + inData
+                #line = line + inData                                   # Windows
+                line = line + inData.decode("ascii")                    # Linux
 
         # Split line into the constituent components
         col     = (line.rstrip()).split(",")
