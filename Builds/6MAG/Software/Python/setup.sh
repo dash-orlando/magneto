@@ -50,6 +50,10 @@ echo ">> Installing MayaVi"
 
 ## Install Pyserial
 echo ">> Installing Pyserial for USB Communication"
-sudo python -m pip install pyserial
-sudo python3 -m pip install pyserial
+#sudo python -m pip install pyserial
+#sudo python3 -m pip install pyserial
+
+echo ">> Installing Multiprocessing"
+sudo pip3 install multiprocessing
+
 
