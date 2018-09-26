@@ -2,18 +2,21 @@
  * Switches between all the available sensors using the multiplexer
  */
 
+#include <wiringPi.h>
+
 #define DEBOUNCE                      1                       // To ensure select pin voltage has enough time to settle.
 
 // MUX lines are on these pins.
-#define S0                            33
+#define S0                            17
 #define S1                            27
-#define S2                            12
+#define S2                            22
 // S2 is grounded.
 // MUX lines are selected in binary.
 // For example, Y0 -> S0=LOW, S1=LOW, S2=LOW -> 000.
 
 // =======================    Select IMU pair       ====================
-void pairSelect( int desiredPair ) {
+void pairSelect( int desiredPair )
+{
   int pair = desiredPair;
   if (pair == 1) {
     //s.t. the selection lines hit Y0, at 000
@@ -31,7 +34,7 @@ void pairSelect( int desiredPair ) {
     digitalWrite( S1, HIGH );
     delay( DEBOUNCE );
   } else {
-    Serial.println( F("Error. This sensor pair doesn't exist!") );
+    printf( "Error. This sensor pair doesn't exist!\n" );
     while (1);
   }
 };

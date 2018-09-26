@@ -6,6 +6,8 @@
  * the RAW readings.
  */
 
+#include <wiringPi.h>
+
 #define CALIBRATION_INDEX             150                     // Accounting for ambient magnetic fields
 #define DECLINATION                   6.29                    // Accounting for the Earth's magnetic field
 
@@ -14,8 +16,9 @@ double cal[NSENS][NAXES] = {0};
 
 
 // ========================  Calibrate  Sensors  =======================
-void calibrateIMU( int whichPair ) {
-  Serial.println( F("Calibrating, please wait.") );
+void calibrateIMU( uint8_t whichPair )
+{
+  printf( "Calibrating, please wait.\n" );
   delay( 25 );
 
   //Calibration function:
@@ -23,15 +26,15 @@ void calibrateIMU( int whichPair ) {
   for ( uint8_t i = 0; i < CALIBRATION_INDEX; i++ )
   {
     //Declaring an index, to make it easier to assign values to/from the correct sensor.
-    int n_hi = (whichPair - 1) * 2;
-    int n_lo = (2 * whichPair) - 1;
+    uint8_t n_hi = (whichPair - 1) * 2;
+    uint8_t n_lo = (2 * whichPair) - 1;
 
     //Wait until sensors are available.
     delay( 10 );
-    while ( !low.magAvailable() && !high.magAvailable() );
+    while ( !imuLO.magAvailable() && !imuHI.magAvailable() );
 
-    high.readMag();                                           // Take readings (High sensors)
-    low.readMag();                                            // Take readings (Low sensors)
+    imuHI.readMag();                                           // Take readings (High sensors)
+    imuLO.readMag();                                            // Take readings (Low sensors)
 
     orientRead( whichPair );                                  // Reorient readings and push to the array
 
@@ -56,6 +59,5 @@ void calibrateIMU( int whichPair ) {
     }
   }
 
-  Serial.print( F("Calibration success for pair: ") );
-  Serial.println( whichPair );
+  printf( "Calibration success for pair: %i\n", whichPair );
 }

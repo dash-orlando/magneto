@@ -1,5 +1,0 @@
-levmarq		KEYWORD1
-levmarq_solve			KEYWORD2
-error_func 		KEYWORD2
-solve_axb_cholesky	KEYWORD2
-cholesky_decomp		KEYWORD2
