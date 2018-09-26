@@ -6,22 +6,32 @@ Script designed to generate GCODE for a given 3D path
 Fluvio L Lobo Fenoglietto
 """
 
+import  numpy   as  np
+
 def gcode_gen( out_name, x, y, z ):
     """
     Given a 3D path described by its coordinates in x, y, and z,
     the function generates a GCODE
     """
+
+    # Data-specific Variables and Edits ======================================= #
+    array_len = len(x)                                                          # len(y) or len(z)
     
-    array_len = len(x)                                              # len(y) or len(z)
-    x = x.round( decimals=2 )                                       # truncate float to 2 decimals            
+    printer_offset = [150.00, 150.00, 50.00]                                    # offset to center of printer
+    x = x + printer_offset[0]
+    y = y + printer_offset[1]
+    z = z + printer_offset[2]
+    
+    x = x.round( decimals=2 )                                                   # truncate float to 2 decimals            
     y = y.round( decimals=2 )
     z = z.round( decimals=2 )
+    
     
     ext = ".gcode"
     file_name = out_name + ext
     file = open( file_name, "w" )
     
-    for i in range(0, array_len):                                   # write all the data from the data arrays
+    for i in range(0, array_len):                                               # write all the data from the data arrays
 
         if i == 0:
 
@@ -35,7 +45,7 @@ def gcode_gen( out_name, x, y, z ):
             print( 'G1 Z50 ; Add Z Offset to avoid electronics...' )            # apply Z offset to avoid electronics
             print( '; Starting Path...\n' )
             print( 'G90 ; Absolute position...\n' )                             # set absolute position
-            print( 'G1 X{} Y{} Z{}'.format(x[i], y[i], z[i]))                   # print to terminal for debuging
+            print( 'G1 X{} Y{} Z{}'.format( x[i],y[i],z[i]))
             # ================================================================= #
 
             # GCODE Generator ================================================= #
@@ -48,13 +58,13 @@ def gcode_gen( out_name, x, y, z ):
             file.write( 'G1 Z50 ; Add Z Offset to avoid electronics...\n' )     # apply Z offset to avoid electronics
             file.write( '; Starting Path...\n' )
             file.write( 'G90 ; Absolute position...\n' )                        # set absolute position
-            file.write( 'G1 X{} Y{} Z{}\n'.format(x[i], y[i], z[i]))            # write to .gcode file...
+            file.write( 'G1 X{} Y{} Z{}\n'.format( x[i], y[i], z[i] ))          # write to .gcode file...
             # ================================================================= #
 
         elif i > 0:
 
             # Terminal Debug ================================================== #
-            # print( 'X{} Y{} Z{}'.format(x[i], y[i], z[i]))                      # print to terminal for debuging
+            print( 'G1 X{} Y{} Z{}'.format(x[i],y[i],z[i]))
             # ================================================================= #
 
             # GCODE Generator ================================================= #
