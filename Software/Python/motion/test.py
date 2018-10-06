@@ -11,4 +11,6 @@ from    motion     import *
 #x, y, t = unit_helix()
 x, y, z = prog_helix( 50, 50, 200 )
 
-gcode_gen( "hh", x, y, z )
+speed = 1200                            # mm/min
+
+gcode_gen( "_helix_1200", x, y, z, speed )

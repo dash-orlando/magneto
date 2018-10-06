@@ -8,10 +8,12 @@ Fluvio L Lobo Fenoglietto
 
 import  numpy   as  np
 
-def gcode_gen( out_name, x, y, z ):
+def gcode_gen( out_name, x, y, z, speed ):
     """
     Given a 3D path described by its coordinates in x, y, and z,
     the function generates a GCODE
+
+    10/05/2018 - Added the speed input variable (same for all axes movement)
     """
 
     # Data-specific Variables and Edits ======================================= #
@@ -45,7 +47,7 @@ def gcode_gen( out_name, x, y, z ):
             print( 'G1 Z50 ; Add Z Offset to avoid electronics...' )            # apply Z offset to avoid electronics
             print( '; Starting Path...\n' )
             print( 'G90 ; Absolute position...\n' )                             # set absolute position
-            print( 'G1 X{} Y{} Z{}'.format( x[i],y[i],z[i]))
+            print( 'G1 X{} Y{} Z{} F{}'.format( x[i],y[i],z[i],speed ))
             # ================================================================= #
 
             # GCODE Generator ================================================= #
@@ -58,18 +60,24 @@ def gcode_gen( out_name, x, y, z ):
             file.write( 'G1 Z50 ; Add Z Offset to avoid electronics...\n' )     # apply Z offset to avoid electronics
             file.write( '; Starting Path...\n' )
             file.write( 'G90 ; Absolute position...\n' )                        # set absolute position
-            file.write( 'G1 X{} Y{} Z{}\n'.format( x[i], y[i], z[i] ))          # write to .gcode file...
+            file.write( 'G1 X{} Y{} Z{} F{} \n'.format( x[i],y[i],z[i],speed ))          # write to .gcode file...
             # ================================================================= #
 
         elif i > 0:
 
             # Terminal Debug ================================================== #
-            print( 'G1 X{} Y{} Z{}'.format(x[i],y[i],z[i]))
+            print( 'G1 X{} Y{} Z{} F{}'.format( x[i],y[i],z[i],speed ))
             # ================================================================= #
 
             # GCODE Generator ================================================= #
 
-            file.write( 'G1 X{} Y{} Z{}\n'.format(x[i], y[i], z[i]))            # write to .gcode file...
+            file.write( 'G1 X{} Y{} Z{} F{} \n'.format( x[i],y[i],z[i],speed ))           # write to .gcode file...
             # ================================================================= #
 
     file.close()
+
+
+"""
+References:
+- https://www.simplify3d.com/support/articles/3d-printing-gcode-tutorial/
+"""
