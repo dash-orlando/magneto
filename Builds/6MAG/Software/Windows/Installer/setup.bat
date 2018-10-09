@@ -75,9 +75,9 @@ echo.
 REM Install VTK
 set /p var=Installing VTK...<NUL
 IF "%x%" == "1" (
-	python -m pip install "VTK_win32.whl"
+	python -m pip install "VTK‑7.1.1‑cp27‑cp27m‑win32.whl"
 ) ELSE (
-	python -m pip install "VTK_win64.whl"
+	python -m pip install "VTK‑7.1.1‑cp27‑cp27m‑win_amd64.whl"
 )
 echo Done
 echo.
