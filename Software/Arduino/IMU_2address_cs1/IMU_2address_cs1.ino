@@ -48,7 +48,7 @@
 // For example, Y0 -> S0=LOW, S1=LOW, S2=LOW -> 000.
 
 // Define system parameters
-#define NSENS     8
+#define NSENS     4
 #define NAXES     3
 
 // Sensor Calibration variables: To store the averaged baseline values for each sensor.
@@ -134,7 +134,7 @@ void setup() {
 };
 
 void loop() {
-  Serial.print("<\n");          // Start of data specifier
+  Serial.print("<");          // Start of data specifier
 
   for (int whichPair = 1; whichPair <= NSENS/2; whichPair++) {
     pairSelect(whichPair);    // Switch between all sensor pairs
