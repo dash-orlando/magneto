@@ -163,9 +163,18 @@ def getData( ser ):
 
         # Check if array is corrupted
         col     = (line.rstrip()).split(",")
-        print(col)
-        print(len(col))
         if (len(col) == Nsens*3):
+
+
+            #
+            # Consolidation using dictionaries
+            #
+
+            B = {}                                                                      # ...initializing dictionary
+            for i in range( Nsens ):                                                    # ...loop around number of sensors (Nsens)
+                for j in range( len(col) ):                                             # ...loop around length of incoming data (must be equal to Nsens*3)
+                    B[str(i)] = np.array( ([Bx],[By],[Bz]), dtype='float64')            # Units { G }
+            
             #
             # Construct magnetic field array
             #
