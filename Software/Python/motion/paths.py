@@ -75,3 +75,12 @@ def prog_helix( max_x, max_y, max_z ):
     plt.show()
     
     return x, y, z 
+
+
+def rando( printer, limits, intervals ):
+    """
+    Generates a random motion based on the printer volume and input limits
+    Movements are differentiated by a time interval
+    """
+    
+    
