@@ -3,31 +3,17 @@
 * Position tracking of magnet based on Finexus
 * https://ubicomplab.cs.washington.edu/pdfs/finexus.pdf
 *
-* VERSION: 0.3.1
-*   - FIXED   : Program now does a check on the received data
-*               to avoid the error we get so often regarding
-*               the array containing invalid data
-*   - MODIFIED: Streamlined code to make it more human friendly
-*   - MODIFIED: Modified code to go along with the 2 I2C addresses
-*               fix provided by Danny
-*   - ADDED   : Finding the initial guess on program startup is now
-*               dynamic; it is calculated on the spot rather than
-*               choosing from a hardcoded list of all the possible
-*               initial guesses.
-*   - FIXED   : Fixed the error ecountered during building the array
-*               of magnetic field elements (for real this time)
+* VERSION: 0.4
+*   - MODIFIED: Create thread from .cpp implementation for data acquisition
 *
 * KNOWN ISSUES:
-*   - Loss in accuracy in 3D space  (not even surprised)
-*   - Slow output rates             (look into multithreading)
-*   - At certain positions, the z position goes cray-cray
-*     while x & y are correct.      (Look into what triggers this behaviour)
+*   - Nada atm
 *
 * AUTHOR                    :   Edward Nichols
 * LAST CONTRIBUTION DATE    :   Sep. 29th, 2017 Year of Our Lord
 * 
 * AUTHOR                    :   Mohammad Odeh 
-* LAST CONTRIBUTION DATE    :   Nov. 11th, 2017 Year of Our Lord
+* LAST CONTRIBUTION DATE    :   Oct. 12th, 2018 Year of Our Lord
 *
 '''
 
@@ -49,13 +35,10 @@ ap = argparse.ArgumentParser()
 
 ap.add_argument("-d", "--debug", action='store_true',
                 help="invoke flag to enable debugging")
-ap.add_argument("-vp", "--visualize-position", action='store_true',
-                help="invoke flag to visualize position")
 
 args = vars( ap.parse_args() )
 
 args["debug"]   = False
-args["visualize-position"] = True
 
 # ************************************************************************
 # =====================> DEFINE NECESSARY FUNCTIONS <====================*
@@ -107,7 +90,7 @@ def bubbleSort( arr, N ):
 
 # --------------------------
 
-q_output = Queue( maxsize=0 )                                                       # Define queue
+q_output = Queue( maxsize=0 )                                                   # Define queue
 def readMagneto( q_output, initialCall=True ):
     cmd = "/home/pi/Desktop/magneto/magneto"
     magneto = pexpect.spawn( cmd, timeout=None )
@@ -179,21 +162,8 @@ def getData( ser, NSENS=4 ):
             By = float( col[10] )
             Bz = float( col[11] )
             B4 = np.array( ([Bx],[By],[Bz]), dtype='float64') # Units { G }
-
-##            # Sensor 5
-##            Bx = float( col[12] )
-##            By = float( col[13] )
-##            Bz = float( col[14] )
-##            B5 = np.array( ([Bx],[By],[Bz]), dtype='float64') # Units { G }
-##
-##            # Sensor 6
-##            Bx = float( col[15] )
-##            By = float( col[16] )
-##            Bz = float( col[17] )
-##            B6 = np.array( ([Bx],[By],[Bz]), dtype='float64' )# Units { G }
             
             # Return vectors
-##            return ( B1, B2, B3, B4, B5, B6 )
             return ( B1, B2, B3, B4 )
 
         # In case array is corrupted, call the function again
@@ -201,9 +171,9 @@ def getData( ser, NSENS=4 ):
             return( getData(ser) )
 
     except Exception as e:
-        print( "Caught error in getData()"      )
-        print( "Error type %s" %str(type(e))    )
-        print( "Error Arguments " + str(e.args) )
+        print( "Caught error in getData()"          )
+        print( "Error type {}".format(type(e))      )
+        print( "Error Arguments {}".format(e.args)  )
 
 # --------------------------
 
@@ -241,28 +211,23 @@ def LHS( root, K, norms ):
     r2 = float( ( (x+0.000)**2. + (y-0.125)**2. + (z+0.00)**2. )**(1/2.) )  # Sensor 2
     r3 = float( ( (x-0.100)**2. + (y+0.050)**2. + (z+0.00)**2. )**(1/2.) )  # Sensor 3
     r4 = float( ( (x-0.100)**2. + (y-0.175)**2. + (z+0.00)**2. )**(1/2.) )  # Sensor 4
-##    r5 = float( ( (x-0.200)**2. + (y+0.000)**2. + (z+0.00)**2. )**(1/2.) )  # Sensor 5
-##    r6 = float( ( (x-0.200)**2. + (y-0.125)**2. + (z+0.00)**2. )**(1/2.) )  # Sensor 6
 
     # Construct the equations
     Eqn1 = ( K*( r1 )**(-6.) * ( 3.*( z/r1 )**2. + 1 ) ) - norms[0]**2.     # Sensor 1
     Eqn2 = ( K*( r2 )**(-6.) * ( 3.*( z/r2 )**2. + 1 ) ) - norms[1]**2.     # Sensor 2
     Eqn3 = ( K*( r3 )**(-6.) * ( 3.*( z/r3 )**2. + 1 ) ) - norms[2]**2.     # Sensor 3
     Eqn4 = ( K*( r4 )**(-6.) * ( 3.*( z/r4 )**2. + 1 ) ) - norms[3]**2.     # Sensor 4
-##    Eqn5 = ( K*( r5 )**(-6.) * ( 3.*( z/r5 )**2. + 1 ) ) - norms[4]**2.     # Sensor 5
-##    Eqn6 = ( K*( r6 )**(-6.) * ( 3.*( z/r6 )**2. + 1 ) ) - norms[5]**2.     # Sensor 6
 
     # Construct a vector of the equations
-##    Eqns = [Eqn1, Eqn2, Eqn3, Eqn4, Eqn5, Eqn6]
     Eqns = [Eqn1, Eqn2, Eqn3, Eqn4]
 
     # Determine which sensors to use based on magnetic field value (smallValue==noBueno!)
-    sort = argsort( norms )             # Auxiliary function sorts norms from smallest to largest
-    sort.reverse()                      # Python built-in function reverses elements of list
-    f=[]                                # Declare vector to hold relevant functions
+    sort = argsort( norms )                                                 # Auxiliary function sorts norms from smallest to largest
+    sort.reverse()                                                          # Python built-in function reverses elements of list
+    f=[]                                                                    # Declare vector to hold relevant functions
 
-    for i in range(0, 3):               # Fill functions' array with the equations that correspond to
-        f.append( Eqns[sort[i]] )       # the sensors with the highest norm, thus closest to magnet
+    for i in range(0, 3):                                                   # Fill functions' array with the equations that correspond to
+        f.append( Eqns[sort[i]] )                                           # the sensors with the highest norm, thus closest to magnet
         
     # Return vector
     return ( f )
@@ -290,31 +255,21 @@ def findIG( magFields ):
     # Mat=      :          :
     #     \     :          :
     #      \ sensor 6: (x, y, z)
-##    IMU_pos = np.array(((0.0  , 0.0  ,   0.0) ,
-##                        (0.0  , 0.125,   0.0) ,
-##                        (0.100,-0.050,   0.0) ,
-##                        (0.100, 0.175,   0.0) ,
-##                        (0.200, 0.0  ,   0.0) ,
-##                        (0.200, 0.125,   0.0)), dtype='float64')
     IMU_pos = np.array(((0.0  , 0.0  ,   0.0) ,
                         (0.0  , 0.125,   0.0) ,
                         (0.100,-0.050,   0.0) ,
                         (0.100, 0.175,   0.0)), dtype='float64')
 
     # Read current magnetic field from MCU
-##    (H1, H2, H3, H4, H5, H6) = magFields
     (H1, H2, H3, H4) = magFields
 
     # Compute L2 vector norms
-##    HNorm = [ float( norm(H1) ), float( norm(H2) ),
-##              float( norm(H3) ), float( norm(H4) ),
-##              float( norm(H5) ), float( norm(H6) ) ]
     HNorm = [ float( norm(H1) ), float( norm(H2) ),
               float( norm(H3) ), float( norm(H4) ) ]
     
     # Determine which sensors to use based on magnetic field value (smallValue==noBueno!)
-    sort = argsort( HNorm )             # Auxiliary function sorts norms from smallest to largest
-    sort.reverse()                      # Python built-in function reverses elements of list
+    sort = argsort( HNorm )                     # Auxiliary function sorts norms from smallest to largest
+    sort.reverse()                              # Python built-in function reverses elements of list
 
     IMUS = bubbleSort( sort, 3 )
 
@@ -330,74 +285,65 @@ def findIG( magFields ):
 # Useful variables
 global CALIBRATING
 
-CALIBRATING = True                              # Boolean to indicate that device is calibrating
-READY       = False                             # Give time for user to place magnet
+CALIBRATING = True                                                      # Boolean to indicate that device is calibrating
 
-#K           = 1.615e-7                          # Small magnet's constant   (K) || Units { G^2.m^6}
-K           = 1.09e-6                           # Big magnet's constant     (K) || Units { G^2.m^6}
-dx          = 1e-7                              # Differential step size (Needed for solver)
+##K           = 1.615e-7                                                  # Small magnet's constant   (K) || Units { G^2.m^6}
+K           = 1.09e-6                                                   # Big magnet's constant     (K) || Units { G^2.m^6}
+dx          = 1e-7                                                      # Differential step size (Needed for solver)
 
 
 # Error handling in case serial communcation fails (1/2)
-##try:
-t_readMagneto = Thread( target=readMagneto, args=( q_output, ) )             # Define thread
-t_readMagneto.daemon = True
-t_readMagneto.start() 
+try:
+    t_readMagneto = Thread( target=readMagneto, args=( q_output, ) )    # Define thread
+    t_readMagneto.daemon = True                                         # Set to daemon
+    t_readMagneto.start()                                               # Start thread
 
-initialGuess = findIG(getData(q_output))         # Determine initial guess based on magnet's location
+    initialGuess = findIG(getData(q_output))                            # Determine initial guess based on magnet's location
 
-### Error handling in case serial communcation fails (2/2)
-##except Exception as e:
-##    print( "Could NOT open serial port" )
-##    print( "Error type %s" %str(type(e)) )
-##    print( "Error Arguments " + str(e.args) )
-##    sleep( 2.5 )
-##    quit()                                      # Shutdown entire program
+# Error handling in case serial communcation fails (2/2)
+except Exception as e:
+    print( "Could NOT create thread. Check .cpp")
+    print( "Error type {}".format(type(e))      )
+    print( "Error Arguments {}".format(e.args)  )
+    sleep( 2.5 )
+    quit()                                                              # Shutdown entire program
 
 
 # ************************************************************************
 # =========================> MAKE IT ALL HAPPEN <=========================
 # ************************************************************************
 
+print( "Ready in 3 " ), ; sleep( 1.0 )
+print( "... 2 " ),      ; sleep( 1.0 )
+print( "... 1 " )       ; sleep( 1.0 )
+print( "GO!" )
+
 # Start iteration
 while( True ):
 
-    # Inform user that system is almost ready
-    if(READY == False):
-        print( "Ready in 3" )
-        sleep( 1.0 )
-        print( "Ready in 2" )
-        sleep( 1.0 )
-        print( "Ready in 1" )
-        sleep( 1.0 )
-        print( "GO!" )
-
-        # Set the device to ready!!
-        READY = True
-
-    start = time()                                                  # Call clock() for accurate time readings
+    start = time()                                                      # Call clock() for accurate time readings
     
     # Data acquisition
-    (H1, H2, H3, H4) = getData(q_output)                         # Get data from MCU
+    (H1, H2, H3, H4) = getData(q_output)                                # Get data from MCU
     
     # Compute norms
-    HNorm = [ float(norm(H1)), float(norm(H2)),                     #
-              float(norm(H3)), float(norm(H4)) ]                    #
+    HNorm = [ float(norm(H1)), float(norm(H2)),                         # Compute norms
+              float(norm(H3)), float(norm(H4)) ]                        # ...
 
     # Solve system of equations
-    sol = root(LHS, initialGuess, args=(K, HNorm), method='lm',     # Invoke solver using the
-               options={'ftol':1e-10, 'xtol':1e-10, 'maxiter':1000, # Levenberg-Marquardt 
-                        'eps':1e-8, 'factor':0.001})                # Algorithm (aka LMA)
+    sol = root(LHS, initialGuess, args=(K, HNorm), method='lm',         # Invoke solver using the
+               options={'ftol':1e-10, 'xtol':1e-10, 'maxiter':1000,     # Levenberg-Marquardt 
+                        'eps':1e-8, 'factor':0.001})                    # Algorithm (aka LMA)
 
     # Store solution in array
-    position = np.array( (sol.x[0]*1000,                            # x-axis
-                          sol.x[1]*1000,                            # y-axis
-                          sol.x[2]*1000,                            # z-axis
-                          time()-start  ), dtype='float64' )        # time
+    position = np.array( (sol.x[0]*1000,                                # x-axis
+                          sol.x[1]*1000,                                # y-axis
+                          sol.x[2]*1000,                                # z-axis
+                          time()-start  ), dtype='float64' )            # time
 
     # Check value
-    if( position[2] < 0 ): position[2] = -1*position[2]             # Make sure z-value
-    else: pass                                                      # ... is ALWAYS +ve
+    if( position[2] < 0 ): position[2] = -1*position[2]                 # Make sure z-value
+    else: pass                                                          # ... is ALWAYS +ve
 
     # Print solution (coordinates) to screen
     print( "(x, y, z, t): (%.3f, %.3f, %.3f, %.3f)" %( position[0],
@@ -405,16 +351,16 @@ while( True ):
                                                        position[2],
                                                        position[3] ) )
 
-    sleep( 0.1 )                                                    # Sleep for stability
+    sleep( 0.1 )                                                        # Sleep for stability
 
     # Check if solution makes sense
     if (abs(sol.x[0]*1000) > 500) or (abs(sol.x[1]*1000) > 500) or (abs(sol.x[2]*1000) > 500):
-        initialGuess = findIG( getData(q_output) )                       # Determine initial guess based on magnet's location
+        initialGuess = findIG( getData(q_output) )                      # Determine initial guess based on magnet's location
 
     # Update initial guess with current position and feed back to solver
     else:    
-        initialGuess = np.array( (sol.x[0]+dx, sol.x[1]+dx,         # Update the initial guess as the
-                                  sol.x[2]+dx), dtype='float64' )   # current position and feed back to LMA
+        initialGuess = np.array( (sol.x[0]+dx, sol.x[1]+dx,             # Update the initial guess as the
+                                  sol.x[2]+dx), dtype='float64' )       # current position and feed back to LMA
 
 # ************************************************************************
 # =============================> DEPRECATED <=============================
