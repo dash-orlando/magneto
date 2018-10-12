@@ -16,10 +16,7 @@
 
 #define ALPHA     0.25
 
-static double exp_avg[NSENS][NAXES] =  { {0, 0, 0},    //  {1x, 1y, 1z}
-                                         {0, 0, 0},
-                                         {0, 0, 0}, 
-                                         {0, 0, 0}, };  //  {8x,  y,  z}
+static double exp_avg[NSENS][NAXES] =  { 0 };  //  {8x,  y,  z}
                                           
 double ema_filter( double current_value, byte sens, byte axis ) {
 

@@ -268,19 +268,23 @@ def findIG( magFields ):
     # Read current magnetic field from MCU
     #(H1, H2, H3, H4, H5, H6) = magFields
 
-##    # Compute L2 vector norms
-##    HNorm_og =  [ float( norm(magFields['0']) ), float( norm(magFields['1']) ),
-##                  float( norm(magFields['2']) ), float( norm(magFields['3']) ) ]
+    # Compute L2 vector norms
+    HNorm_og =  [ float( norm(magFields['0']) ), float( norm(magFields['1']) ),
+                  float( norm(magFields['2']) ), float( norm(magFields['3']) ) ]
 
     Npairs  = int(len( magFields )/2) 
-    HNorm   = np.zeros(( Npairs, 2 ), dtype='float64')
+    HNorm   = np.zeros( ( Npairs, 2 ) )
     for i in range( Npairs ):
-        HNorm[i] = np.array( (  [float(norm(magFields[str(2*i)]))],
-                                [float(norm(magFields[str(2*i)]))]), dtype='float64') 
+        HNorm[i] = np.array( (  float(norm(magFields[str(2*i)])),
+                                float(norm(magFields[str(2*i + 1)])) ), dtype='float64') 
     
 ##    # Determine which sensors to use based on magnetic field value (smallValue==noBueno!)
 ##    sort = argsort( HNorm )             # Auxiliary function sorts norms from smallest to largest
 ##    sort.reverse()                      # Python built-in function reverses elements of list
+
+    # Determine which sensors to use based on magnetic field value (smallValue==noBueno!)
+    sort = argsort( np.sort( HNorm, axis=None ) )
+    sort.reverse()
 
     return HNorm_og, HNorm
     
@@ -309,7 +313,7 @@ dx          = 1e-7                              # Differential step size (Needed
 DEVC    = "Arduino"                                # Device Name (not very important)
 #PORTPRE = "/dev/ttyACM"                                       # Port number (VERY important)
 PORTPRE = "COM"
-PORTNUM = 24
+PORTNUM = 4
 BAUD    = 115200                                   # Baudrate    (VERY VERY important)
 
 # Error handling in case serial communcation fails (1/2)
