@@ -26,12 +26,16 @@ LSM9DS1 imuLO( IMU_MODE_I2C, LSM9DS1_AG_LOW , LSM9DS1_M_LOW  );					// Even sens
 #include "functions.h"
 
 
-int main(int argc, char *argv[])
+int main( int argc, char *argv[] )
 {
 	if( wiringPiSetupGpio() == -1 ) 											// Start the wiringPi library
     {
 		return 0;
 	} 
+    
+    pinMode( S0, OUTPUT ); 														// Set select pins as output
+	pinMode( S1, OUTPUT ); 														// ...
+	pinMode( S2, OUTPUT ); 														// ...
     
     for( uint8_t i = 1; i <= NSENS/2; i++ )
     {
@@ -48,7 +52,7 @@ int main(int argc, char *argv[])
 	}
     
 	// Infinite loop after setup is complete
-    for ( ;; )
+    for( ;; )
     {
 		// Collect data
 		for( uint8_t i = 1; i <= NSENS/2; i++ )
@@ -64,11 +68,11 @@ int main(int argc, char *argv[])
 		// Print data
 		char    buff[156] = {'\0'};                                 			// String buffer
 		strcat( buff, "<" );                                        			// SOH indicator
-		for (uint8_t i = 0; i < NSENS; i++) 									// Loop over sensors
+		for( uint8_t i = 0; i < NSENS; i++ ) 									// Loop over sensors
 		{																		// ...
-			for (uint8_t j = 0; j < NAXES; j++) 								//	Loop over axes
+			for( uint8_t j = 0; j < NAXES; j++ ) 								//	Loop over axes
 			{																	// 	...
-				char 	temp[ 9 ] = {'\0'};										// 	Array to hold calibrated readings
+				char temp[ 9 ] = {'\0'};										// 	Array to hold calibrated readings
 				if( sens[i][j] - cal[i][j] >= 0 ) 								// 	Formatting in case of positive reading
 				{
 					snprintf( temp, 7+1, "%.5lf", sens[i][j] - cal[i][j] );
@@ -79,7 +83,7 @@ int main(int argc, char *argv[])
 				}
 				strcat( buff, temp ); 											// 	Append calibrated array to output buffer
 				
-				if (i == NSENS - 1 && j == NAXES - 1)
+				if( i == NSENS - 1 && j == NAXES - 1 )
 					continue;
 				else
 					strcat( buff, "," ); 										// 	Add delimiter

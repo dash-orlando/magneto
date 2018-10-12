@@ -106,6 +106,8 @@ def readMagneto( q_output, initialCall=True ):
 
     #q_output.close()
 
+# --------------------------
+
 def getData( ser, NSENS=4 ):
     '''
     Pool the data from the MCU (wheteher it be a Teensy or an Arduino or whatever)
@@ -129,7 +131,8 @@ def getData( ser, NSENS=4 ):
     line = ser.get()
     line = line.strip( "<" )
     line = line.strip( ">" )
-
+##    print( line )
+    
     try:
 
         # Check if array is corrupted
@@ -208,9 +211,9 @@ def LHS( root, K, norms ):
     #       the x/y/z direction should I march to get
     #       back to sensor1 (origin)?
     r1 = float( ( (x+0.000)**2. + (y+0.000)**2. + (z+0.00)**2. )**(1/2.) )  # Sensor 1 (ORIGIN)
-    r2 = float( ( (x+0.000)**2. + (y-0.125)**2. + (z+0.00)**2. )**(1/2.) )  # Sensor 2
-    r3 = float( ( (x-0.100)**2. + (y+0.050)**2. + (z+0.00)**2. )**(1/2.) )  # Sensor 3
-    r4 = float( ( (x-0.100)**2. + (y-0.175)**2. + (z+0.00)**2. )**(1/2.) )  # Sensor 4
+    r2 = float( ( (x-0.040)**2. + (y+0.040)**2. + (z+0.00)**2. )**(1/2.) )  # Sensor 2
+    r3 = float( ( (x-0.080)**2. + (y+0.000)**2. + (z+0.00)**2. )**(1/2.) )  # Sensor 3
+    r4 = float( ( (x-0.040)**2. + (y-0.040)**2. + (z+0.00)**2. )**(1/2.) )  # Sensor 4
 
     # Construct the equations
     Eqn1 = ( K*( r1 )**(-6.) * ( 3.*( z/r1 )**2. + 1 ) ) - norms[0]**2.     # Sensor 1
@@ -228,7 +231,7 @@ def LHS( root, K, norms ):
 
     for i in range(0, 3):                                                   # Fill functions' array with the equations that correspond to
         f.append( Eqns[sort[i]] )                                           # the sensors with the highest norm, thus closest to magnet
-        
+
     # Return vector
     return ( f )
 
@@ -256,9 +259,9 @@ def findIG( magFields ):
     #     \     :          :
     #      \ sensor 6: (x, y, z)
     IMU_pos = np.array(((0.0  , 0.0  ,   0.0) ,
-                        (0.0  , 0.125,   0.0) ,
-                        (0.100,-0.050,   0.0) ,
-                        (0.100, 0.175,   0.0)), dtype='float64')
+                        (0.040,-0.040,   0.0) ,
+                        (0.080, 0.000,   0.0) ,
+                        (0.040, 0.040,   0.0)), dtype='float64')
 
     # Read current magnetic field from MCU
     (H1, H2, H3, H4) = magFields

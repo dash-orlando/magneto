@@ -9,7 +9,8 @@
 #define LSM9DS1_AG_LOW             	0x6B                 		// SDO_AG on these IMU's are HIGH [PINS NOT GROUNDED]***
 
 // =========================    Setup IMU       ========================
-void setupIMU() {
+void setupIMU()
+{
 
   // ---------------------------------------- HIGH IMU Setup ---------------------------------------
   

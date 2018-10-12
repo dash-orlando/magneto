@@ -22,14 +22,14 @@ void calibrateIMU( uint8_t whichPair )
   delay( 25 );
 
   double hold[6] = {0};
-  for ( uint8_t i = 0; i < CALIBRATION_INDEX; i++ )
+  for( uint8_t i = 0; i < CALIBRATION_INDEX; i++ )
   {
     //Declaring an index, to make it easier to assign values to/from the correct sensor.
     uint8_t n_HI = (whichPair - 1) * 2; 										// Define index for HI sensors
     uint8_t n_LO = (2 * whichPair) - 1; 										// Define index for LO sensors
 
-    while ( !imuLO.magAvailable() && !imuHI.magAvailable() );					// Wait until the sensors are available.
-	imuHI.readMag(); imuLO.readMag(); 											// Take readings
+    while( !imuLO.magAvailable() && !imuHI.magAvailable() );					// Wait until the sensors are available.
+    imuHI.readMag(); imuLO.readMag(); 											// Take readings
 
     orientRead( whichPair );                                  					// Reorient readings and push to the array
 	
@@ -41,7 +41,7 @@ void calibrateIMU( uint8_t whichPair )
     hold[4] += sens[n_LO][1];                                 					// for the LOW sensors.
     hold[5] += sens[n_LO][2];                                 					// ...
 
-    if ( i == CALIBRATION_INDEX - 1 ) 											// Average the readings
+    if( i == CALIBRATION_INDEX - 1 ) 											// Average the readings
     {
       cal[n_HI][0] = hold[0] / CALIBRATION_INDEX;             					// Compute the calibration (BASE)
       cal[n_HI][1] = hold[1] / CALIBRATION_INDEX;             					// values for the High sensors
