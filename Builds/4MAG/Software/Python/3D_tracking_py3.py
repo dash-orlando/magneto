@@ -162,47 +162,49 @@ def getData( ser ):
         # Split line into the constituent components
 
         # Check if array is corrupted
+        print(line)
         col     = (line.rstrip()).split(",")
         if (len(col) == Nsens*3):
-
 
             #
             # Consolidation using dictionaries
             #
 
-            B = {}                                                                      # ...initializing dictionary
-            for i in range( Nsens ):                                                    # ...loop around number of sensors (Nsens)
-                for j in range( len(col) ):                                             # ...loop around length of incoming data (must be equal to Nsens*3)
-                    B[str(i)] = np.array( ([Bx],[By],[Bz]), dtype='float64')            # Units { G }
+            B = {}                                                                          # ...initializing dictionary
+            for i in range( Nsens ):                                                        # ...loop around number of sensors (Nsens)
+                B[str(i)] = np.zeros(3)
+                B[str(i)] = np.array( ( [float(col[3*i])],
+                                        [float(col[3*i + 1])],
+                                        [float(col[3*i + 2])]), dtype='float64')            # Units { G }
             
-            #
-            # Construct magnetic field array
-            #
-
-            # Sensor 1
-            Bx = float( col[0] )
-            By = float( col[1] )
-            Bz = float( col[2] )
-            B1 = np.array( ([Bx],[By],[Bz]), dtype='float64') # Units { G }
-
-            # Sensor 2
-            Bx = float( col[3] )
-            By = float( col[4] )
-            Bz = float( col[5] )
-            B2 = np.array( ([Bx],[By],[Bz]), dtype='float64') # Units { G }
-
-            # Sensor 3
-            Bx = float( col[6] )
-            By = float( col[7] )
-            Bz = float( col[8] )
-            B3 = np.array( ([Bx],[By],[Bz]), dtype='float64') # Units { G }
-
-            # Sensor 4
-            Bx = float( col[9]  )
-            By = float( col[10] )
-            Bz = float( col[11] )
-            B4 = np.array( ([Bx],[By],[Bz]), dtype='float64') # Units { G }
-            
+##            #
+##            # Construct magnetic field array
+##            #
+##
+##            # Sensor 1
+##            Bx = float( col[0] )
+##            By = float( col[1] )
+##            Bz = float( col[2] )
+##            B1 = np.array( ([Bx],[By],[Bz]), dtype='float64') # Units { G }
+##
+##            # Sensor 2
+##            Bx = float( col[3] )
+##            By = float( col[4] )
+##            Bz = float( col[5] )
+##            B2 = np.array( ([Bx],[By],[Bz]), dtype='float64') # Units { G }
+##
+##            # Sensor 3
+##            Bx = float( col[6] )
+##            By = float( col[7] )
+##            Bz = float( col[8] )
+##            B3 = np.array( ([Bx],[By],[Bz]), dtype='float64') # Units { G }
+##
+##            # Sensor 4
+##            Bx = float( col[9]  )
+##            By = float( col[10] )
+##            Bz = float( col[11] )
+##            B4 = np.array( ([Bx],[By],[Bz]), dtype='float64') # Units { G }
+##            
 ##            # Sensor 5
 ##            Bx = float( col[12] )
 ##            By = float( col[13] )
@@ -217,7 +219,7 @@ def getData( ser ):
             
             # Return vectors
 ##            return ( B1, B2, B3, B4, B5, B6 )
-            return ( B1, B2, B3, B4 )
+            return ( B )
 
         # In case array is corrupted, call the function again
         else:
@@ -356,7 +358,7 @@ dx          = 1e-7                              # Differential step size (Needed
 DEVC    = "Arduino"                                # Device Name (not very important)
 #PORTPRE = "/dev/ttyACM"                                       # Port number (VERY important)
 PORTPRE = "COM"
-PORTNUM = 4
+PORTNUM = 24
 BAUD    = 115200                                   # Baudrate    (VERY VERY important)
 
 # Error handling in case serial communcation fails (1/2)
@@ -366,7 +368,8 @@ try:
         IMU.open()
     print( "Serial Port OPEN" )
 
-    initialGuess = findIG(getData(IMU))         # Determine initial guess based on magnet's location
+    getData(IMU)
+    #initialGuess = findIG(getData(IMU))         # Determine initial guess based on magnet's location
 
 # Error handling in case serial communcation fails (2/2)
 except Exception as e:
@@ -398,7 +401,10 @@ while( True ):
         READY = True
 
     # Data acquisition
-    (H1, H2, H3, H4, H5, H6) = getData(IMU)                         # Get data from MCU
+    #(H1, H2, H3, H4, H5, H6) = getData(IMU)                         # Get data from MCU
+    ( B ) = getData(IMU)                         # Get data from MCU
+
+    """
     
     # Compute norms
     HNorm = [ float(norm(H1)), float(norm(H2)),                     #
@@ -424,6 +430,8 @@ while( True ):
     else:    
         initialGuess = np.array( (sol.x[0]+dx, sol.x[1]+dx,         # Update the initial guess as the
                                   sol.x[2]+dx), dtype='float64' )   # current position and feed back to LMA
+
+    """
 
 # ************************************************************************
 # =============================> DEPRECATED <=============================
