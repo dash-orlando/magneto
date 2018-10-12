@@ -126,9 +126,6 @@ def getData( ser ):
     ser.reset_input_buffer()
     ser.reset_output_buffer()
 
-    # Allow data to fill-in buffer
-    # sleep(0.1)
-
     try:
         # Wait for the sensor to calibrate itself to ambient fields.
         while( True ):
@@ -137,12 +134,7 @@ def getData( ser ):
                 CALIBRATING = False
             if ser.in_waiting > 0:  
                 inData = ser.read()
-                #print( inData )
-
-##                if inData == '<':                                      # Windows
-##                    break
-                
-                if inData == b'<':                                      # Linux
+                if inData == b'<':
                     break  
 
         # Read the actual data value. Stop at End of Data specifier '>'. 
@@ -150,14 +142,9 @@ def getData( ser ):
         while( True ):
             if ser.in_waiting > 0:
                 inData = ser.read()
-##                
-##                if inData == '>':                                      # Windows
-##                    break                                              # Linux
-                
                 if inData == b'>':
                     break
-##                line = line + inData                                   # Windows
-                line = line + inData.decode("ascii")                    # Linux
+                line = line + inData.decode("ascii")
 
         # Split line into the constituent components
 
@@ -167,7 +154,7 @@ def getData( ser ):
         if (len(col) == Nsens*3):
 
             #
-            # Consolidation using dictionaries
+            # Construct magnetic field array
             #
 
             B = {}                                                                          # ...initializing dictionary
@@ -176,49 +163,8 @@ def getData( ser ):
                 B[str(i)] = np.array( ( [float(col[3*i])],
                                         [float(col[3*i + 1])],
                                         [float(col[3*i + 2])]), dtype='float64')            # Units { G }
-            
-##            #
-##            # Construct magnetic field array
-##            #
-##
-##            # Sensor 1
-##            Bx = float( col[0] )
-##            By = float( col[1] )
-##            Bz = float( col[2] )
-##            B1 = np.array( ([Bx],[By],[Bz]), dtype='float64') # Units { G }
-##
-##            # Sensor 2
-##            Bx = float( col[3] )
-##            By = float( col[4] )
-##            Bz = float( col[5] )
-##            B2 = np.array( ([Bx],[By],[Bz]), dtype='float64') # Units { G }
-##
-##            # Sensor 3
-##            Bx = float( col[6] )
-##            By = float( col[7] )
-##            Bz = float( col[8] )
-##            B3 = np.array( ([Bx],[By],[Bz]), dtype='float64') # Units { G }
-##
-##            # Sensor 4
-##            Bx = float( col[9]  )
-##            By = float( col[10] )
-##            Bz = float( col[11] )
-##            B4 = np.array( ([Bx],[By],[Bz]), dtype='float64') # Units { G }
-##            
-##            # Sensor 5
-##            Bx = float( col[12] )
-##            By = float( col[13] )
-##            Bz = float( col[14] )
-##            B5 = np.array( ([Bx],[By],[Bz]), dtype='float64') # Units { G }
-##
-##            # Sensor 6
-##            Bx = float( col[15] )
-##            By = float( col[16] )
-##            Bz = float( col[17] )
-##            B6 = np.array( ([Bx],[By],[Bz]), dtype='float64' )# Units { G }
-            
+
             # Return vectors
-##            return ( B1, B2, B3, B4, B5, B6 )
             return ( B )
 
         # In case array is corrupted, call the function again
