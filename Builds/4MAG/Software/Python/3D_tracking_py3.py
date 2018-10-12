@@ -286,14 +286,14 @@ def findIG( magFields ):
     sort = argsort( np.sort( HNorm, axis=None ) )
     sort.reverse()
 
-    return HNorm_og, HNorm
+    #return HNorm_og, HNorm
     
-##    IMUS = bubbleSort( sort, 3 )
-##
-##    # Return the initial guess as the centroid of the detected triangle
-##    return ( np.array(((IMU_pos[IMUS[0]][0]+IMU_pos[IMUS[1]][0]+IMU_pos[IMUS[2]][0])/3.,
-##                       (IMU_pos[IMUS[0]][1]+IMU_pos[IMUS[1]][1]+IMU_pos[IMUS[2]][1])/3.,
-##                       (IMU_pos[IMUS[0]][2]+IMU_pos[IMUS[1]][2]+IMU_pos[IMUS[2]][2])/3. -0.01), dtype='float64') )
+    IMUS = bubbleSort( sort, 3 )
+
+    # Return the initial guess as the centroid of the detected triangle
+    return ( np.array(((IMU_pos[IMUS[0]][0]+IMU_pos[IMUS[1]][0]+IMU_pos[IMUS[2]][0])/3.,
+                       (IMU_pos[IMUS[0]][1]+IMU_pos[IMUS[1]][1]+IMU_pos[IMUS[2]][1])/3.,
+                       (IMU_pos[IMUS[0]][2]+IMU_pos[IMUS[1]][2]+IMU_pos[IMUS[2]][2])/3. -0.01), dtype='float64') )
 
 # ************************************************************************
 # ===========================> SETUP PROGRAM <===========================
