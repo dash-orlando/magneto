@@ -263,28 +263,33 @@ def findIG( magFields ):
     IMU_pos = np.array(((0.0  , 0.0  ,   0.0) ,
                         (0.0  , 0.125,   0.0) ,
                         (0.100,-0.050,   0.0) ,
-                        (0.100, 0.175,   0.0) ,
-                        (0.200, 0.0  ,   0.0) ,
-                        (0.200, 0.125,   0.0)), dtype='float64')
+                        (0.100, 0.175,   0.0)), dtype='float64')
 
     # Read current magnetic field from MCU
-    (H1, H2, H3, H4, H5, H6) = magFields
+    #(H1, H2, H3, H4, H5, H6) = magFields
 
-    # Compute L2 vector norms
-    HNorm = [ float( norm(H1) ), float( norm(H2) ),
-              float( norm(H3) ), float( norm(H4) ),
-              float( norm(H5) ), float( norm(H6) ) ]
+##    # Compute L2 vector norms
+##    HNorm_og =  [ float( norm(magFields['0']) ), float( norm(magFields['1']) ),
+##                  float( norm(magFields['2']) ), float( norm(magFields['3']) ) ]
+
+    Npairs  = int(len( magFields )/2) 
+    HNorm   = np.zeros(( Npairs, 2 ), dtype='float64')
+    for i in range( Npairs ):
+        HNorm[i] = np.array( (  [float(norm(magFields[str(2*i)]))],
+                                [float(norm(magFields[str(2*i)]))]), dtype='float64') 
     
-    # Determine which sensors to use based on magnetic field value (smallValue==noBueno!)
-    sort = argsort( HNorm )             # Auxiliary function sorts norms from smallest to largest
-    sort.reverse()                      # Python built-in function reverses elements of list
+##    # Determine which sensors to use based on magnetic field value (smallValue==noBueno!)
+##    sort = argsort( HNorm )             # Auxiliary function sorts norms from smallest to largest
+##    sort.reverse()                      # Python built-in function reverses elements of list
 
-    IMUS = bubbleSort( sort, 3 )
-
-    # Return the initial guess as the centroid of the detected triangle
-    return ( np.array(((IMU_pos[IMUS[0]][0]+IMU_pos[IMUS[1]][0]+IMU_pos[IMUS[2]][0])/3.,
-                       (IMU_pos[IMUS[0]][1]+IMU_pos[IMUS[1]][1]+IMU_pos[IMUS[2]][1])/3.,
-                       (IMU_pos[IMUS[0]][2]+IMU_pos[IMUS[1]][2]+IMU_pos[IMUS[2]][2])/3. -0.01), dtype='float64') )
+    return HNorm_og, HNorm
+    
+##    IMUS = bubbleSort( sort, 3 )
+##
+##    # Return the initial guess as the centroid of the detected triangle
+##    return ( np.array(((IMU_pos[IMUS[0]][0]+IMU_pos[IMUS[1]][0]+IMU_pos[IMUS[2]][0])/3.,
+##                       (IMU_pos[IMUS[0]][1]+IMU_pos[IMUS[1]][1]+IMU_pos[IMUS[2]][1])/3.,
+##                       (IMU_pos[IMUS[0]][2]+IMU_pos[IMUS[1]][2]+IMU_pos[IMUS[2]][2])/3. -0.01), dtype='float64') )
 
 # ************************************************************************
 # ===========================> SETUP PROGRAM <===========================
