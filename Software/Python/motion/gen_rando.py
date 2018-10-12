@@ -23,6 +23,8 @@ x_rm = rand_multipliers[0]              # random multiplier per axis
 y_rm = rand_multipliers[1]
 z_rm = rand_multipliers[2]
 
+
+### function starts here ###
 # determine offsets
 offsets = np.zeros(3)
 for i in range( 0, len(printer) ):
