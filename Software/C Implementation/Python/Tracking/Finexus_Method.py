@@ -3,14 +3,15 @@
 * Position tracking of magnet based on Finexus
 * https://ubicomplab.cs.washington.edu/pdfs/finexus.pdf
 *
-* VERSION: 0.4.1
+* VERSION: 0.4.2
 *   - MODIFIED: Create thread from .cpp implementation for data acquisition
 *   - FIXED   : Position calculation lagged behind acquired data. Fixed that
 *               by clearing queue prior to pulling data (that way we always
 *               get the most up to data magnetic field readings)
+*   - ADDED   : Determine direction and number of revolutions
 *
 * KNOWN ISSUES:
-*   - Nada atm
+*   - Counter increments/decrements per half revolution (by design...for now)
 *
 * AUTHOR                    :   Edward Nichols
 * LAST CONTRIBUTION DATE    :   Sep. 29th, 2017 Year of Our Lord
@@ -21,15 +22,15 @@
 '''
 
 # Import Modules
-import  numpy               as      np              # Import Numpy
-from    time                import  time, sleep     # Sleep for stability
-from    scipy.optimize      import  root            # Solve System of Eqns for (x, y, z)
-from    scipy.linalg        import  norm            # Calculate vector norms (magnitude)
-from    usbProtocol         import  createUSBPort   # Create USB port (serial comm. w\ Arduino)
-import  argparse                                    # Feed in arguments to the program
-import  pexpect
-from    threading                   import Thread, Event
-from    Queue                       import Queue
+import  numpy                       as      np              # Import Numpy
+from    time                        import  time, sleep     # Sleep for stability
+from    scipy.optimize              import  root            # Solve System of Eqns for (x, y, z)
+from    scipy.linalg                import  norm            # Calculate vector norms (magnitude)
+from    threading                   import  Thread          # Create threads
+from    Queue                       import  Queue           # Create queues
+from    usbProtocol                 import  createUSBPort   # Create USB port (serial comm. w\ Arduino)
+import  argparse                                            # Feed in arguments to the program
+import  pexpect                                             # Spawn programs
 
 # ************************************************************************
 # =====================> CONSTRUCT ARGUMENT PARSER <=====================*
@@ -292,9 +293,41 @@ def findIG( magFields ):
                        (IMU_pos[IMUS[0]][1]+IMU_pos[IMUS[1]][1]+IMU_pos[IMUS[2]][1])/3.,
                        (IMU_pos[IMUS[0]][2]+IMU_pos[IMUS[1]][2]+IMU_pos[IMUS[2]][2])/3. -0.01), dtype='float64') )
 
+# --------------------------
+
+def compute_rotation( position_crnt ):
+    '''
+    Compute rotations and direction
+    '''
+    global position_prvs, revolutions
+    
+    x, y, z, _ = position_crnt                                              # Unpack data
+    X, Y, Z, _ = position_prvs                                              # ...
+
+    if( (y < 0 and x > X) or (y > 0 and x < X) ):                           # In case we are going CCW
+        print( "We are moving CCW" )                                        # ...
+        if( (y < 0 and Y > 0) or (y > 0 and Y < 0 ) ):                      #   In case we completed a revolution (detects x-axis crossings)
+            revolutions -= 1                                                #       Decrement revolutions counter
+
+    elif( (y < 0 and x < X) or (y > 0 and x > X) ):                         # In case we are going CW
+        print( "We are moving CW" )                                         # ...
+        if( (y < 0 and Y > 0) or (y > 0 and Y < 0 ) ):                      #   In case we completed a revolution (detects x-axis crossings)
+            revolutions += 1                                                #       Increment revolutions counter
+
+    else:                                                                   # This will NEVER happen
+        print( "We are staying still" )                                     # ...
+
+    print( " Number of revolutions: {}".format(revolutions) )
+    position_prvs = position_crnt                                           # Update PAST variable
+    
 # ************************************************************************
 # ===========================> SETUP PROGRAM <===========================
 # ************************************************************************
+
+# Define useful variables/parameters
+global position_prvs, revolutions                                           # Used to store previous position readings ...
+position_prvs   = 0, 0, 0, 0                                                # ... used for determining direction ...
+revolutions     = 0                                                         # ... and number of revolutions
 
 # Define the position of the sensors on the grid
 # relative to the origin, i.e:
@@ -395,6 +428,8 @@ while( True ):
     else:    
         initialGuess = np.array( (sol.x[0]+dx, sol.x[1]+dx,                 # Update the initial guess as the
                                   sol.x[2]+dx), dtype='float64' )           # current position and feed back to LMA
+
+        compute_rotation( position )                                        # Compute how many rotations we've done and direction
 
 # ************************************************************************
 # =============================> DEPRECATED <=============================
