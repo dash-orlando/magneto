@@ -3,8 +3,11 @@
 * Position tracking of magnet based on Finexus
 * https://ubicomplab.cs.washington.edu/pdfs/finexus.pdf
 *
-* VERSION: 0.4
+* VERSION: 0.4.1
 *   - MODIFIED: Create thread from .cpp implementation for data acquisition
+*   - FIXED   : Position calculation lagged behind acquired data. Fixed that
+*               by clearing queue prior to pulling data (that way we always
+*               get the most up to data magnetic field readings)
 *
 * KNOWN ISSUES:
 *   - Nada atm
@@ -13,7 +16,7 @@
 * LAST CONTRIBUTION DATE    :   Sep. 29th, 2017 Year of Our Lord
 * 
 * AUTHOR                    :   Mohammad Odeh 
-* LAST CONTRIBUTION DATE    :   Oct. 12th, 2018 Year of Our Lord
+* LAST CONTRIBUTION DATE    :   Oct. 15th, 2018 Year of Our Lord
 *
 '''
 
@@ -90,36 +93,46 @@ def bubbleSort( arr, N ):
 
 # --------------------------
 
-q_output = Queue( maxsize=0 )                                                   # Define queue
-def readMagneto( q_output, initialCall=True ):
-    cmd = "/home/pi/Desktop/magneto/magneto"
-    magneto = pexpect.spawn( cmd, timeout=None )
+def getData( queue ):
+    '''
+    Poll the data from the .cpp program and place in queue for retrieval
+    The data consists of the magnetic field components in the x-, y-, and z-direction
+    of all the sensors.
+    
+    INPUTS:
+        - queue     : A queue object of size infinity
 
-##    if( initialCall ):
-##        q_output.put( magneto )                                              # Place variable in queue for retrival
-##        initialCall = False
-        
+    OUTPUT:
+        - Magnetic field readings placed in queue for later retrieval
+    '''
+
+    magneto = pexpect.spawn( cpp_prog, timeout=None )
+
     for line in magneto:
         out = line.strip('\n\r')
-        q_output.put( out )
-        #print( out )
+        if( args["debug"] ): print( out )
+        
+        with queue.mutex:                                                   # Clear queue. This is done because we are placing items in the queue
+            queue.queue.clear()                                             # faster than we are using, which causes our calculations to lag behind
+            
+        queue.put( out )                                                    # Place items in queue
 
-    #q_output.close()
-
+    queue.close()                                                           # Close queue
+    
 # --------------------------
 
-def getData( ser, NSENS=4 ):
+def get_array( array_queue, NSENS=4 ):
     '''
-    Pool the data from the MCU (wheteher it be a Teensy or an Arduino or whatever)
-    The data consists of the magnetic field components in the x-, y-, and z-direction
-    of all the sensors. The array must begin with '<' as the SOH signal, the compononents
-    must be comma delimited, and must end with '>' as the EOT signal.
+    Construct magnetic field readings into a numpy array. The input array must begin
+    with '<' as the SOH signal, the compononents must be comma delimited, and must end
+    with '>' as the EOT signal.
     
             >$\     <B_{1x}, B_{1y}, B_{1z}, ..., B_{1x}, B_{1y}, B_{1z}> 
     
     INPUTS:
-        - ser: a serial object. Note that the serial port MUST be open before
-               passing it the to function
+        - array_queue : A queue object. This is where the magnetic field readings
+                        from the .cpp program are stored.
+        - NSENS       : Number of sensors in the array
 
     OUTPUT:
         - Individual numpy arrays of all the magnetic field vectors
@@ -128,15 +141,14 @@ def getData( ser, NSENS=4 ):
 
     global CALIBRATING
 
-    line = ser.get()
-    line = line.strip( "<" )
-    line = line.strip( ">" )
-##    print( line )
+    line = array_queue.get()                                                # Get whatever is in queue
+    line = line.strip( "<" )                                                # Strip the SOH marker
+    line = line.strip( ">" )                                                # Strip the EOT marker
     
     try:
 
         # Check if array is corrupted
-        col     = (line.rstrip()).split(",")
+        col     = (line.rstrip()).split(",")                                # Split elements using delimiter
         if (len(col) == NSENS*3):
             #
             # Construct magnetic field array
@@ -146,35 +158,35 @@ def getData( ser, NSENS=4 ):
             Bx = float( col[0] )
             By = float( col[1] )
             Bz = float( col[2] )
-            B1 = np.array( ([Bx],[By],[Bz]), dtype='float64') # Units { G }
+            B1 = np.array( ([Bx],[By],[Bz]), dtype='float64')               # Units { G }
 
             # Sensor 2
             Bx = float( col[3] )
             By = float( col[4] )
             Bz = float( col[5] )
-            B2 = np.array( ([Bx],[By],[Bz]), dtype='float64') # Units { G }
+            B2 = np.array( ([Bx],[By],[Bz]), dtype='float64')               # Units { G }
 
             # Sensor 3
             Bx = float( col[6] )
             By = float( col[7] )
             Bz = float( col[8] )
-            B3 = np.array( ([Bx],[By],[Bz]), dtype='float64') # Units { G }
+            B3 = np.array( ([Bx],[By],[Bz]), dtype='float64')               # Units { G }
 
             # Sensor 4
             Bx = float( col[9]  )
             By = float( col[10] )
             Bz = float( col[11] )
-            B4 = np.array( ([Bx],[By],[Bz]), dtype='float64') # Units { G }
+            B4 = np.array( ([Bx],[By],[Bz]), dtype='float64')               # Units { G }
             
             # Return vectors
             return ( B1, B2, B3, B4 )
 
         # In case array is corrupted, call the function again
         else:
-            return( getData(ser) )
+            return( get_array(array_queue) )
 
     except Exception as e:
-        print( "Caught error in getData()"          )
+        print( "Caught error in get_array()"        )
         print( "Error type {}".format(type(e))      )
         print( "Error Arguments {}".format(e.args)  )
 
@@ -190,7 +202,7 @@ def LHS( root, K, norms ):
                 >$\  f(x, y, z, ...) = LHS = 0
     
     INPUTS:
-        - root  : a numpy array contating the initial guesses of the roots
+        - root  : A numpy array contating the initial guesses of the roots
         - K     : K is a property of the magnet and has units of { G^2.m^6}
         - norms : An array/list of the vector norms of the magnetic field
                   vectors for all the sensors
@@ -200,7 +212,6 @@ def LHS( root, K, norms ):
           3 sensors' equations are going to be used with the LMA solver.
           The sorting is based on which 3 sensors are closest to the magnet.
     '''
-    global PRINT
     
     # Extract x, y, and z
     x, y, z = root
@@ -210,10 +221,10 @@ def LHS( root, K, norms ):
     #     : Standing on sensor(n), how many units in
     #       the x/y/z direction should I march to get
     #       back to sensor1 (origin)?
-    r1 = float( ( (x+0.000)**2. + (y+0.000)**2. + (z+0.00)**2. )**(1/2.) )  # Sensor 1 (ORIGIN)
-    r2 = float( ( (x-0.040)**2. + (y+0.040)**2. + (z+0.00)**2. )**(1/2.) )  # Sensor 2
-    r3 = float( ( (x-0.080)**2. + (y+0.000)**2. + (z+0.00)**2. )**(1/2.) )  # Sensor 3
-    r4 = float( ( (x-0.040)**2. + (y-0.040)**2. + (z+0.00)**2. )**(1/2.) )  # Sensor 4
+    r1 = float( ( (x - X1)**2. + (y - Y1)**2. + (z - Z1)**2. )**(1/2.) )    # Sensor 1
+    r2 = float( ( (x - X2)**2. + (y - Y2)**2. + (z - Z2)**2. )**(1/2.) )    # Sensor 2
+    r3 = float( ( (x - X3)**2. + (y - Y3)**2. + (z - Z3)**2. )**(1/2.) )    # Sensor 3
+    r4 = float( ( (x - X4)**2. + (y - Y4)**2. + (z - Z4)**2. )**(1/2.) )    # Sensor 4 (ORIGIN)
 
     # Construct the equations
     Eqn1 = ( K*( r1 )**(-6.) * ( 3.*( z/r1 )**2. + 1 ) ) - norms[0]**2.     # Sensor 1
@@ -246,7 +257,7 @@ def findIG( magFields ):
     is fed as the initial guess
     
     INPUTS:
-        - magfield: a numpy array containing all the magnetic field readings
+        - magfield: A numpy array containing all the magnetic field readings
 
     OUTPUT:
         - A numpy array containing <x, y, z> values for the initial guess
@@ -258,10 +269,10 @@ def findIG( magFields ):
     # Mat=      :          :
     #     \     :          :
     #      \ sensor 6: (x, y, z)
-    IMU_pos = np.array(((0.0  , 0.0  ,   0.0) ,
-                        (0.040,-0.040,   0.0) ,
-                        (0.080, 0.000,   0.0) ,
-                        (0.040, 0.040,   0.0)), dtype='float64')
+    IMU_pos = np.array(((X1, Y1, Z1) ,
+                        (X2, Y2, Z2) ,
+                        (X3, Y3, Z3) ,
+                        (X4, Y4, Z4)), dtype='float64')
 
     # Read current magnetic field from MCU
     (H1, H2, H3, H4) = magFields
@@ -285,31 +296,52 @@ def findIG( magFields ):
 # ===========================> SETUP PROGRAM <===========================
 # ************************************************************************
 
-# Useful variables
-global CALIBRATING
+# Define the position of the sensors on the grid
+# relative to the origin, i.e:
+#
+#       +y  ^
+#           |         o SEN3 <-(X3, Y3, Z3)
+#           |
+#           |                       ____ (X2, Y2, Z2)
+#           |                      /
+#           |                     V
+#   ORIGIN, O----------------- o SEN2 --> +x
+#  (0, 0, 0)|
+#           |
+#           |
+#           |
+#           |         o SEN1 <-(X1, Y1, Z1)
+#           v
 
-CALIBRATING = True                                                      # Boolean to indicate that device is calibrating
+X1, Y1, Z1 =  40e-3, -40e-3,  00e-3                                         # Position of sensor 1
+X2, Y2, Z2 =  80e-3,  00e-3,  00e-3                                         # Position of sensor 2
+X3, Y3, Z3 =  40e-3,  40e-3,  00e-3                                         # Position of sensor 3
+X4, Y4, Z4 =  00e-3,  00e-3,  00e-3                                         # Position of sensor 4 (ORIGIN)
 
-##K           = 1.615e-7                                                  # Small magnet's constant   (K) || Units { G^2.m^6}
-K           = 1.09e-6                                                   # Big magnet's constant     (K) || Units { G^2.m^6}
-dx          = 1e-7                                                      # Differential step size (Needed for solver)
+# Choose the magnet we want to track
+##K           = 1.615e-7                                                      # Small magnet's constant   (K) || Units { G^2.m^6}
+K           = 1.09e-6                                                       # Big magnet's constant     (K) || Units { G^2.m^6}
+dx          = 1e-7                                                          # Differential step size (Needed for solver)
 
+# Full path to the compiled .cpp program
+cpp_prog = "/home/pi/Desktop/magneto/magneto"                               # Define the program to use
 
-# Error handling in case serial communcation fails (1/2)
+# Error handling in case thread spawning fails (1/2)
 try:
-    t_readMagneto = Thread( target=readMagneto, args=( q_output, ) )    # Define thread
-    t_readMagneto.daemon = True                                         # Set to daemon
-    t_readMagneto.start()                                               # Start thread
+    q_cpp_output = Queue( maxsize=0 )                                       # Define queue (this will have the magnetic field readings)
+    t_getData = Thread( target=getData, args=( q_cpp_output, ) )            # Define thread
+    t_getData.daemon = True                                                 # Set to daemon
+    t_getData.start()                                                       # Start thread
 
-    initialGuess = findIG(getData(q_output))                            # Determine initial guess based on magnet's location
+    initialGuess = findIG(get_array(q_cpp_output))                          # Determine initial guess based on magnet's location
 
-# Error handling in case serial communcation fails (2/2)
+# Error handling in case thread spawning fails (2/2)
 except Exception as e:
-    print( "Could NOT create thread. Check .cpp")
+    print( "Could NOT create thread, check .cpp")
     print( "Error type {}".format(type(e))      )
     print( "Error Arguments {}".format(e.args)  )
     sleep( 2.5 )
-    quit()                                                              # Shutdown entire program
+    quit()                                                                  # Shutdown entire program
 
 
 # ************************************************************************
@@ -324,46 +356,45 @@ print( "GO!" )
 # Start iteration
 while( True ):
 
-    start = time()                                                      # Call clock() for accurate time readings
-    
+    start = time()                                                          # Call clock() for accurate time readings
+
     # Data acquisition
-    (H1, H2, H3, H4) = getData(q_output)                                # Get data from MCU
+    (H1, H2, H3, H4) = get_array(q_cpp_output)                              # Get data from .cpp program
     
     # Compute norms
-    HNorm = [ float(norm(H1)), float(norm(H2)),                         # Compute norms
-              float(norm(H3)), float(norm(H4)) ]                        # ...
+    HNorm = [ float(norm(H1)), float(norm(H2)),                             # Compute norms
+              float(norm(H3)), float(norm(H4)) ]                            # ...
 
     # Solve system of equations
-    sol = root(LHS, initialGuess, args=(K, HNorm), method='lm',         # Invoke solver using the
-               options={'ftol':1e-10, 'xtol':1e-10, 'maxiter':1000,     # Levenberg-Marquardt 
-                        'eps':1e-8, 'factor':0.001})                    # Algorithm (aka LMA)
+    sol = root(LHS, initialGuess, args=(K, HNorm), method='lm',             # Invoke solver using the
+               options={'ftol':1e-10, 'xtol':1e-10, 'maxiter':1000,         # Levenberg-Marquardt 
+                        'eps':1e-8, 'factor':0.001})                        # Algorithm (aka LMA)
 
     # Store solution in array
-    position = np.array( (sol.x[0]*1000,                                # x-axis
-                          sol.x[1]*1000,                                # y-axis
-                          sol.x[2]*1000,                                # z-axis
-                          time()-start  ), dtype='float64' )            # time
+    position = np.array( (sol.x[0]*1000,                                    # x-axis
+                          sol.x[1]*1000,                                    # y-axis
+                          sol.x[2]*1000,                                    # z-axis
+                          time()-start  ), dtype='float64' )                # time
 
     # Check value
-    if( position[2] < 0 ): position[2] = -1*position[2]                 # Make sure z-value
-    else: pass                                                          # ... is ALWAYS +ve
+    if( position[2] < 0 ): position[2] = -1*position[2]                     # Make sure z-value
+    else: pass                                                              # ... is ALWAYS +ve
 
     # Print solution (coordinates) to screen
-    print( "(x, y, z, t): (%.3f, %.3f, %.3f, %.3f)" %( position[0],
-                                                       position[1],
-                                                       position[2],
-                                                       position[3] ) )
+    solution_str = "(x, y, z, t): ({:.3f}, {:.3f}, {:.3f}, {:.3f})"         # ...
+    print( solution_str.format( position[0], position[1],                   # Print solution
+                                position[2], position[3] ) )                # ...
 
-    sleep( 0.1 )                                                        # Sleep for stability
+    sleep( 0.1 )                                                            # Sleep for stability
 
     # Check if solution makes sense
     if (abs(sol.x[0]*1000) > 500) or (abs(sol.x[1]*1000) > 500) or (abs(sol.x[2]*1000) > 500):
-        initialGuess = findIG( getData(q_output) )                      # Determine initial guess based on magnet's location
+        initialGuess = findIG( get_array(q_cpp_output) )                    # Determine initial guess based on magnet's location
 
     # Update initial guess with current position and feed back to solver
     else:    
-        initialGuess = np.array( (sol.x[0]+dx, sol.x[1]+dx,             # Update the initial guess as the
-                                  sol.x[2]+dx), dtype='float64' )       # current position and feed back to LMA
+        initialGuess = np.array( (sol.x[0]+dx, sol.x[1]+dx,                 # Update the initial guess as the
+                                  sol.x[2]+dx), dtype='float64' )           # current position and feed back to LMA
 
 # ************************************************************************
 # =============================> DEPRECATED <=============================
