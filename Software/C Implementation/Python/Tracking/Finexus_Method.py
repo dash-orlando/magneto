@@ -10,14 +10,21 @@
 *               get the most up to data magnetic field readings)
 *   - ADDED   : Determine direction and number of revolutions
 *
+*
+* VERSION: 0.4.5
+*   - MODIFIED: direction and revolution calculations are based on polar
+*               co-ordinates
+*
 * KNOWN ISSUES:
-*   - Counter increments/decrements per half revolution (by design...for now)
+*   - Can't determine whether we completed a FULL revolution
+*     or just crossed the 180degree mark.
+*       NOTE: arctan( y, x ) has a domain of [-pi, pi)
 *
 * AUTHOR                    :   Edward Nichols
 * LAST CONTRIBUTION DATE    :   Sep. 29th, 2017 Year of Our Lord
 * 
 * AUTHOR                    :   Mohammad Odeh 
-* LAST CONTRIBUTION DATE    :   Oct. 15th, 2018 Year of Our Lord
+* LAST CONTRIBUTION DATE    :   Oct. 16th, 2018 Year of Our Lord
 *
 '''
 
@@ -37,12 +44,15 @@ import  pexpect                                             # Spawn programs
 # ************************************************************************
 ap = argparse.ArgumentParser()
 
-ap.add_argument("-d", "--debug", action='store_true',
-                help="invoke flag to enable debugging")
+ap.add_argument( "-d", "--debug", action = 'store_true',
+                 help = "Debugging flag" )
+ap.add_argument( "-v", "--verbose", action = 'store_true',
+                 help = "Print EVERYTHING!!!")
 
 args = vars( ap.parse_args() )
 
 args["debug"]   = False
+args["verbose"] = False
 
 # ************************************************************************
 # =====================> DEFINE NECESSARY FUNCTIONS <====================*
@@ -111,7 +121,7 @@ def getData( queue ):
 
     for line in magneto:
         out = line.strip('\n\r')
-        if( args["debug"] ): print( out )
+        if( args["verbose"] ): print( out )
         
         with queue.mutex:                                                   # Clear queue. This is done because we are placing items in the queue
             queue.queue.clear()                                             # faster than we are using, which causes our calculations to lag behind
@@ -200,7 +210,8 @@ def LHS( root, K, norms ):
     Recall that in order to solve a system numerically it
     must have the form of,
     
-                >$\  f(x, y, z, ...) = LHS = 0
+          if    >$\  LHS = f(x, y, z, ...) = g(x, y, z, ...) = RHS
+          then  >$\  f(x, y, z, ...) - g(x, y, z, ...) = LHS - RHS = 0
     
     INPUTS:
         - root  : A numpy array contating the initial guesses of the roots
@@ -295,38 +306,60 @@ def findIG( magFields ):
 
 # --------------------------
 
-def compute_rotation( position_crnt ):
+def compute_rotation( position_crnt, TOL = 1e-6 ):
     '''
     Compute rotations and direction
     '''
     global position_prvs, revolutions
-    
-    x, y, z, _ = position_crnt                                              # Unpack data
-    X, Y, Z, _ = position_prvs                                              # ...
 
-    if( (y < 0 and x > X) or (y > 0 and x < X) ):                           # In case we are going CCW
-        print( "We are moving CCW" )                                        # ...
-        if( (y < 0 and Y > 0) or (y > 0 and Y < 0 ) ):                      #   In case we completed a revolution (detects x-axis crossings)
+    r, theta = position_crnt                                                # Unpack data
+    R, THETA = position_prvs                                                # ...
+
+    if( theta >= -np.pi and THETA <= np.pi ):                               # Limit ourselves to atan2(y, x) domain
+        if ( theta - THETA < -5 ):                                          #   In case we are going CCW
             revolutions -= 1                                                #       Decrement revolutions counter
-
-    elif( (y < 0 and x < X) or (y > 0 and x > X) ):                         # In case we are going CW
-        print( "We are moving CW" )                                         # ...
-        if( (y < 0 and Y > 0) or (y > 0 and Y < 0 ) ):                      #   In case we completed a revolution (detects x-axis crossings)
+            print( "We are moving CCW" )                                    #       ...
+            print( " Number of revolutions: {}".format(revolutions) )       #       ...
+            
+        elif ( theta - THETA > 5 ):                                         #   In case we are going CW
             revolutions += 1                                                #       Increment revolutions counter
+            print( "We are moving CW" )                                     #       ...
+            print( " Number of revolutions: {}".format(revolutions) )       #       ..
 
-    else:                                                                   # This will NEVER happen
-        print( "We are staying still" )                                     # ...
-
-    print( " Number of revolutions: {}".format(revolutions) )
     position_prvs = position_crnt                                           # Update PAST variable
-    
+
+
+# --------------------------
+
+def convert_to_polar( cartesian_coordinates ):
+    '''
+    Convert cartesian to polar coordinates
+
+    INPUTS:
+        - cartesian_coordinates: Cartesian coordinates in the form (x, y, z, t)
+
+    OUTPUT:
+        - r     : The radius at which the magnet is found
+        - theta : The angle  at which the magnet is found
+    '''
+
+    x, y, z, _  = cartesian_coordinates
+
+    r           = np.sqrt( x**2 + y**2 )
+    theta       = np.arctan2( y, x )
+
+    if( args["debug"] or args["verbose"] ):
+        print( "r = {}, theta = {}".format(r, theta) )
+
+    return( r, theta )
+
 # ************************************************************************
 # ===========================> SETUP PROGRAM <===========================
 # ************************************************************************
 
 # Define useful variables/parameters
 global position_prvs, revolutions                                           # Used to store previous position readings ...
-position_prvs   = 0, 0, 0, 0                                                # ... used for determining direction ...
+position_prvs   = 0, 0                                                      # ... used for determining direction ...
 revolutions     = 0                                                         # ... and number of revolutions
 
 # Define the position of the sensors on the grid
@@ -346,10 +379,10 @@ revolutions     = 0                                                         # ..
 #           |         o SEN1 <-(X1, Y1, Z1)
 #           v
 
-X1, Y1, Z1 =  40e-3, -40e-3,  00e-3                                         # Position of sensor 1
-X2, Y2, Z2 =  80e-3,  00e-3,  00e-3                                         # Position of sensor 2
-X3, Y3, Z3 =  40e-3,  40e-3,  00e-3                                         # Position of sensor 3
-X4, Y4, Z4 =  00e-3,  00e-3,  00e-3                                         # Position of sensor 4 (ORIGIN)
+X1, Y1, Z1 =  00e-3, -40e-3,  00e-3                                         # Position of sensor 1
+X2, Y2, Z2 =  40e-3,  00e-3,  00e-3                                         # Position of sensor 2
+X3, Y3, Z3 =  00e-3,  40e-3,  00e-3                                         # Position of sensor 3
+X4, Y4, Z4 = -40e-3,  00e-3,  00e-3                                         # Position of sensor 4 (ORIGIN)
 
 # Choose the magnet we want to track
 ##K           = 1.615e-7                                                      # Small magnet's constant   (K) || Units { G^2.m^6}
@@ -414,9 +447,10 @@ while( True ):
     else: pass                                                              # ... is ALWAYS +ve
 
     # Print solution (coordinates) to screen
-    solution_str = "(x, y, z, t): ({:.3f}, {:.3f}, {:.3f}, {:.3f})"         # ...
-    print( solution_str.format( position[0], position[1],                   # Print solution
-                                position[2], position[3] ) )                # ...
+    if( args["verbose"] ):
+        solution_str = "(x, y, z, t): ({:.3f}, {:.3f}, {:.3f}, {:.3f})"     # ...
+        print( solution_str.format( position[0], position[1],               # Print solution
+                                    position[2], position[3] ) )            # ...
 
     sleep( 0.1 )                                                            # Sleep for stability
 
@@ -428,8 +462,8 @@ while( True ):
     else:    
         initialGuess = np.array( (sol.x[0]+dx, sol.x[1]+dx,                 # Update the initial guess as the
                                   sol.x[2]+dx), dtype='float64' )           # current position and feed back to LMA
-
-        compute_rotation( position )                                        # Compute how many rotations we've done and direction
+        
+        compute_rotation( convert_to_polar( position ) )                    # Compute how many rotations we've done and direction
 
 # ************************************************************************
 # =============================> DEPRECATED <=============================
