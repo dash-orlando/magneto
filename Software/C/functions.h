@@ -4,3 +4,4 @@
 #include "filter.h"
 #include "orientRead.h"
 #include "calibrate.h"
+#include "system_of_eqns.h"

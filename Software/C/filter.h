@@ -16,13 +16,15 @@
 
 #define ALPHA     0.25
 
-static double exp_avg[NSENS][NAXES] =  { 0 };  //  {4x, 4y, 4z}
+static double exp_avg[NSENS][NAXES] =  { 0 }; 	// { 	1x,  	1y,  	1z}
+												// 				...
+												// {NSENSx, NSENSy, NSENSz}
 
 // ============================  EMA Filter  ===========================
 double ema_filter( double current_value, uint8_t sens, uint8_t axis )
 {
   // Filter data
-  exp_avg[sens][axis] = ALPHA*current_value + (1 - ALPHA)*exp_avg[sens][axis];
+  exp_avg[sens][axis] = ALPHA*current_value + (1 - ALPHA)*exp_avg[RAW][axis];
 
   // Return Filtered data
   return( exp_avg[sens][axis] );
