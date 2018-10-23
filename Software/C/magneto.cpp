@@ -9,6 +9,11 @@
 #include "LSM9DS1.h"
 #include <wiringPi.h>
 
+#include <math.h>
+#include <float.h>
+
+#include "levmar.h"
+
 // System parameters
 #define NSENS     					4                                       	// Number of sensors
 #define NAXES     					3                                       	// Number of axes
@@ -22,11 +27,12 @@
 LSM9DS1 imuHI( IMU_MODE_I2C, LSM9DS1_AG_HIGH, LSM9DS1_M_HIGH );					// Odd  sensors
 LSM9DS1 imuLO( IMU_MODE_I2C, LSM9DS1_AG_LOW , LSM9DS1_M_LOW  );					// Even sensors
 
+double CAL[NSENS][NAXES] 	= {0}; 												// CALIBRATED (RAW - BASE) readings
+double norm[ NSENS ] 		= {0}; 												// L2-norm
+
 // Call auxiliary functions library
 #include "functions.h"
 
-double CAL[NSENS][NAXES] 	= {0}; 												// CALIBRATED (RAW - BASE) readings
-double norm[ NSENS ] 		= {0}; 												// L2-norm
 
 int main( int argc, char *argv[] )
 {
@@ -53,6 +59,11 @@ int main( int argc, char *argv[] )
 		} calibrateIMU( i ); 													// Perform user-defined calibration routine
 	}
     
+    // Setup solver
+    opts[0]=LM_INIT_MU; opts[1]=1E-15; opts[2]=1E-15; opts[3]=1E-20;
+	opts[4]= LM_DIFF_DELTA; // relevant only if the Jacobian is approximated using finite differences; specifies forward differencing
+	//opts[4]=-LM_DIFF_DELTA; // specifies central differencing to approximate Jacobian; more accurate but more expensive to compute!
+	
 	// Infinite loop after setup is complete
     for( ;; )
     {
@@ -68,7 +79,7 @@ int main( int argc, char *argv[] )
 		}
 		
 		// Reset norms array
-		for( uint8_t i = 0, i < NSENS; i++ )
+		for( uint8_t i = 0; i < NSENS; i++ )
 		{
 			norm[i] = 0;
 		}
@@ -101,23 +112,24 @@ int main( int argc, char *argv[] )
 			norm[ i ] = sqrt( norm[i] ); 										// 	Compute norm (2/2)
 		}
 		strcat( buff, ">" );                                        			// SOH indicator
-		printf( "%s\n", buff );                                        			// Print final OUTPUT string
+		//printf( "%s\n", buff );                                        			// Print final OUTPUT string
 		
 		
-		ret=dlevmar_dif(system_of_eqns, p, x, m, n, 1000, opts, info, NULL, NULL, NULL);  // no Jacobian
+		ret=dlevmar_dif(system_of_eqns, p, eqn, m, n, 1000, opts, info, NULL, NULL, NULL);  // no Jacobian
 		
-		printf("Results:-\n");
-		printf("Levenberg-Marquardt returned %d in %g iter, reason %g\nSolution: ", ret, info[5], info[6]);
+		//~ printf("Results:-\n");
+		//~ printf("Levenberg-Marquardt returned %d in %g iter, reason %g\nSolution: ", ret, info[5], info[6]);
 		for(int i=0; i<m; ++i)
 		{
-			printf("%.7g ", p[i]);
+			printf("%.7g ", p[i]*1000);
 		}
 		
-		printf("\n\nMinimization info:-\n");
-		for(int i=0; i<LM_INFO_SZ; ++i)
-		{
-			printf("%g ", info[i]);
-		} printf("\n");
+		//~ printf("\n\nMinimization info:-\n");
+		//~ for(int i=0; i<LM_INFO_SZ; ++i)
+		//~ {
+			//~ printf("%g ", info[i]);
+		//~ }
+		printf("\n");
 		
     } exit(EXIT_SUCCESS);
 }

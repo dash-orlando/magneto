@@ -24,7 +24,7 @@ static double exp_avg[NSENS][NAXES] =  { 0 }; 	// { 	1x,  	1y,  	1z}
 double ema_filter( double current_value, uint8_t sens, uint8_t axis )
 {
   // Filter data
-  exp_avg[sens][axis] = ALPHA*current_value + (1 - ALPHA)*exp_avg[RAW][axis];
+  exp_avg[sens][axis] = ALPHA*current_value + (1 - ALPHA)*exp_avg[sens][axis];
 
   // Return Filtered data
   return( exp_avg[sens][axis] );

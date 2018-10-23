@@ -4,20 +4,18 @@
 
 #include <wiringPi.h>
 #include <math.h>
+#include <float.h>
+
+#include "levmar.h"
 
 #define K 			1.09e-6 		// Big Ol' Magnet's constant (K) || Units { G^2.m^6}
 
-register int i, j; 					// Counters
 int ret; 							// Number of iterations it takes to converge
 double 	p[3], 						// Initial guess. 5 is max(2, 3, 5)
 		eqn[3]; 					// Equations array. 16 is max(2, 3, 5, 6, 16)
 int m = NAXES, n = NSENS; 			// Number of unknowns, number of equations
 double 	opts[LM_OPTS_SZ],
 		info[LM_INFO_SZ];
-
-opts[0]=LM_INIT_MU; opts[1]=1E-15; opts[2]=1E-15; opts[3]=1E-20;
-opts[4]= LM_DIFF_DELTA; // relevant only if the Jacobian is approximated using finite differences; specifies forward differencing
-//opts[4]=-LM_DIFF_DELTA; // specifies central differencing to approximate Jacobian; more accurate but more expensive to compute!
 
 /*
 # Define the position of the sensors on the grid
@@ -54,15 +52,16 @@ void system_of_eqns( double *p, double *eqn, int m, int n, void *data )
 			y = p[1], 															// Unpack initial guesses
 			z = p[2]; 															//
 			
-	double r1 = sqrt( (x - X1)**2. + (y - Y1)**2. + (z - Z1)**2. ); 			// Sensor 1
-    double r2 = sqrt( (x - X2)**2. + (y - Y2)**2. + (z - Z2)**2. );				// Sensor 2
-    double r3 = sqrt( (x - X3)**2. + (y - Y3)**2. + (z - Z3)**2. );				// Sensor 3
-    double r4 = sqrt( (x - X4)**2. + (y - Y4)**2. + (z - Z4)**2. );				// Sensor 4 (ORIGIN)
+	double r1 = sqrt( (x - X1)*(x - X1) + (y - Y1)*(y - Y1) + (z - Z1)*(z - Z1) ); 		// Sensor 1
+    double r2 = sqrt( (x - X2)*(x - X2) + (y - Y2)*(y - Y2) + (z - Z2)*(z - Z2) );		// Sensor 2
+    double r3 = sqrt( (x - X3)*(x - X3) + (y - Y3)*(y - Y3) + (z - Z3)*(z - Z3) );		// Sensor 3
+    double r4 = sqrt( (x - X4)*(x - X4) + (y - Y4)*(y - Y4) + (z - Z4)*(z - Z4) );		// Sensor 4 (ORIGIN)
 
     // Construct the equations
-    eqn[0] = ( K*( r1 )**(-6.) * ( 3.*( z/r1 )**2. + 1 ) ) - norm[0]**2.     	// Sensor 1
-    eqn[1] = ( K*( r2 )**(-6.) * ( 3.*( z/r2 )**2. + 1 ) ) - norm[1]**2.     	// Sensor 2
-    eqn[2] = ( K*( r3 )**(-6.) * ( 3.*( z/r3 )**2. + 1 ) ) - norm[2]**2.     	// Sensor 3
-    eqn[3] = ( K*( r4 )**(-6.) * ( 3.*( z/r4 )**2. + 1 ) ) - norm[3]**2.     	// Sensor 4
+    eqn[0] = ( K*intpow( r1, -6 ) * ( 3.*( z/r1 )*( z/r1 ) + 1 ) ) - norm[0]*norm[0];    // Sensor 1
+    eqn[1] = ( K*intpow( r2, -6 ) * ( 3.*( z/r2 )*( z/r2 ) + 1 ) ) - norm[1]*norm[1];    // Sensor 2
+    eqn[2] = ( K*intpow( r3, -6 ) * ( 3.*( z/r3 )*( z/r3 ) + 1 ) ) - norm[2]*norm[2];    // Sensor 3
+    eqn[3] = ( K*intpow( r4, -6 ) * ( 3.*( z/r4 )*( z/r4 ) + 1 ) ) - norm[3]*norm[3];    // Sensor 4
+    
     
 }
