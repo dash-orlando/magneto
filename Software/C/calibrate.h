@@ -51,8 +51,16 @@ void calibrateIMU( uint8_t whichPair )
       BASE[n_LO][0] = hold[3] / CALIBRATION_INDEX;             					// Compute the calibration (BASE)
       BASE[n_LO][1] = hold[4] / CALIBRATION_INDEX;             					// values for the Low sensors
       BASE[n_LO][2] = hold[5] / CALIBRATION_INDEX;             					// ...
+      
+      printf( "Calibration offsets for sensor %i:-\n", n_HI+1 );
+	  printf( "x=%.5lf, y=%.5lf, z=%.5lf\n", BASE[n_HI][0], BASE[n_HI][1], BASE[n_HI][2] );
+
+	  printf( "Calibration offsets for sensor %i:-\n", n_LO+1 );
+	  printf( "x=%.5lf, y=%.5lf, z=%.5lf\n", BASE[n_LO][0], BASE[n_LO][1], BASE[n_LO][2] );
+  
     }
   }
 
   printf( "Calibration success for pair: %i\n", whichPair );
+  
 }

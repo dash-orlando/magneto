@@ -30,26 +30,36 @@ void find_max_norm( double arr[], int arr_size, uint8_t* index )
         /* If current element is smaller than first*/
         if(arr[i] > first) 
         { 
-            third	= second; 
-            second 	= first ; 
-            first 	= arr[i]; 
-			index[0]= i 	; 	// Place highest array index here
+            third	= second; 		// Make the old 2nd max the new 3rd max
+            second 	= first ; 		// Make the old 1st max the new 2nd max
+            first 	= arr[i]; 		// This is the new 1st max
+            
+            index[2]=index[1]; 		// Make index of the old 2nd max as the new 3rd max
+            index[1]=index[0]; 		// Make index of the old 1st max as the new 2ndd max
+			index[0]= i 	 ; 		// Place 1st highest array index here
 			
         } 
    
         /* If arr[i] is in between first and second then update second  */
         else if( arr[i] > second ) 
         { 
-            third	= second; 
-            second 	= arr[i];
-			index[1]= i 	; 	// Place second highest array index here
+            third	= second; 		// Make the old 2nd max the new 3rd max
+            second 	= arr[i]; 		// This is the new 2nd max
+            
+            index[2]=index[1]; 		// Make index of the old 2nd max as the new 3rd max
+			index[1]= i 	; 		// Place 2nd highest array index here
         } 
    
         else if( arr[i] > third )
 		{
-            third 	= arr[i];
-			index[2]= i 	; 	// Place third highest array ndex here
+            third 	= arr[i]; 		// This is the new 3rd max
+            
+			index[2]= i		; 		// Place 3rd highest array ndex here
 		}
-    } 
-    printf( "Three largest elements are %d %d %d\n", first, second, third );
+    }
+    
+    #ifdef DEBUG
+	    printf( "Three largest elements are %.5f %.5lf %.5lf\n", first, second, third );
+	    printf( "Corresponds to sensors: %i, %i, %i\n", index[0]+1, index[1]+1, index[2]+1 );
+	#endif
 }

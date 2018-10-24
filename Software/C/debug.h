@@ -5,35 +5,29 @@
  * INPUTS:-
  * 		- double mag_field: CALIBRATED magnetic field readings
  * 		- uint8_t SENS_NDX: The 'i', or senseors', counter. 	\ Both of theses guys are used to determine the
- * 		- uint8_t AXES_NDX: The 'j', or axes', counter. 		/ start and end of the char array and when to print.
+ * 		- uint8_t AXES_NDX: The 'j', or axes', counter. 		/ end of the char array and when to print.
  *
  * OUTPUT:-
  * 		- NONE
  */
 #include <stdio.h>
 
-void print_mag( double mag_field, uint8_t SENS_NDX, uint8_t AXES_NDX )
+void print_mag( char* char_buff, double mag_field, uint8_t SENS_NDX, uint8_t AXES_NDX )
 {	
-	if( SENS_NDX == 0 && AXES_NDX == 0 )
-	{
-		char    buff[156] = {'\0'};                                 			// String buffer
-		strcat( buff, "<" );                                        			// SOH indicator
-	}
-	
 	char temp[ 9 ] = {'\0'};													// Array to hold CALIBRATED readings
 	if( mag_field >= 0 ) snprintf( temp, 7+1, "%.5lf", mag_field );				// Formatting in case of positive reading
 	else 				 snprintf( temp, 8+1, "%.5lf", mag_field );				// Formatting in case of negative reading
 
-	strcat( buff, temp ); 														// Append CALIBRATED array to output buffer
+	strcat( char_buff, temp ); 													// Append CALIBRATED array to output buffer
 	
 	if( SENS_NDX == NSENS - 1 && AXES_NDX == NAXES - 1 )
 	{
-		strcat( buff, ">" );                                        			// SOH indicator
-		printf( "%s\n", buff );                                        			// Print final OUTPUT string
+		strcat( char_buff, ">" );                                        		// SOH indicator
+		printf( "%s\n", char_buff );                                        	// Print final OUTPUT string
 	}
 	else
 	{
-		strcat( buff, "," ); 													// Add delimiter
+		strcat( char_buff, "," ); 												// Add delimiter
 	}
 }
 
