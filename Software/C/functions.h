@@ -6,3 +6,5 @@
 #include "calibrate.h"
 #include "intpow.h"
 #include "system_of_eqns.h"
+#include "debug.h"
+#include "find_max_norm.h"

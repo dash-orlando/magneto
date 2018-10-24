@@ -78,58 +78,35 @@ int main( int argc, char *argv[] )
 			orientRead( i );                                  					// Reorient readings and push to the array
 		}
 		
-		// Reset norms array
-		for( uint8_t i = 0; i < NSENS; i++ )
-		{
-			norm[i] = 0;
-		}
-		
-		// Print data
-		char    buff[156] = {'\0'};                                 			// String buffer
-		strcat( buff, "<" );                                        			// SOH indicator
+		// Compute CALIBRATED readings + norm
+		memset( norm, 0.0, NSENS*sizeof(norm) );								// Reset norms array
 		for( uint8_t i = 0; i < NSENS; i++ ) 									// Loop over sensors
 		{																		// ...
 			for( uint8_t j = 0; j < NAXES; j++ ) 								//	Loop over axes
 			{																	// 	...
-				char temp[ 9 ] = {'\0'};										// 	Array to hold calibrated readings
 				CAL[i][j] = RAW[i][j] - BASE[i][j]; 							// 	Store CALIBRATED readings
 				norm[ i ] += CAL[i][j] * CAL[i][j]; 							// 	Compute norm (1/2)
-				if( CAL[i][j] >= 0 ) 											// 	Formatting in case of positive reading
-				{
-					snprintf( temp, 7+1, "%.5lf", CAL[i][j] );
-				}
-				else 															// 	Formatting in case of negative reading
-				{
-					snprintf( temp, 8+1, "%.5lf", CAL[i][j] );
-				}
-				strcat( buff, temp ); 											// 	Append calibrated array to output buffer
 				
-				if( i == NSENS - 1 && j == NAXES - 1 )
-					continue;
-				else
-					strcat( buff, "," ); 										// 	Add delimiter
+				#ifdef DEBUG
+					print_mag( CAL[i][j], i, j ); 								// Construct & print mag field array data
+				#endif
 			}
 			norm[ i ] = sqrt( norm[i] ); 										// 	Compute norm (2/2)
 		}
-		strcat( buff, ">" );                                        			// SOH indicator
-		//printf( "%s\n", buff );                                        			// Print final OUTPUT string
 		
+		// Run the LMA to estimate the position of the magnet
+		ret=dlevmar_dif(system_of_eqns, init_guess, sensor_eqn, m, n, 1000, opts, info, NULL, NULL, NULL);  // no Jacobian
 		
-		ret=dlevmar_dif(system_of_eqns, p, eqn, m, n, 1000, opts, info, NULL, NULL, NULL);  // no Jacobian
-		
-		//~ printf("Results:-\n");
-		//~ printf("Levenberg-Marquardt returned %d in %g iter, reason %g\nSolution: ", ret, info[5], info[6]);
-		for(int i=0; i<m; ++i)
-		{
-			printf("%.7g ", p[i]*1000);
-		}
-		
-		//~ printf("\n\nMinimization info:-\n");
-		//~ for(int i=0; i<LM_INFO_SZ; ++i)
-		//~ {
-			//~ printf("%g ", info[i]);
-		//~ }
-		printf("\n");
+		#ifdef DEBUG
+			print_lm_verbose();
+		#else
+			// Note to self: figure out why developers don't care for/use init_guess[0]
+			// What is in init_guess[0]?
+			for( uint8_t i = 0; i < m; ++i )
+			{
+				printf( "%.7g ", init_guess[i]*1000 );
+			} 	printf( "\n" );
+		#endif
 		
     } exit(EXIT_SUCCESS);
 }
