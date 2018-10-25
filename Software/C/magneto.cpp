@@ -20,6 +20,9 @@
 // System parameters
 #define NSENS     					4                                       	// Number of sensors
 #define NAXES     					3                                       	// Number of axes
+#define X_LIM 						500 										// Boundary limits
+#define Y_LIM 						500 										// Boundary limits
+#define Z_LIM 						500 										// Boundary limits
 
 #define LSM9DS1_M_HIGH             	0x1E                    					// SDO_M on these IMU's are HIGH
 #define LSM9DS1_AG_HIGH            	0x6B                    					// SDO_AG on these IMU's are HIGH 
@@ -62,12 +65,19 @@ int main( int argc, char *argv[] )
 			exit( EXIT_FAILURE );
 		} calibrateIMU( i ); 													// Perform user-defined calibration routine
 	}
+	
+	find_max_norm( norm, NSENS, ndx );											// Find sorted indices of sensors with maximum norms
+	find_init_guess( init_guess, NAXES, XYZ, ndx ); 							// Find initial guess
     
 	// Setup solver
 	opts[0]=LM_INIT_MU; opts[1]=1E-15; opts[2]=1E-15; opts[3]=1E-20;
 	opts[4]= LM_DIFF_DELTA; // relevant only if the Jacobian is approximated using finite differences; specifies forward differencing
 	//opts[4]=-LM_DIFF_DELTA; // specifies central differencing to approximate Jacobian; more accurate but more expensive to compute!
-	
+
+// ---------------------------------------------------------------------------------------------
+// --------------------------------- INFINITE LOOP STARTS HERE ---------------------------------
+// ---------------------------------------------------------------------------------------------
+
 	// Infinite loop after setup is complete
 	for( ;; )
 	{
@@ -101,23 +111,34 @@ int main( int argc, char *argv[] )
 					print_mag( buff, CAL[i][j], i, j ); 						// 		Construct & print mag field array data
 				#endif
 			}
-			norm[ i ] = sqrt( norm[i] ); 										// 	Compute norm (2/2)
-		} 
-		find_max_norm( norm, NSENS, ndx );										// Find indices of sensors with maximum norms
-		bubbleSort( ndx, NAXES ); 												// Sort indices of said sensors
+			norm[ i ] = sqrt( norm[i] ); 										// Compute norm (2/2)
+		} 	find_max_norm( norm, NSENS, ndx );									// Find sorted indices of sensors with maximum norms
 		
 		// Run the LMA to estimate the position of the magnet
 		ret=dlevmar_dif(system_of_eqns, init_guess, sensor_eqn, m, n, 1000, opts, info, NULL, NULL, NULL);  // no Jacobian
+		
 		unsigned int end_time = millis() - t;
-		#ifdef DEBUG
-			print_lm_verbose();
-		#else
-			for( uint8_t i = 0; i < m; ++i )
-			{
-				printf( "p[%i] = %.3lf ", i, init_guess[i]*1000 );
-				init_guess[i] =+ dx;
-			} 	printf( " t = %i", end_time ); printf( "\n" );
-		#endif
+		
+		// Bound solution to a predetermined volume
+		if( fabs(init_guess[0]*1e3) > X_LIM || fabs(init_guess[0]*1e3) > X_LIM || fabs(init_guess[0]*1e3) > X_LIM )
+		{
+			find_max_norm( norm, NSENS, ndx );									// Find sorted indices of sensors with maximum norms
+			find_init_guess( init_guess, NAXES, XYZ, ndx ); 					// Find initial guess
+			printf( "Out of bounds. Finding initial guess.\n" );
+		}
+		
+		else
+		{
+			#ifdef DEBUG
+				print_lm_verbose();
+			#else
+				for( uint8_t i = 0; i < m; ++i )
+				{
+					printf( "p[%i] = %.3lf ", i, init_guess[i]*1000 );
+					init_guess[i] =+ dx;
+				} 	printf( " t = %i", end_time ); printf( "\n" );
+			#endif
+		}
 		
 	} exit(EXIT_SUCCESS);
 }

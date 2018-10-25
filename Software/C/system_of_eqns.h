@@ -49,10 +49,10 @@ double 	opts[LM_OPTS_SZ],
 #           |         o SEN1 <-(X1, Y1, Z1)
 #           v
 */
-double 	X1 =  00e-3, Y1 = -40e-3, Z1 =  00e-3; 											
-double 	X2 =  40e-3, Y2 =  00e-3, Z2 =  00e-3;                      					// Position of sensor 2
-double 	X3 =  00e-3, Y3 =  40e-3, Z3 =  00e-3;                      					// Position of sensor 3
-double 	X4 = -40e-3, Y4 =  00e-3, Z4 =  00e-3;                      					// Position of sensor 4 (ORIGIN)
+//~ double 	X1 =  00e-3, Y1 = -40e-3, Z1 =  00e-3; 											
+//~ double 	X2 =  40e-3, Y2 =  00e-3, Z2 =  00e-3;                      					// Position of sensor 2
+//~ double 	X3 =  00e-3, Y3 =  40e-3, Z3 =  00e-3;                      					// Position of sensor 3
+//~ double 	X4 = -40e-3, Y4 =  00e-3, Z4 =  00e-3;                      					// Position of sensor 4 (ORIGIN)
 
 double XYZ[NSENS][NAXES] = { { 00e-3, -40e-3,  00e-3},									// Position of sensor 1
 							 { 40e-3,  00e-3,  00e-3},									// Position of sensor 2
