@@ -68,6 +68,14 @@ int main( int argc, char *argv[] )
 	
 	find_max_norm( norm, NSENS, ndx );											// Find sorted indices of sensors with maximum norms
 	find_init_guess( init_guess, NAXES, XYZ, ndx ); 							// Find initial guess
+	
+	// Create logfile
+	FILE *logfile = fopen( "output.txt", "w" ); 								// Open file for writing
+	if( logfile == NULL )
+	{
+		printf( "ERROR! Could not open file\n" );
+		exit( -1 );
+	}
     
 	// Setup solver
 	opts[0]=LM_INIT_MU; opts[1]=1E-15; opts[2]=1E-15; opts[3]=1E-20;
@@ -134,9 +142,10 @@ int main( int argc, char *argv[] )
 			#else
 				for( uint8_t i = 0; i < m; ++i )
 				{
-					printf( "p[%i] = %.3lf ", i, init_guess[i]*1000 );
+					printf( "p[%i] = %.3lf ", i, init_guess[i]*1000 ); 			// Write to stdout
+					fprintf( logfile, "p[%i] = %.3lf ", i, init_guess[i]*1000 );// Write to file
 					init_guess[i] =+ dx;
-				} 	printf( " t = %i", end_time ); printf( "\n" );
+				} 	printf( " t = %i\n", end_time ); fprintf( logfile, " t = %i\n", end_time );
 			#endif
 		}
 		
