@@ -427,9 +427,10 @@ print( "... 1 " )       ; sleep( 1.0 )
 print( "GO!" )
 
 # Start iteration
+prog_start = time()
 while( True ):
 
-    start = time()                                                          # Call clock() for accurate time readings
+    loop_start = time()                                                     # Call clock() for accurate time readings
 
     # Data acquisition
     (H1, H2, H3, H4, H5, H6) = getData(IMU)                                 # Get data from MCU
@@ -448,7 +449,7 @@ while( True ):
     position = np.array( (sol.x[0]*1000,                                    # x-axis
                           sol.x[1]*1000,                                    # y-axis
                           sol.x[2]*1000,                                    # z-axis
-                          time()-start  ), dtype='float64' )                # time
+                          time() - loop_start  ), dtype='float64' )         # time
 
     # Check value
 ##    if( position[2] < 0 ): position[2] = -1*position[2]                     # Make sure z-value
@@ -462,11 +463,11 @@ while( True ):
     xe, ye, ze, length = find_end_effector( xm, ym, zm, Lt )
 
     # Print solution (coordinates) to screen
-    solution_str    = "(xm, ym, zm, xe, ye, ze, length, t): ({:.3f}, {:.3f}, {:.3f}, {:.3f}, {:.3f}, {:.3f}, {:.3f}, {:.3f})"          # ...
-    output_str      = "{:.3f}, {:.3f}, {:.3f}, {:.3f}, {:.3f}, {:.3f}, {:.3f}, {:.3f}"
-    print( solution_str.format( position[0], position[1], position[2], xe, ye, ze, length, position[3] ) )                          # ...
+    solution_str    = "(xm, ym, zm, xe, ye, ze, length, t): ({:.3f}, {:.3f}, {:.3f}, {:.3f}, {:.3f}, {:.3f}, {:.3f}, {:.3f}, {:.3f})"          # ...
+    output_str      = "{:.3f}, {:.3f}, {:.3f}, {:.3f}, {:.3f}, {:.3f}, {:.3f}, {:.3f}, {:.3f}"
+    print( solution_str.format( position[0], position[1], position[2], xe, ye, ze, length, position[3], (time() - prog_start) ) )                          # ...
     # Write data to file
-    f.write( output_str.format( position[0], position[1], position[2], xe, ye, ze, length, position[3] ) )
+    f.write( output_str.format( position[0], position[1], position[2], xe, ye, ze, length, position[3], (time() - prog_start) ) )
     f.write( '\n' )
 
     sleep( 0.1 )                                                            # Sleep for stability
