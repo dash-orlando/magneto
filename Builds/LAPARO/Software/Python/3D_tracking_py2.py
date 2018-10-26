@@ -389,13 +389,14 @@ dx          = 1e-7                                                          # Di
 Lt          = 318                                                               # length of the surgical tool
 
 # Establish connection with Arduino
-DEVC = "Arduino"                                # Device Name (not very important)
-PORT = 3                                       # Port number (VERY important)
-BAUD = 115200                                   # Baudrate    (VERY VERY important)
+DEVC        = "Arduino"                                                         # Device Name (not very important)
+PORTPREFIX  = "COM"
+PORTNUM     = 3                                                                 # Port number (VERY important)
+BAUD        = 115200                                                            # Baudrate    (VERY VERY important)
 
 # Error handling in case serial communcation fails (1/2)
 try:
-    IMU = createUSBPort( DEVC, PORT, BAUD )     # Create serial connection
+    IMU = createUSBPort( DEVC, PORTPREFIX, PORTNUM, BAUD )     # Create serial connection
     if IMU.is_open == False:                    # Make sure port is open
         IMU.open()
     print( "Serial Port OPEN" )
