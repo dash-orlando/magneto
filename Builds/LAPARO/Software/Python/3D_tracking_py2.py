@@ -414,11 +414,9 @@ except Exception as e:
 finally:
     # output file parameters
     date = localtime( time() )
-
-    name = "%d-%d-%d   %d_%d_%d.txt" %(date[1],date[2],date[0]%100,date[3],date[4],date[5])         #FileName = Month_Day_Year
-
-
-    f = open(name, 'w') 
+    name = "output/%d-%d-%d_%d-%d-%d.txt" %(date[1],date[2],date[0]%100,date[3],date[4],date[5])         #FileName = Month_Day_Year
+    f = open(name, 'w')
+    
 # ************************************************************************
 # =========================> MAKE IT ALL HAPPEN <=========================
 # ************************************************************************
@@ -464,9 +462,12 @@ while( True ):
     xe, ye, ze, length = find_end_effector( xm, ym, zm, Lt )
 
     # Print solution (coordinates) to screen
-    solution_str = "(xm, ym, zm, xe, ye, ze, length, t): ({:.3f}, {:.3f}, {:.3f}, {:.3f}, {:.3f}, {:.3f}, {:.3f}, {:.3f})"         # ...
-    print( solution_str.format( position[0], position[1],                   # Print solution
-                                position[2], xe, ye, ze, length, position[3] ) )                # ...
+    solution_str    = "(xm, ym, zm, xe, ye, ze, length, t): ({:.3f}, {:.3f}, {:.3f}, {:.3f}, {:.3f}, {:.3f}, {:.3f}, {:.3f})"          # ...
+    output_str      = "{:.3f}, {:.3f}, {:.3f}, {:.3f}, {:.3f}, {:.3f}, {:.3f}, {:.3f}"
+    print( solution_str.format( position[0], position[1], position[2], xe, ye, ze, length, position[3] ) )                          # ...
+    # Write data to file
+    f.write( output_str.format( position[0], position[1], position[2], xe, ye, ze, length, position[3] ) )
+    f.write( '\n' )
 
     sleep( 0.1 )                                                            # Sleep for stability
 
@@ -482,4 +483,4 @@ while( True ):
 # ************************************************************************
 # =============================> DEPRECATED <=============================
 # ************************************************************************
-#
+f.close()
