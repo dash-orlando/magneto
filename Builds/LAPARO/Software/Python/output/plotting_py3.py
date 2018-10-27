@@ -69,6 +69,61 @@ pos   = [(160,     263),
          (1291,    1415)]
 
 Npos = len(pos)
+
+# statistics
+xm_mean = []
+ym_mean = []
+zm_mean = []
+xe_mean = []
+ye_mean = []
+ze_mean = []
+xm_std  = []
+ym_std  = []
+zm_std  = []
+xe_std  = []
+ye_std  = []
+ze_std  = []
+xm_se   = []
+ym_se   = []
+zm_se   = []
+xe_se   = []
+ye_se   = []
+ze_se   = []
+
+
+for i in range( 0, Npos ):
+    data_len = pos[i][1]-pos[i][0]                              # number of data points (n)
+
+    # means
+    ## magnet
+    xm_mean.append( np.mean( xm[pos[i][0]:pos[i][1]] )  )
+    ym_mean.append( np.mean( ym[pos[i][0]:pos[i][1]] )  )
+    zm_mean.append( np.mean( zm[pos[i][0]:pos[i][1]] )  )
+    ## end effector
+    xe_mean.append( np.mean( xe[pos[i][0]:pos[i][1]] )  )
+    ye_mean.append( np.mean( ye[pos[i][0]:pos[i][1]] )  )
+    ze_mean.append( np.mean( ze[pos[i][0]:pos[i][1]] )  )
+
+    # std
+    ## magnet
+    xm_std.append(  np.std( xm[pos[i][0]:pos[i][1]] )   )
+    ym_std.append(  np.std( ym[pos[i][0]:pos[i][1]] )   )
+    zm_std.append(  np.std( zm[pos[i][0]:pos[i][1]] )   )
+    ## end effector
+    xe_std.append(  np.std( xe[pos[i][0]:pos[i][1]] )   )
+    ye_std.append(  np.std( ye[pos[i][0]:pos[i][1]] )   )
+    ze_std.append(  np.std( ze[pos[i][0]:pos[i][1]] )   )
+
+    # se
+    ## magnet
+    xm_se.append(   xm_std[i] / np.sqrt( data_len )     )
+    ym_se.append(   ym_std[i] / np.sqrt( data_len )     )
+    zm_se.append(   zm_std[i] / np.sqrt( data_len )     )
+    ## end effector
+    xe_se.append(   xe_std[i] / np.sqrt( data_len )     )
+    ye_se.append(   ye_std[i] / np.sqrt( data_len )     )
+    ze_se.append(   ze_std[i] / np.sqrt( data_len )     )
+
 for i in range( 0, Npos ):
 
     # magnet position
