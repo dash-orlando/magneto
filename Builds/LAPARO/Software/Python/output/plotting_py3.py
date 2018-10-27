@@ -70,15 +70,25 @@ pos   = [(160,     263),
 
 Npos = len(pos)
 for i in range( 0, Npos ):
+
+    # magnet position
     ax.scatter3D(xm[pos[i][0]:pos[i][1]],
                  ym[pos[i][0]:pos[i][1]],
                  zm[pos[i][0]:pos[i][1]],
-                 c=zm[pos[i][0]:pos[i][1]])
+                 c=zm[pos[i][0]:pos[i][1]],
+                 cmap='Greens')
+
+    # end-effector position
+    ax.scatter3D(xe[pos[i][0]:pos[i][1]],
+                 ye[pos[i][0]:pos[i][1]],
+                 ze[pos[i][0]:pos[i][1]],
+                 c=ze[pos[i][0]:pos[i][1]],
+                 cmap='Reds')
 
 #ax.legend()
 ax.set_xlim(-150, 150)
 ax.set_ylim(-150, 150)
-ax.set_zlim(-200, 200)
+ax.set_zlim(-250, 250)
 ax.set_xlabel('X')
 ax.set_ylabel('Y')
 ax.set_zlabel('Z')
