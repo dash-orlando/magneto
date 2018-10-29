@@ -19,8 +19,9 @@ import  numpy                   as np
 # variables
 filename = "10-26-18_15-1-49.txt"
 
-
+# ========================================================================= #
 # import data from text file
+# ========================================================================= #
 xm          = []
 ym          = []
 zm          = []
@@ -45,16 +46,10 @@ with open( filename, 'r' ) as file:
         #prog_time.append(   line[8] )
 
 
-# plotting
 
-ax = plt.axes(projection='3d')
-
-# Data for a three-dimensional line
-#zline = np.linspace(0, 15, 1000)
-#xline = np.sin(zline)
-#yline = np.cos(zline)
-#ax.plot3D(xline, yline, zline, 'gray')
-
+# ========================================================================= #
+# Data processing, statistics
+# ========================================================================= #
 # Data for three-dimensional scattered points
 ## position limits
 pos   = [(160,     263),
@@ -92,7 +87,7 @@ ze_se   = []
 
 
 for i in range( 0, Npos ):
-    data_len = pos[i][1]-pos[i][0]                              # number of data points (n)
+    data_len = pos[i][1]-pos[i][0]                                          # number of data points (n)
 
     # means
     ## magnet
@@ -124,28 +119,74 @@ for i in range( 0, Npos ):
     ye_se.append(   ye_std[i] / np.sqrt( data_len )     )
     ze_se.append(   ze_std[i] / np.sqrt( data_len )     )
 
+# ========================================================================= #
+# plotting
+# ========================================================================= #
+
+## raw data plot
+ax1 = plt.axes(projection='3d')
+
+# Data for a three-dimensional line
+#zline = np.linspace(0, 15, 1000)
+#xline = np.sin(zline)
+#yline = np.cos(zline)
+#ax.plot3D(xline, yline, zline, 'gray')
+
 for i in range( 0, Npos ):
 
     # magnet position
-    ax.scatter3D(xm[pos[i][0]:pos[i][1]],
-                 ym[pos[i][0]:pos[i][1]],
-                 zm[pos[i][0]:pos[i][1]],
-                 c=zm[pos[i][0]:pos[i][1]],
-                 cmap='Greens')
+    ax1.scatter3D(xm[pos[i][0]:pos[i][1]],
+                  ym[pos[i][0]:pos[i][1]],
+                  zm[pos[i][0]:pos[i][1]],
+                  c=zm[pos[i][0]:pos[i][1]],
+                  cmap='Greens')
 
     # end-effector position
-    ax.scatter3D(xe[pos[i][0]:pos[i][1]],
-                 ye[pos[i][0]:pos[i][1]],
-                 ze[pos[i][0]:pos[i][1]],
-                 c=ze[pos[i][0]:pos[i][1]],
-                 cmap='Reds')
+    ax1.scatter3D(xe[pos[i][0]:pos[i][1]],
+                  ye[pos[i][0]:pos[i][1]],
+                  ze[pos[i][0]:pos[i][1]],
+                  c=ze[pos[i][0]:pos[i][1]],
+                  cmap='Reds')
+
 
 #ax.legend()
-ax.set_xlim(-150, 150)
-ax.set_ylim(-150, 150)
-ax.set_zlim(-250, 250)
-ax.set_xlabel('X')
-ax.set_ylabel('Y')
-ax.set_zlabel('Z')
+ax1.set_xlim(-150, 150)
+ax1.set_ylim(-150, 150)
+ax1.set_zlim(-250, 250)
+ax1.set_xlabel('X')
+ax1.set_ylabel('Y')
+ax1.set_zlabel('Z')
 plt.show()
 
+## stats
+ax2 = plt.axes(projection='3d')
+
+# Data for a three-dimensional line
+#zline = np.linspace(0, 15, 1000)
+#xline = np.sin(zline)
+#yline = np.cos(zline)
+#ax.plot3D(xline, yline, zline, 'gray')
+
+for i in range( 0, Npos ):
+
+    # magnet position
+    ax2.scatter3D(xm_mean[i],
+                  ym_mean[i],
+                  zm_mean[i],
+                  color='Blue')
+
+    # end-effector position
+    ax2.scatter3D(xe_mean[i],
+                  ye_mean[i],
+                  ze_mean[i],
+                  color='Red')
+
+
+#ax.legend()
+ax2.set_xlim(-150, 150)
+ax2.set_ylim(-150, 150)
+ax2.set_zlim(-250, 250)
+ax2.set_xlabel('X')
+ax2.set_ylabel('Y')
+ax2.set_zlabel('Z')
+plt.show()
