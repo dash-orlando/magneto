@@ -4,11 +4,13 @@
 
 #include <wiringPi.h>
 
-//This is for a setup
+// Array that will house the smoothed sensor orientation adjusted readings, for printing.
+double sens[NSENS][NAXES] = {0};
+
 void orientRead( uint8_t pair )
 {
 	// No orientation attempt has been made. RHR is not enforced.
-	// Single Exponential Smoothing has implemented.
+	// Single Exponential Smoothing has been implemented.
 	uint8_t n_HI = (pair - 1) * 2;
 	uint8_t n_LO = (2 * pair) - 1;
 	
