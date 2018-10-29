@@ -174,12 +174,50 @@ for i in range( 0, Npos ):
                   ym_mean[i],
                   zm_mean[i],
                   color='Blue')
+    
+    # magnet position error bars
+    ax2.plot([xm_mean[i]+xm_se[i]*100, xm_mean[i]-xm_se[i]*100],
+             [ym_mean[i], ym_mean[i]],
+             [zm_mean[i], zm_mean[i]],
+             marker="_",
+             color='Black')
+    
+    ax2.plot([xm_mean[i], xm_mean[i]],
+             [ym_mean[i]+ym_se[i]*100, ym_mean[i]-ym_se[i]*100],
+             [zm_mean[i], zm_mean[i]],
+             marker="_",
+             color='Black')
+    
+    ax2.plot([xm_mean[i], xm_mean[i]],
+             [ym_mean[i], ym_mean[i]],
+             [zm_mean[i]+zm_se[i]*100, zm_mean[i]-zm_se[i]*100],
+             marker="_",
+             color='Black')
 
     # end-effector position
     ax2.scatter3D(xe_mean[i],
                   ye_mean[i],
                   ze_mean[i],
                   color='Red')
+
+    # end-effector position error bars
+    ax2.plot([xe_mean[i]+xe_se[i]*100, xe_mean[i]-xe_se[i]*100],
+             [ye_mean[i], ye_mean[i]],
+             [ze_mean[i], ze_mean[i]],
+             marker="_",
+             color='Black')
+    
+    ax2.plot([xe_mean[i], xe_mean[i]],
+             [ye_mean[i]+ye_se[i]*100, ye_mean[i]-ye_se[i]*100],
+             [ze_mean[i], ze_mean[i]],
+             marker="_",
+             color='Black')
+    
+    ax2.plot([xe_mean[i], xe_mean[i]],
+             [ye_mean[i], ye_mean[i]],
+             [ze_mean[i]+ze_se[i]*100, ze_mean[i]-ze_se[i]*100],
+             marker="_",
+             color='Black')
 
 
 #ax.legend()
