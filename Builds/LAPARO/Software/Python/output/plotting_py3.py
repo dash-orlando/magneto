@@ -123,7 +123,9 @@ for i in range( 0, Npos ):
 # plotting
 # ========================================================================= #
 
+# ========================================================================= #
 ## raw data plot
+# ========================================================================= #
 ax1 = plt.axes(projection='3d')
 
 # Data for a three-dimensional line
@@ -158,7 +160,9 @@ ax1.set_ylabel('Y')
 ax1.set_zlabel('Z')
 plt.show()
 
+# ========================================================================= #
 ## stats
+# ========================================================================= #
 ax2 = plt.axes(projection='3d')
 
 # Data for a three-dimensional line
@@ -227,4 +231,50 @@ ax2.set_zlim(-250, 250)
 ax2.set_xlabel('X')
 ax2.set_ylabel('Y')
 ax2.set_zlabel('Z')
+plt.show()
+
+# ========================================================================= #
+## other
+# ========================================================================= #
+actual_pos = [(20.00, -85.00, -165.00),
+              (26.00, 95.00, -212.80),
+              (85.00, 37.00, -129.80),
+              (55.75, 74.50, -231.80),
+              (-37.50, -36.00, -199.80),
+              (-86.00, -90.00, -231.80),
+              (-126.50, -8.00, -231.80),
+              (-82.50, 27.50, -212.80),
+              (-79.00, 46.00, -212.80),
+              (-66.50, 60.50, -212.80)]
+
+ax1 = plt.axes(projection='3d')
+
+# Data for a three-dimensional line
+#zline = np.linspace(0, 15, 1000)
+#xline = np.sin(zline)
+#yline = np.cos(zline)
+#ax.plot3D(xline, yline, zline, 'gray')
+
+for i in range( 0, Npos ):
+
+    # magnet position
+    ax1.scatter3D(actual_pos[i][0],
+                  actual_pos[i][1],
+                  actual_pos[i][2],
+                  color='Blue')
+
+    # end-effector position
+    ax1.scatter3D(xe[pos[i][0]:pos[i][1]],
+                  ye[pos[i][0]:pos[i][1]],
+                  ze[pos[i][0]:pos[i][1]],
+                  color='Red')
+
+
+#ax.legend()
+ax1.set_xlim(-150, 150)
+ax1.set_ylim(-150, 150)
+ax1.set_zlim(-250, 250)
+ax1.set_xlabel('X')
+ax1.set_ylabel('Y')
+ax1.set_zlabel('Z')
 plt.show()
