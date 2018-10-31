@@ -123,115 +123,115 @@ for i in range( 0, Npos ):
 # plotting
 # ========================================================================= #
 
-# ========================================================================= #
-## raw data plot
-# ========================================================================= #
-ax1 = plt.axes(projection='3d')
+### ========================================================================= #
+#### raw data plot
+### ========================================================================= #
+##ax1 = plt.axes(projection='3d')
+##
+### Data for a three-dimensional line
+###zline = np.linspace(0, 15, 1000)
+###xline = np.sin(zline)
+###yline = np.cos(zline)
+###ax.plot3D(xline, yline, zline, 'gray')
+##
+##for i in range( 0, Npos ):
+##
+##    # magnet position
+##    ax1.scatter3D(xm[pos[i][0]:pos[i][1]],
+##                  ym[pos[i][0]:pos[i][1]],
+##                  zm[pos[i][0]:pos[i][1]],
+##                  c=zm[pos[i][0]:pos[i][1]],
+##                  cmap='Greens')
+##
+##    # end-effector position
+##    ax1.scatter3D(xe[pos[i][0]:pos[i][1]],
+##                  ye[pos[i][0]:pos[i][1]],
+##                  ze[pos[i][0]:pos[i][1]],
+##                  c=ze[pos[i][0]:pos[i][1]],
+##                  cmap='Reds')
+##
+##
+###ax.legend()
+##ax1.set_xlim(-150, 150)
+##ax1.set_ylim(-150, 150)
+##ax1.set_zlim(-250, 250)
+##ax1.set_xlabel('X')
+##ax1.set_ylabel('Y')
+##ax1.set_zlabel('Z')
+##plt.show()
 
-# Data for a three-dimensional line
-#zline = np.linspace(0, 15, 1000)
-#xline = np.sin(zline)
-#yline = np.cos(zline)
-#ax.plot3D(xline, yline, zline, 'gray')
-
-for i in range( 0, Npos ):
-
-    # magnet position
-    ax1.scatter3D(xm[pos[i][0]:pos[i][1]],
-                  ym[pos[i][0]:pos[i][1]],
-                  zm[pos[i][0]:pos[i][1]],
-                  c=zm[pos[i][0]:pos[i][1]],
-                  cmap='Greens')
-
-    # end-effector position
-    ax1.scatter3D(xe[pos[i][0]:pos[i][1]],
-                  ye[pos[i][0]:pos[i][1]],
-                  ze[pos[i][0]:pos[i][1]],
-                  c=ze[pos[i][0]:pos[i][1]],
-                  cmap='Reds')
-
-
-#ax.legend()
-ax1.set_xlim(-150, 150)
-ax1.set_ylim(-150, 150)
-ax1.set_zlim(-250, 250)
-ax1.set_xlabel('X')
-ax1.set_ylabel('Y')
-ax1.set_zlabel('Z')
-plt.show()
-
-# ========================================================================= #
-## stats
-# ========================================================================= #
-ax2 = plt.axes(projection='3d')
-
-# Data for a three-dimensional line
-#zline = np.linspace(0, 15, 1000)
-#xline = np.sin(zline)
-#yline = np.cos(zline)
-#ax.plot3D(xline, yline, zline, 'gray')
-
-for i in range( 0, Npos ):
-
-    # magnet position
-    ax2.scatter3D(xm_mean[i],
-                  ym_mean[i],
-                  zm_mean[i],
-                  color='Blue')
-    
-    # magnet position error bars
-    ax2.plot([xm_mean[i]+xm_se[i]*100, xm_mean[i]-xm_se[i]*100],
-             [ym_mean[i], ym_mean[i]],
-             [zm_mean[i], zm_mean[i]],
-             marker="_",
-             color='Black')
-    
-    ax2.plot([xm_mean[i], xm_mean[i]],
-             [ym_mean[i]+ym_se[i]*100, ym_mean[i]-ym_se[i]*100],
-             [zm_mean[i], zm_mean[i]],
-             marker="_",
-             color='Black')
-    
-    ax2.plot([xm_mean[i], xm_mean[i]],
-             [ym_mean[i], ym_mean[i]],
-             [zm_mean[i]+zm_se[i]*100, zm_mean[i]-zm_se[i]*100],
-             marker="_",
-             color='Black')
-
-    # end-effector position
-    ax2.scatter3D(xe_mean[i],
-                  ye_mean[i],
-                  ze_mean[i],
-                  color='Red')
-
-    # end-effector position error bars
-    ax2.plot([xe_mean[i]+xe_se[i]*100, xe_mean[i]-xe_se[i]*100],
-             [ye_mean[i], ye_mean[i]],
-             [ze_mean[i], ze_mean[i]],
-             marker="_",
-             color='Black')
-    
-    ax2.plot([xe_mean[i], xe_mean[i]],
-             [ye_mean[i]+ye_se[i]*100, ye_mean[i]-ye_se[i]*100],
-             [ze_mean[i], ze_mean[i]],
-             marker="_",
-             color='Black')
-    
-    ax2.plot([xe_mean[i], xe_mean[i]],
-             [ye_mean[i], ye_mean[i]],
-             [ze_mean[i]+ze_se[i]*100, ze_mean[i]-ze_se[i]*100],
-             marker="_",
-             color='Black')
-
-
-#ax.legend()
-ax2.set_xlim(-150, 150)
-ax2.set_ylim(-150, 150)
-ax2.set_zlim(-250, 250)
-ax2.set_xlabel('X')
-ax2.set_ylabel('Y')
-ax2.set_zlabel('Z')
-plt.show()
+### ========================================================================= #
+#### stats
+### ========================================================================= #
+##ax2 = plt.axes(projection='3d')
+##
+### Data for a three-dimensional line
+###zline = np.linspace(0, 15, 1000)
+###xline = np.sin(zline)
+###yline = np.cos(zline)
+###ax.plot3D(xline, yline, zline, 'gray')
+##
+##for i in range( 0, Npos ):
+##
+##    # magnet position
+##    ax2.scatter3D(xm_mean[i],
+##                  ym_mean[i],
+##                  zm_mean[i],
+##                  color='Blue')
+##    
+##    # magnet position error bars
+##    ax2.plot([xm_mean[i]+xm_se[i]*100, xm_mean[i]-xm_se[i]*100],
+##             [ym_mean[i], ym_mean[i]],
+##             [zm_mean[i], zm_mean[i]],
+##             marker="_",
+##             color='Black')
+##    
+##    ax2.plot([xm_mean[i], xm_mean[i]],
+##             [ym_mean[i]+ym_se[i]*100, ym_mean[i]-ym_se[i]*100],
+##             [zm_mean[i], zm_mean[i]],
+##             marker="_",
+##             color='Black')
+##    
+##    ax2.plot([xm_mean[i], xm_mean[i]],
+##             [ym_mean[i], ym_mean[i]],
+##             [zm_mean[i]+zm_se[i]*100, zm_mean[i]-zm_se[i]*100],
+##             marker="_",
+##             color='Black')
+##
+##    # end-effector position
+##    ax2.scatter3D(xe_mean[i],
+##                  ye_mean[i],
+##                  ze_mean[i],
+##                  color='Red')
+##
+##    # end-effector position error bars
+##    ax2.plot([xe_mean[i]+xe_se[i]*100, xe_mean[i]-xe_se[i]*100],
+##             [ye_mean[i], ye_mean[i]],
+##             [ze_mean[i], ze_mean[i]],
+##             marker="_",
+##             color='Black')
+##    
+##    ax2.plot([xe_mean[i], xe_mean[i]],
+##             [ye_mean[i]+ye_se[i]*100, ye_mean[i]-ye_se[i]*100],
+##             [ze_mean[i], ze_mean[i]],
+##             marker="_",
+##             color='Black')
+##    
+##    ax2.plot([xe_mean[i], xe_mean[i]],
+##             [ye_mean[i], ye_mean[i]],
+##             [ze_mean[i]+ze_se[i]*100, ze_mean[i]-ze_se[i]*100],
+##             marker="_",
+##             color='Black')
+##
+##
+###ax.legend()
+##ax2.set_xlim(-150, 150)
+##ax2.set_ylim(-150, 150)
+##ax2.set_zlim(-250, 250)
+##ax2.set_xlabel('X')
+##ax2.set_ylabel('Y')
+##ax2.set_zlabel('Z')
+##plt.show()
 
 # ========================================================================= #
 ## other
@@ -277,4 +277,69 @@ ax1.set_zlim(-250, 250)
 ax1.set_xlabel('X')
 ax1.set_ylabel('Y')
 ax1.set_zlabel('Z')
+plt.show()
+
+
+# ========================================================================= #
+## flat subplots
+# ========================================================================= #
+actual_pos = [(20.00, -85.00, -165.00),
+              (26.00, 95.00, -212.80),
+              (85.00, 37.00, -129.80),
+              (55.75, 74.50, -231.80),
+              (-37.50, -36.00, -199.80),
+              (-86.00, -90.00, -231.80),
+              (-126.50, -8.00, -231.80),
+              (-82.50, 27.50, -212.80),
+              (-79.00, 46.00, -212.80),
+              (-66.50, 60.50, -212.80)]
+
+for i in range( 0, Npos ):
+
+    # magnet position
+    magpos = plt.scatter(actual_pos[i][0],
+                         actual_pos[i][1],
+                         color='Blue')
+
+    # end-effector position
+    endeff = plt.scatter(xe[pos[i][0]:pos[i][1]],
+                         ye[pos[i][0]:pos[i][1]],
+                         color='Red')
+
+
+# ref circle, magnet
+rmcx = [100]
+rmcy = [-100]
+rm   = [800]
+refmag = plt.scatter(rmcx, rmcy, s=rm, color='black', edgecolor='black')
+
+# ref circle, end effector
+recx = [100]
+recy = [-100]
+re   = [100]
+
+refeff = plt.scatter(recx, recy, s=re, color='white', edgecolor='black')
+
+#ax.legend()
+##plt.set_xlim(-150, 150)
+##a.set_ylim(-150, 150)
+##ax1.set_zlim(-250, 250)
+##ax1.set_xlabel('X')
+##ax1.set_ylabel('Y')
+##ax1.set_zlabel('Z')
+ticks = np.linspace(-150, 150, num=int(300/25 + 1), endpoint=True)
+plt.xticks(ticks, fontsize=9)
+plt.yticks(ticks, fontsize=9)
+plt.xlabel('X (mm)')
+plt.ylabel('Y (mm)')
+plt.legend((magpos, endeff, refmag, refeff),
+           ("Magnet Position","End-Effector Position","Magnet Ref. Size","End Effector Ref. Size"),
+           labelspacing=1.5,
+           #ncol=4,
+           fontsize=10,
+           framealpha=1,
+           shadow=True,
+           borderpad=1,
+           loc=1)
+plt.grid()
 plt.show()
