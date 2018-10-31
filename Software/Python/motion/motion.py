@@ -19,7 +19,7 @@ def gcode_gen( out_name, x, y, z, speed ):
     # Data-specific Variables and Edits ======================================= #
     array_len = len(x)                                                          # len(y) or len(z)
     
-    printer_offset = [150.00, 150.00, 50.00]                                    # offset to center of printer
+    printer_offset = [150.00, 150.00, 75.00]                                    # offset to center of printer
     x = x + printer_offset[0]
     y = y + printer_offset[1]
     z = z + printer_offset[2]
