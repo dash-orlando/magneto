@@ -244,12 +244,12 @@ def LHS( root, K, norms ):
     r6 = float( ( (x - X6)**2. + (y - Y6)**2. + (z - Z6)**2. )**(1/2.) )    # Sensor 6
     
     # Construct the equations
-    Eqn1 = ( K*( r1 )**(-6.) * ( 3.*( z/r1 )**2. + 1 ) ) - norms[0]**2.     # Sensor 1
-    Eqn2 = ( K*( r2 )**(-6.) * ( 3.*( z/r2 )**2. + 1 ) ) - norms[1]**2.     # Sensor 2
-    Eqn3 = ( K*( r3 )**(-6.) * ( 3.*( z/r3 )**2. + 1 ) ) - norms[2]**2.     # Sensor 3
-    Eqn4 = ( K*( r4 )**(-6.) * ( 3.*( z/r4 )**2. + 1 ) ) - norms[3]**2.     # Sensor 4
-    Eqn5 = ( K*( r5 )**(-6.) * ( 3.*( z/r5 )**2. + 1 ) ) - norms[4]**2.     # Sensor 5
-    Eqn6 = ( K*( r6 )**(-6.) * ( 3.*( z/r6 )**2. + 1 ) ) - norms[5]**2.     # Sensor 6
+    Eqn1 = ( K*( r1 )**(-6.) * ( 3.*( (z - Z1)/r1 )**2. + 1 ) ) - norms[0]**2.     # Sensor 1
+    Eqn2 = ( K*( r2 )**(-6.) * ( 3.*( (z - Z2)/r2 )**2. + 1 ) ) - norms[1]**2.     # Sensor 2
+    Eqn3 = ( K*( r3 )**(-6.) * ( 3.*( (z - Z3)/r3 )**2. + 1 ) ) - norms[2]**2.     # Sensor 3
+    Eqn4 = ( K*( r4 )**(-6.) * ( 3.*( (z - Z4)/r4 )**2. + 1 ) ) - norms[3]**2.     # Sensor 4
+    Eqn5 = ( K*( r5 )**(-6.) * ( 3.*( (z - Z5)/r5 )**2. + 1 ) ) - norms[4]**2.     # Sensor 5
+    Eqn6 = ( K*( r6 )**(-6.) * ( 3.*( (z - Z6)/r6 )**2. + 1 ) ) - norms[5]**2.     # Sensor 6
     
     # Construct a vector of the equations
     Eqns = [Eqn1, Eqn2, Eqn3, Eqn4, Eqn5, Eqn6]
@@ -373,12 +373,12 @@ READY       = False                             # Give time for user to place ma
 
 
 #X0, Y0, Z0 = 00e-3,   00e-3,   00e-3                                         # ORGIN @ CENTER
-X1, Y1, Z1 =  00e-3,   75e-3,   10e-3                                         # Position of sensor 1
-X2, Y2, Z2 =  68e-3,   37e-3,   00e-3                                         # Position of sensor 2
-X3, Y3, Z3 =  68e-3,  -37e-3,   10e-3                                         # Position of sensor 3
-X4, Y4, Z4 =  00e-3,  -75e-3,   00e-3                                         # Position of sensor 4 
-X5, Y5, Z5 = -68e-3,  -37e-3,   10e-3                                         # Position of sensor 5
-X6, Y6, Z6 = -68e-3,   37e-3,   00e-3                                         # Position of sensor 6 
+X1, Y1, Z1 =  00e-3,   75.0e-3,   13e-3                                         # Position of sensor 1
+X2, Y2, Z2 =  65e-3,   37.5e-3,    3e-3                                         # Position of sensor 2
+X3, Y3, Z3 =  65e-3,  -37.5e-3,   13e-3                                         # Position of sensor 3
+X4, Y4, Z4 =  00e-3,  -75.0e-3,    3e-3                                         # Position of sensor 4 
+X5, Y5, Z5 = -65e-3,  -37.5e-3,   13e-3                                         # Position of sensor 5
+X6, Y6, Z6 = -65e-3,   37.5e-3,    3e-3                                         # Position of sensor 6 
 
 # Choose the magnet we want to track
 ##K           = 1.615e-7                                                      # Small magnet's constant   (K) || Units { G^2.m^6}
