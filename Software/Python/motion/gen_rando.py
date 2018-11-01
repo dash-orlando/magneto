@@ -5,7 +5,7 @@ Fluvio L Lobo Fenoglietto
 """
 
 
-from    paths       import rando
+from    paths       import *
 from    motion      import *
 
 import  numpy       as      np
@@ -16,6 +16,10 @@ printer = np.array([300,300,400])
 limits = printer/2
 steps = 20                              # number of positions/iterations
 
+position, offsets, limits, printer = random_walk( printer, limits, steps)
+
+
+"""
 # generate random multipliers
 rand_multipliers = np.random.rand(3,1)
 
@@ -40,4 +44,4 @@ for i in range( 0, steps ):
     # generate positions
     for j in range( 0, len(rm) ):
         position[i,j] = limits[j]*rm[j] + offsets[j]
-
+"""

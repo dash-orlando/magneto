@@ -77,10 +77,36 @@ def prog_helix( max_x, max_y, max_z ):
     return x, y, z 
 
 
-def rando( printer, limits, intervals ):
+def random_walk( printer, limits, steps):
     """
     Generates a random motion based on the printer volume and input limits
     Movements are differentiated by a time interval
     """
+
+    # generate random multipliers
+    rand_multipliers = np.random.rand(3,1)
+    x_rm = rand_multipliers[0]                                                          # random multiplier per axis
+    y_rm = rand_multipliers[1]
+    z_rm = rand_multipliers[2]
+
+    # determine offsets
+    offsets = np.zeros(3)
+    for i in range( 0, len(printer) ):
+        offsets[i] = ( printer[i] - limits[i] )/2
+
+    # create positions
+    position = np.zeros((steps, 3))
+    for i in range( 0, steps ):
+
+        # generate random multipliers
+        rm = np.random.rand(3,1)
+
+        # generate positions
+        for j in range( 0, len(rm) ):
+            position[i,j] = limits[j]*rm[j] + offsets[j]
+
+    #return
+    return position, offsets, limits, printer
+    
     
     
