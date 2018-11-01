@@ -17,7 +17,8 @@ import  numpy                   as np
 
 
 # variables
-filename = "10-26-18_15-1-49.txt"
+##filename = "10-26-18_15-1-49.txt"
+filename = "11-1-18_15-14-57.txt"
 
 # ========================================================================= #
 # import data from text file
@@ -52,7 +53,18 @@ with open( filename, 'r' ) as file:
 # ========================================================================= #
 # Data for three-dimensional scattered points
 ## position limits
-pos   = [(160,     263),
+pos   = [(233,     370),
+         (396,     529),
+         (552,     691),
+         (707,     843),
+         (869,     999),
+         (1014,     1150),
+         (1166,     1303),
+         (1317,    1449),
+         (1458,    1592),
+         (1606,    1742)]
+"""
+pos   = [(236,     263),
          (276,     387),
          (407,     515),
          (532,     643),
@@ -62,7 +74,7 @@ pos   = [(160,     263),
          (1041,    1153),
          (1160,    1280),
          (1291,    1415)]
-
+"""
 Npos = len(pos)
 
 # statistics
@@ -294,6 +306,9 @@ actual_pos = [(20.00, -85.00, -165.00),
               (-79.00, 46.00, -212.80),
               (-66.50, 60.50, -212.80)]
 
+# ------------------------------------------------------------------------- #
+## XY
+# ------------------------------------------------------------------------- #
 for i in range( 0, Npos ):
 
     # magnet position
@@ -320,13 +335,6 @@ re   = [100]
 
 refeff = plt.scatter(recx, recy, s=re, color='white', edgecolor='black')
 
-#ax.legend()
-##plt.set_xlim(-150, 150)
-##a.set_ylim(-150, 150)
-##ax1.set_zlim(-250, 250)
-##ax1.set_xlabel('X')
-##ax1.set_ylabel('Y')
-##ax1.set_zlabel('Z')
 ticks = np.linspace(-150, 150, num=int(300/25 + 1), endpoint=True)
 plt.xticks(ticks, fontsize=9)
 plt.yticks(ticks, fontsize=9)
@@ -334,6 +342,102 @@ plt.xlabel('X (mm)')
 plt.ylabel('Y (mm)')
 plt.legend((magpos, endeff, refmag, refeff),
            ("Magnet Position","End-Effector Position","Magnet Ref. Size","End Effector Ref. Size"),
+           labelspacing=1.5,
+           #ncol=4,
+           fontsize=10,
+           framealpha=1,
+           shadow=True,
+           borderpad=1,
+           loc=1)
+plt.grid()
+plt.show()
+
+# ------------------------------------------------------------------------- #
+## XZ
+# ------------------------------------------------------------------------- #
+for i in range( 0, Npos ):
+
+    # magnet position
+    magpos = plt.scatter(actual_pos[i][0],
+                         actual_pos[i][2],
+                         color='Blue')
+
+    # end-effector position
+    endeff = plt.scatter(xe[pos[i][0]:pos[i][1]],
+                         ze[pos[i][0]:pos[i][1]],
+                         color='Red')
+
+"""
+# ref circle, magnet
+rmcx = [100]
+rmcy = [-100]
+rm   = [800]
+refmag = plt.scatter(rmcx, rmcy, s=rm, color='black', edgecolor='black')
+
+# ref circle, end effector
+recx = [100]
+recy = [-100]
+re   = [100]
+
+refeff = plt.scatter(recx, recy, s=re, color='white', edgecolor='black')
+"""
+xticks = np.linspace(-150, 150, num=int(300/25 + 1), endpoint=True)
+zticks = np.linspace(-250, -150, num=int(100/25 + 1), endpoint=True)
+
+plt.xticks(xticks, fontsize=9)
+plt.yticks(zticks, fontsize=9)
+plt.xlabel('X (mm)')
+plt.ylabel('Z (mm)')
+plt.legend((magpos, endeff),
+           ("Magnet Position","End-Effector Position"),
+           labelspacing=1.5,
+           #ncol=4,
+           fontsize=10,
+           framealpha=1,
+           shadow=True,
+           borderpad=1,
+           loc=1)
+plt.grid()
+plt.show()
+
+# ------------------------------------------------------------------------- #
+## YZ
+# ------------------------------------------------------------------------- #
+for i in range( 0, Npos ):
+
+    # magnet position
+    magpos = plt.scatter(actual_pos[i][1],
+                         actual_pos[i][2],
+                         color='Blue')
+
+    # end-effector position
+    endeff = plt.scatter(ye[pos[i][0]:pos[i][1]],
+                         ze[pos[i][0]:pos[i][1]],
+                         color='Red')
+
+"""
+# ref circle, magnet
+rmcx = [100]
+rmcy = [-100]
+rm   = [800]
+refmag = plt.scatter(rmcx, rmcy, s=rm, color='black', edgecolor='black')
+
+# ref circle, end effector
+recx = [100]
+recy = [-100]
+re   = [100]
+
+refeff = plt.scatter(recx, recy, s=re, color='white', edgecolor='black')
+"""
+yticks = np.linspace(-150, 150, num=int(300/25 + 1), endpoint=True)
+zticks = np.linspace(-250, -150, num=int(100/25 + 1), endpoint=True)
+
+plt.xticks(yticks, fontsize=9)
+plt.yticks(zticks, fontsize=9)
+plt.xlabel('Y (mm)')
+plt.ylabel('Z (mm)')
+plt.legend((magpos, endeff),
+           ("Magnet Position","End-Effector Position"),
            labelspacing=1.5,
            #ncol=4,
            fontsize=10,
