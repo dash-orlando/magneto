@@ -113,5 +113,40 @@ def random_walk( printer, limits, steps):
     #return
     return position, offsets, limits, printer
     
-    
+def random_cwalk( printer, limits, steps):
+    """
+    Generates a random motion based on the printer volume and input limits
+    Movements are differentiated by a time interval
+    Movements are relative to the center of the build plate
+
+        printer   --> Print volume of the printer (x_max, y_max, z_max)
+        limits    --> Maximum travel for the random walk (x_limit, y_limit, z_limit)
+        steps     --> Number of random steps to be calculated
+        intervals --> Time pause between positions
+    """
+
+    # generate random multipliers
+    rand_multipliers = np.random.rand(3,1)
+    x_rm = rand_multipliers[0]                                                          # random multiplier per axis
+    y_rm = rand_multipliers[1]
+    z_rm = rand_multipliers[2]
+
+    # determine offsets
+    offsets = np.zeros(3)
+    for i in range( 0, len(printer) ):
+        offsets[i] = ( printer[i] - limits[i] )/2
+
+    # create positions
+    position = np.zeros((steps, 3))
+    for i in range( 0, steps ):
+
+        # generate random multipliers
+        rm = np.random.rand(3,1)
+
+        # generate positions
+        for j in range( 0, len(rm) ):
+            position[i,j] = limits[j]*rm[j] + offsets[j]
+
+    #return
+    return position, offsets, limits, printer    
     

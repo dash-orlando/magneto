@@ -144,10 +144,14 @@ def gcode_gen_2( out_name, x, y, z, printer_offset, speed ):
 
     file.close()
 
-def gcode_gen_3( out_name, x, y, z, printer_offset, speed, interval ):
+def gcode_gen_3( out_name, x, y, z, printer_offset, speed, interval, mode ):
     """
     gcode_gen_rw
-    Gcode Generator Function specific to a Random Walk with Pauses
+    Gcode Generator Function specific to a Random Walk, featuring;
+        intervals   --> time intervals (in milliseconds) between motion
+        mode        --> mode of operation;
+                        --> mode = 0 --> normal mode
+                        --> mode = 1 --> steppers are disable and re-enabled between intervals
 
     Features:
     10/12/2018 - Converted printer offsets as an input to the function
@@ -184,7 +188,14 @@ def gcode_gen_3( out_name, x, y, z, printer_offset, speed, interval ):
             print( '; Starting Path...\n' )
             print( 'G90 ; Absolute position...\n' )                             # set absolute position
             print( 'G1 X{} Y{} Z{} F{}'.format( x[i],y[i],z[i],speed ))
-            print( 'G4 P{}'.format( interval ))                                 # added interval or wait
+
+            if ( mode == 0 ):
+                print( 'G4 P{}'.format( interval ))                             # added interval or wait
+            elif ( mode == 1 ):
+                print( 'M18' )                                                  # disable motors
+                print( 'G4 P{}'.format( interval ))                             # added interval or wait
+                print( 'M17' )                                                  # enable motors
+            
             # ================================================================= #
 
             # GCODE Generator ================================================= #
@@ -198,20 +209,36 @@ def gcode_gen_3( out_name, x, y, z, printer_offset, speed, interval ):
             file.write( '; Starting Path...\n' )
             file.write( 'G90 ; Absolute position...\n' )                        # set absolute position
             file.write( 'G1 X{} Y{} Z{} F{} \n'.format( x[i],y[i],z[i],speed )) # write to .gcode file...
-            file.write( 'G4 P{} \n'.format( interval ))                         # added interval or wait
+
+            if ( mode == 0 ):
+                file.write( 'G4 P{} \n'.format( interval ))                     # added interval or wait
+            elif ( mode == 1 ):
+                file.write( 'M18 \n' )                                          # disable motors
+                file.write( 'G4 P{} \n'.format( interval ))                     # added interval or wait
+                file.write( 'M17 \n' )                                          # enable motors
             # ================================================================= #
 
         elif i > 0:
 
             # Terminal Debug ================================================== #
             print( 'G1 X{} Y{} Z{} F{}'.format( x[i],y[i],z[i],speed ))
-            print( 'G4 P{}'.format( interval ))                                 # added interval or wait
+            if ( mode == 0 ):
+                print( 'G4 P{}'.format( interval ))                             # added interval or wait
+            elif ( mode == 1 ):
+                print( 'M18' )                                                  # disable motors
+                print( 'G4 P{}'.format( interval ))                             # added interval or wait
+                print( 'M17' )                                                  # enable motors
             # ================================================================= #
 
             # GCODE Generator ================================================= #
 
             file.write( 'G1 X{} Y{} Z{} F{} \n'.format( x[i],y[i],z[i],speed )) # write to .gcode file...
-            file.write( 'G4 P{} \n'.format( interval ))                         # added interval or wait
+            if ( mode == 0 ):
+                file.write( 'G4 P{} \n'.format( interval ))                     # added interval or wait
+            elif ( mode == 1 ):
+                file.write( 'M18 \n' )                                          # disable motors
+                file.write( 'G4 P{} \n'.format( interval ))                     # added interval or wait
+                file.write( 'M17 \n' )                                          # enable motors
             # ================================================================= #
 
     file.close()
