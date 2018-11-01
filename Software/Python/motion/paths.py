@@ -81,6 +81,11 @@ def random_walk( printer, limits, steps):
     """
     Generates a random motion based on the printer volume and input limits
     Movements are differentiated by a time interval
+
+        printer   --> Print volume of the printer (x_max, y_max, z_max)
+        limits    --> Maximum travel for the random walk (x_limit, y_limit, z_limit)
+        steps     --> Number of random steps to be calculated
+        intervals --> Time pause between positions
     """
 
     # generate random multipliers

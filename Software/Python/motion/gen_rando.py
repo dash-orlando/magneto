@@ -5,20 +5,21 @@ Fluvio L Lobo Fenoglietto
 """
 
 
-from    paths       import *
-from    motion      import *
+from    paths           import *
+from    gcode_gen       import *
 
 import  numpy       as      np
 
 
 # inputs
-printer = np.array([300,300,400])
+printer = np.array([300,300,400])/2
 limits = printer/2
 steps = 20                              # number of positions/iterations
 
 position, offsets, limits, printer = random_walk( printer, limits, steps)
 
-
+out_name = "rand_walk_1.gcode"
+gcode_gen_3( out_name, position[:,0], position[:,1], position[:,2], offsets, 3600, 2500 )
 """
 # generate random multipliers
 rand_multipliers = np.random.rand(3,1)
