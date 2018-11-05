@@ -113,7 +113,7 @@ def random_walk( printer, limits, steps):
     #return
     return position, offsets, limits, printer
     
-def random_cwalk( printer, limits, steps):
+def random_cwalk( printer, climits, steps):
     """
     Generates a random motion based on the printer volume and input limits
     Movements are differentiated by a time interval
@@ -134,11 +134,8 @@ def random_cwalk( printer, limits, steps):
 
         # generate positions
         for j in range( 0, len(rm) ):
-        if ( j == ( len(rm)-1 ) and rm[j] < 0 ):
-            position[i,j] = limits[j]*rm[j]*-1
-        else:
-            position[i,j] = limits[j]*rm[j]
+            position[i,j] = climits[j]*rm[j]
 
     #return
-    return position, limits, printer    
+    return position, climits, printer    
     

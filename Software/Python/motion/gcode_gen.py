@@ -144,7 +144,7 @@ def gcode_gen_2( out_name, x, y, z, printer_offset, speed ):
 
     file.close()
 
-def gcode_gen_3( out_name, x, y, z, printer_offset, speed, interval, mode ):
+def gcode_gen_cwalk( out_name, x, y, z, printer, speed, interval, mode ):
     """
     gcode_gen_rw
     Gcode Generator Function specific to a Random Walk, featuring;
@@ -160,9 +160,13 @@ def gcode_gen_3( out_name, x, y, z, printer_offset, speed, interval, mode ):
     # Data-specific Variables and Edits ======================================= #
     array_len = len(x)                                                          # len(y) or len(z)
     
-    x = x + printer_offset[0]                                                   # offset to center of printer
-    y = y + printer_offset[1]
-    z = z + printer_offset[2]
+##    x = x + printer_offset[0]                                                   # offset to center of printer
+##    y = y + printer_offset[1]
+##    z = z + printer_offset[2]
+
+    x0 = printer[0].round( decimals=2 )
+    y0 = printer[1].round( decimals=2 )
+    z0 = printer[2].round( decimals=2 )
     
     x = x.round( decimals=2 )                                                   # truncate float to 2 decimals            
     y = y.round( decimals=2 )
@@ -182,11 +186,11 @@ def gcode_gen_3( out_name, x, y, z, printer_offset, speed, interval, mode ):
             print( '; Home axes...' )
             print( 'G28 ;' )                                                    # gcode command for homing all axes
             print( '; Initializing...' )
-            print( ';  Applying Z Offset...' )
-            print( 'G91 ; Relative position...' )                               # set relative position
-            print( 'G1 Z50 ; Add Z Offset to avoid electronics...' )            # apply Z offset to avoid electronics
+            print( '; Moving to center...' )
+            print( 'G90 ; Relative position...' )
+            print( 'G1 X{} Y{} Z{} F{}'.format( x0,y0,z0,speed ))               # translation to the center of the printer
             print( '; Starting Path...\n' )
-            print( 'G90 ; Absolute position...\n' )                             # set absolute position
+            print( 'G91 ; Relative position...\n' )                             # set absolute position
             print( 'G1 X{} Y{} Z{} F{}'.format( x[i],y[i],z[i],speed ))
 
             if ( mode == 0 ):
@@ -203,11 +207,11 @@ def gcode_gen_3( out_name, x, y, z, printer_offset, speed, interval, mode ):
             file.write( '; Home axes...\n' )
             file.write( 'G28 ;\n' )                                             # gcode command for homing all axes
             file.write( '; Initializing...\n' )
-            file.write( ';  Applying Z Offset...\n' )
-            file.write( 'G91 ; Relative position...\n' )                        # set relative position
-            file.write( 'G1 Z50 ; Add Z Offset to avoid electronics...\n' )     # apply Z offset to avoid electronics
+            file.write( '; Moving to center...\n' )
+            file.write( 'G90 ; Absolute position...\n' )
+            file.write( 'G1 X{} Y{} Z{} F{} \n'.format( x0,y0,z0,speed ))       # translation to the center of the printer
             file.write( '; Starting Path...\n' )
-            file.write( 'G90 ; Absolute position...\n' )                        # set absolute position
+            file.write( 'G91 ; Relative position...\n' )                        # set absolute position
             file.write( 'G1 X{} Y{} Z{} F{} \n'.format( x[i],y[i],z[i],speed )) # write to .gcode file...
 
             if ( mode == 0 ):

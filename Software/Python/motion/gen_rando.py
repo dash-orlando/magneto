@@ -13,51 +13,17 @@ import  numpy       as      np
 
 # inputs
 printer = np.array([150,150,150])
-limits = printer/2
+climits = printer/3
 steps = 20                              # number of positions/iterations
 
-##position, offsets, limits, printer = random_walk( printer, limits, steps)
-##out_name = "rand_walk_s20_t10"
-##gcode_gen_3( out_name, position[:,0], position[:,1], position[:,2], offsets, 3600, 10000, 1 )
-
-#position, limits, printer = random_cwalk( printer, limits, steps)
-
-# create positions
-position = np.zeros((steps, 3))
-for i in range( 0, steps ):
-
-    # generate random multipliers
-    rm = np.random.rand(3,1) - np.random.rand(3,1)
-
-    # generate positions
-    for j in range( 0, len(rm) ):
-        if ( j == ( len(rm)-1 ) and rm[j] < 0 ):
-            position[i,j] = limits[j]*rm[j]*-1
-        else:
-            position[i,j] = limits[j]*rm[j]
-"""
-# generate random multipliers
-rand_multipliers = np.random.rand(3,1)
-
-x_rm = rand_multipliers[0]              # random multiplier per axis
-y_rm = rand_multipliers[1]
-z_rm = rand_multipliers[2]
-
-
-### function starts here ###
-# determine offsets
-offsets = np.zeros(3)
-for i in range( 0, len(printer) ):
-    offsets[i] = ( printer[i] - limits[i] )/2
-
-# create positions
-position = np.zeros((steps, 3))
-for i in range( 0, steps ):
-
-    # generate random multipliers
-    rm = np.random.rand(3,1)
-
-    # generate positions
-    for j in range( 0, len(rm) ):
-        position[i,j] = limits[j]*rm[j] + offsets[j]
-"""
+position, climits, printer = random_cwalk( printer,
+                                           climits,
+                                           steps )
+gcode_gen_cwalk( 'test',
+                 position[:,0],
+                 position[:,1],
+                 position[:,2],
+                 printer,
+                 3600,
+                 5000,
+                 1 )
