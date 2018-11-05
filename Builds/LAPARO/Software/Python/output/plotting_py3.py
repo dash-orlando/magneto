@@ -99,6 +99,9 @@ ye_se   = []
 ze_se   = []
 
 
+filename = 'stats.txt'
+file = open( filename, 'w')
+
 for i in range( 0, Npos ):
     data_len = pos[i][1]-pos[i][0]                                          # number of data points (n)
 
@@ -131,6 +134,27 @@ for i in range( 0, Npos ):
     xe_se.append(   xe_std[i] / np.sqrt( data_len )     )
     ye_se.append(   ye_std[i] / np.sqrt( data_len )     )
     ze_se.append(   ze_std[i] / np.sqrt( data_len )     )
+
+    file.write( '{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} \n'.format( xm_mean[i],
+                                                                                                    ym_mean[i],
+                                                                                                    zm_mean[i],
+                                                                                                    xe_mean[i],
+                                                                                                    ye_mean[i],
+                                                                                                    ze_mean[i],
+                                                                                                    xm_std[i],
+                                                                                                    ym_std[i],
+                                                                                                    zm_std[i],
+                                                                                                    xe_std[i],
+                                                                                                    ye_std[i],
+                                                                                                    ze_std[i],
+                                                                                                    xm_se[i],
+                                                                                                    ym_se[i],
+                                                                                                    zm_se[i],
+                                                                                                    xe_se[i],
+                                                                                                    ye_se[i],
+                                                                                                    ze_se[i] ) )
+
+file.close()
 
 # ========================================================================= #
 # plotting
