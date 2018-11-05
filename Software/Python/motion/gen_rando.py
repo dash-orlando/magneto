@@ -12,7 +12,7 @@ import  numpy       as      np
 
 
 # inputs
-printer = np.array([150,150,150])
+printer = np.array([150,150,50])
 climits = printer/3
 steps = 20                              # number of positions/iterations
 
