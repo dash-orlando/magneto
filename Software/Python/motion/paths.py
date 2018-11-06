@@ -15,7 +15,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-
+# -------------------------------------------------------------------------------------- #
 def helix():
     """
     Generates a default parametric helix obtained from the matplotlib examples
@@ -35,6 +35,7 @@ def helix():
     
     return x, y, z, r, theta
 
+# -------------------------------------------------------------------------------------- #
 def unit_helix():
     """
     Generates a unit helix
@@ -56,6 +57,7 @@ def unit_helix():
     
     return x, y, t
 
+# -------------------------------------------------------------------------------------- #
 def prog_helix( max_x, max_y, max_z ):
     """
     Generates a helix based on the maximum ranges in x, y, and z, given by;
@@ -76,7 +78,7 @@ def prog_helix( max_x, max_y, max_z ):
     
     return x, y, z 
 
-
+# -------------------------------------------------------------------------------------- #
 def random_walk( printer, limits, steps):
     """
     Generates a random motion based on the printer volume and input limits
@@ -112,7 +114,8 @@ def random_walk( printer, limits, steps):
 
     #return
     return position, offsets, limits, printer
-    
+
+# -------------------------------------------------------------------------------------- #   
 def random_cwalk( printer, climits, steps):
     """
     Generates a random motion based on the printer volume and input limits
@@ -138,4 +141,43 @@ def random_cwalk( printer, climits, steps):
 
     #return
     return position, climits, printer    
+
+# ------------------------------------------------------------------------------------- #
+def random_cwalkwr( printer, climits, steps):
+    """
+    Random Center Walk with Retraction
     
+        Random motion based on the printer volume and input limits
+        Movements are relative to the center of the build plate
+        Random movements are followed by a retraction to the origin
+
+        printer   --> Print volume of the printer (x_max, y_max, z_max)
+        limits    --> Maximum travel for the random walk (x_limit, y_limit, z_limit)
+        steps     --> Number of random steps to be calculated
+        intervals --> Time pause between positions
+    """
+
+    # create positions
+    axes        = 3
+    steps_corr  = steps * 2                                                             # correction for the number of steps - every step is followed by a retraction, hence doubling the number of steps                                                  
+    position    = np.zeros((steps_corr, 3))                                             # initialization of position array
+    for i in range( 0, steps_corr ):                                                         
+
+        # even/odd check
+        if ( i % 2 == 0 ):                                                              # if the counter is even, including 0, the programs performs a random walk
+            # generate random multipliers
+            rm = np.random.rand(3,1) - np.random.rand(3,1)
+
+            # generate positions
+            for j in range( 0, len(rm) ):
+                position[i,j] = climits[j]*rm[j]
+
+        elif ( i % 2 == 1 ):                                                            # if the counter is odd, the program performs a retraction
+            # generate positions
+            for j in range( 0, axes ):
+                position[i,j] = position[i-1,j]*(-1)
+
+    #return
+    return position, climits, printer
+
+# ------------------------------------------------------------------------------------- #
