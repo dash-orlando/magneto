@@ -12,7 +12,8 @@ import  numpy       as      np
 
 
 # inputs
-printer = np.array([150,150,50])
+holder_offset = np.array([2.50, 60.00, 0])
+printer = np.array([150,150,75]) + holder_offset
 climits = printer/3
 steps = 20                              # number of positions/iterations
 
@@ -21,7 +22,7 @@ position, climits, printer = random_cwalkwr( printer,
                                            steps )
 
 
-gcode_gen_cwalk( 'cwalkwr_test_1',
+gcode_gen_cwalk( 'cwalkwr_test_2z75',
                  position[:,0],
                  position[:,1],
                  position[:,2],
@@ -29,3 +30,4 @@ gcode_gen_cwalk( 'cwalkwr_test_1',
                  3600,
                  5000,
                  1 )
+
