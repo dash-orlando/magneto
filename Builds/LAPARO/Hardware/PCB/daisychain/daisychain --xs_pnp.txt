@@ -1,0 +1,66 @@
+*Pick And Place List
+*Company=
+*Author=
+*eMail=
+*
+*Project=daisychain --xs
+*Date=17:08:16
+*CreatedBy=Fritzing 0.9.3b.04.19.5c895d327c44a3114e5fcc9d8260daf0cbb52806
+*
+*
+*Coordinates in mm, always center of component
+*Origin 0/0=Lower left corner of PCB
+*Rotation in degree (0-360, math. pos.)
+*
+*No;Value;Package;X;Y;Rotation;Side;Name
+1;;THT;2.2709;-12.5162;0;Bottom;IN
+2;;;1.3208;-6.22;0;Bottom;Copper Fill11
+3;;;15.24;-12.2779;0;Bottom;Copper Fill21
+4;;;17.8181;-23.4285;0;Bottom;Copper Fill13
+5;;;9.48317;-13.7183;0;Bottom;TXT1
+6;;;25.593;-5.98293;0;Bottom;TXT1
+7;;;27.3304;-6.22;0;Bottom;Copper Fill8
+8;;;15.2654;-17.5865;0;Bottom;Copper Fill2
+9;;;18.6944;-22.6284;0;Bottom;Copper Fill15
+10;;;15.3509;-12.4062;90;Bottom;LSM9DS1
+11;;;15.24;-21.4727;0;Bottom;Copper Fill1
+12;;;25.4188;-11.1593;0;Bottom;TXT1
+13;;;1.3208;-6.22;0;Bottom;Copper Fill26
+14;;;9.39906;-16.254;0;Bottom;TXT1
+15;;;25.457;-8.63725;0;Bottom;TXT1
+16;;;29.083;-6.22;0;Bottom;Copper Fill9
+17;;;15.2654;-12.5065;0;Bottom;Copper Fill4
+18;;;10.2489;-5.8009;0;Bottom;Copper Fill28
+19;;;15.2654;-9.9665;0;Bottom;Copper Fill5
+20;;;4.064;-21.4727;0;Bottom;Copper Fill16
+21;;;15.2654;-15.0465;0;Bottom;Copper Fill3
+22;;;10.541;-5.3056;0;Bottom;Copper Fill29
+23;;;15.24;-4.5817;0;Bottom;Copper Fill6
+24;;;28.2321;-5.3437;0;Bottom;Copper Fill7
+25;;;7.5692;-15.0973;0;Bottom;Copper Fill18
+26;;;17.8181;-21.7775;0;Bottom;Copper Fill14
+27;;;18.6944;-22.6284;0;Bottom;Copper Fill32
+28;;;17.8181;-23.4285;0;Bottom;Copper Fill30
+29;;;17.8181;-21.7775;0;Bottom;Copper Fill31
+30;;;25.5325;-18.7919;0;Bottom;TXT1
+31;;;2.2225;-5.3437;0;Bottom;Copper Fill25
+32;;sj_2s-notrace;6.57;-11.2462;180;Top;SJ3
+33;;sj_2s-notrace;6.57;-16.3462;180;Top;SJ5
+34;;;4.88485;-18.7607;0;Bottom;TXT1
+35;;;25.4188;-13.6861;0;Bottom;TXT1
+36;;;29.083;-6.22;0;Bottom;Copper Fill24
+37;;;9.47724;-11.1593;0;Bottom;TXT1
+38;;;3.0988;-6.22;0;Bottom;Copper Fill27
+39;;;4.7143;-6.05312;0;Bottom;TXT1
+40;;sj_2s-notrace;6.57;-13.8462;180;Top;SJ4
+41;;;4.75472;-8.60867;0;Bottom;TXT1
+42;;;28.2321;-5.3437;0;Bottom;Copper Fill22
+43;;;27.3304;-6.22;0;Bottom;Copper Fill23
+44;;;7.5692;-12.5319;0;Bottom;Copper Fill19
+45;;;8.9154;-15.6053;0;Bottom;Copper Fill20
+46;;;2.2225;-5.3437;0;Bottom;Copper Fill10
+47;;sj_2s-notrace;9.85828;-5.24618;0;Top;JGND
+48;;;7.5946;-19.4407;0;Bottom;Copper Fill17
+49;;THT;28.2709;-12.5162;0;Bottom;OUT
+50;;;3.0988;-6.22;0;Bottom;Copper Fill12
+51;;;25.3012;-16.2502;0;Bottom;TXT1
