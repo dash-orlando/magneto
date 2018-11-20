@@ -1,0 +1,55 @@
+*Pick And Place List
+*Company=
+*Author=
+*eMail=
+*
+*Project=daisychain --xs
+*Date=20:38:41
+*CreatedBy=Fritzing 0.9.3b.04.19.5c895d327c44a3114e5fcc9d8260daf0cbb52806
+*
+*
+*Coordinates in mm, always center of component
+*Origin 0/0=Lower left corner of PCB
+*Rotation in degree (0-360, math. pos.)
+*
+*No;Value;Package;X;Y;Rotation;Side;Name
+1;;;6.1214;-2.9514;0;Bottom;Copper Fill19
+2;;;20.2438;-5.5295;0;Bottom;Copper Fill7
+3;;;22.0218;-5.5295;0;Bottom;Copper Fill22
+4;;;9.13874;-13.0391;0;Bottom;TXT1
+5;;;11.7856;-16.896;0;Bottom;Copper Fill2
+6;;;14.2621;-21.087;0;Bottom;Copper Fill26
+7;;sj_2s-no;6.59262;-15.667;180;Top;SJ5
+8;;;11.7348;-4.8056;0;Bottom;Copper Fill6
+9;;;7.9502;-2.6212;0;Bottom;Copper Fill20
+10;;;3.2512;-5.5295;0;Bottom;Copper Fill10
+11;;THT;2.39369;-11.797;0;Bottom;IN
+12;;;11.7737;-11.727;90;Bottom;LSM9DS1
+13;;;11.7348;-12.324;0;Bottom;Copper Fill18
+14;;;9.24429;-10.48;0;Bottom;TXT1
+15;;;20.2438;-5.5295;0;Bottom;Copper Fill21
+16;;;4.826;-19.3344;0;Bottom;Copper Fill14
+17;;;6.54727;-18.0815;0;Bottom;TXT1
+18;;;11.7856;-9.276;0;Bottom;Copper Fill5
+19;;;5.8674;-14.3814;0;Bottom;Copper Fill15
+20;;;5.0506;-5.37391;0;Bottom;TXT1
+21;;;14.2621;-22.738;0;Bottom;Copper Fill25
+22;;;7.2136;-14.9148;0;Bottom;Copper Fill17
+23;;;1.4732;-5.5295;0;Bottom;Copper Fill23
+24;;sj_2s-no;7.84369;-3.96696;0;Top;JGND
+25;;;5.02981;-7.92946;0;Bottom;TXT1
+26;;THT;21.1937;-11.797;0;Bottom;OUT
+27;;;11.7348;-20.6044;0;Bottom;Copper Fill1
+28;;;9.12915;-15.5748;0;Bottom;TXT1
+29;;;11.7856;-11.816;0;Bottom;Copper Fill4
+30;;;14.2621;-22.738;0;Bottom;Copper Fill11
+31;;;15.113;-21.9379;0;Bottom;Copper Fill13
+32;;;14.2621;-21.087;0;Bottom;Copper Fill12
+33;;;22.0218;-5.5295;0;Bottom;Copper Fill8
+34;;;3.2512;-5.5295;0;Bottom;Copper Fill24
+35;;sj_2s-no;6.59262;-10.567;180;Top;SJ3
+36;;;1.4732;-5.5295;0;Bottom;Copper Fill9
+37;;;15.113;-21.9379;0;Bottom;Copper Fill27
+38;;sj_2s-no;6.59262;-13.167;180;Top;SJ4
+39;;;11.7856;-14.356;0;Bottom;Copper Fill3
+40;;;5.8674;-11.8668;0;Bottom;Copper Fill16
