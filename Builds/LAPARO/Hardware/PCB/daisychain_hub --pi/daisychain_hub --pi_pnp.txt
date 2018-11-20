@@ -1,0 +1,27 @@
+*Pick And Place List
+*Company=
+*Author=
+*eMail=
+*
+*Project=daisychain_hub --pi
+*Date=12:10:46
+*CreatedBy=Fritzing 0.9.3b.04.19.5c895d327c44a3114e5fcc9d8260daf0cbb52806
+*
+*
+*Coordinates in mm, always center of component
+*Origin 0/0=Lower left corner of PCB
+*Rotation in degree (0-360, math. pos.)
+*
+*No;Value;Package;X;Y;Rotation;Side;Name
+1;;;14.1325;-59.2746;-90;Bottom;TXT2
+2;;THT;3.81067;-32.7998;0;Bottom;J6
+3;;;23.9577;-19.0408;0;Bottom;TXT2
+4;;;23.9951;-21.5602;0;Bottom;TXT2
+5;;;16.6039;-59.2746;-90;Bottom;TXT2
+6;;;7.3068;-13.709;0;Bottom;TXT2
+7;;;15.8207;-19.0798;0;Bottom;SparkFun 74HC4051 8-Channel Mux Breakout3
+8;;;24.04;-24.1272;0;Bottom;TXT2
+9;;THT;15.3107;-62.1098;90;Bottom;J5
+10;;;7.26547;-11.1845;0;Bottom;TXT2
+11;;;9.01313;-59.5394;-90;Bottom;TXT2
+12;;;11.6611;-59.1825;-90;Bottom;TXT2
