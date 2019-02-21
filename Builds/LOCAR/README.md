@@ -5,4 +5,9 @@ _**LOCAR**_, or the _**Location-based Trocar or Laparoscopic Trainer**_, is a co
 
 ## INSTALLATION
 ### Python 2.7
-
+1. Install the following requirements
+```
+sudo pip install numpy
+sudo pip install scipy
+sudo apt-get install python-scipy
+```
