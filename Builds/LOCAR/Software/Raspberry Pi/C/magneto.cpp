@@ -18,7 +18,7 @@
 //#define DEBUG 						1											// Verbose output
 
 // System parameters
-#define NSENS     					4                                       	// Number of sensors
+#define NSENS     					6                                       	// Number of sensors
 #define NAXES     					3                                       	// Number of axes
 #define X_LIM 						500 										// Boundary limits
 #define Y_LIM 						500 										// Boundary limits
