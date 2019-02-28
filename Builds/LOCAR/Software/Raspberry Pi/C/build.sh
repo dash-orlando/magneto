@@ -13,7 +13,7 @@ NC='\033[0m'		# No COLOR
 
 
 # EXECUTION ========================================================= #
-echo "${LPURPLE}########## STARTING MAGNETO SETUP ##########${NC}"
+echo "${LPURPLE}### STARTING MAGNETO SETUP ############${NC}"
 
 echo "${GREEN}[1] MAKING LSM9DS1 LIBRARIES...${NC}"
 # Currently using the relative of the repository
@@ -55,5 +55,4 @@ sudo make clean
 # Make magneto
 sudo make
 
-
-
+echo "${LPURPLE}### PROGRAM COMPLETE ###################${NC}"
