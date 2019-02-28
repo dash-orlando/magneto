@@ -1,0 +1,56 @@
+*Pick And Place List
+*Company=
+*Author=
+*eMail=
+*
+*Project=daisychain --xs
+*Date=22:49:25
+*CreatedBy=Fritzing 0.9.3b.04.19.5c895d327c44a3114e5fcc9d8260daf0cbb52806
+*
+*
+*Coordinates in mm, always center of component
+*Origin 0/0=Lower left corner of PCB
+*Rotation in degree (0-360, math. pos.)
+*
+*No;Value;Package;X;Y;Rotation;Side;Name
+1;;;6.54731;-18.0815;0;Bottom;TXT1
+2;;;11.7856;-16.896;0;Bottom;Copper Fill2
+3;;;14.2621;-22.738;0;Bottom;Copper Fill26
+4;;;1.4732;-5.5295;0;Bottom;Copper Fill22
+5;;;20.2438;-5.5295;0;Bottom;Copper Fill24
+6;;sj_2s-no;6.59267;-10.567;180;Top;SJ3
+7;;sj_2s-no;7.84376;-3.96697;0;Top;JGND
+8;;;5.8674;-11.8668;0;Bottom;Copper Fill17
+9;;;11.7348;-20.6044;0;Bottom;Copper Fill1
+10;;;15.113;-21.9379;0;Bottom;Copper Fill13
+11;;;11.7856;-9.276;0;Bottom;Copper Fill5
+12;;;14.2621;-22.738;0;Bottom;Copper Fill11
+13;;;11.7856;-11.816;0;Bottom;Copper Fill4
+14;;;5.8674;-14.3814;0;Bottom;Copper Fill16
+15;;;5.05069;-5.37391;0;Bottom;TXT1
+16;;;11.7856;-14.356;0;Bottom;Copper Fill3
+17;;;9.13879;-13.0391;0;Bottom;TXT1
+18;;;22.0218;-5.5295;0;Bottom;Copper Fill25
+19;;sj_2s-no;6.59267;-15.667;180;Top;SJ5
+20;;;6.1214;-2.9514;0;Bottom;Copper Fill20
+21;;sj_2s-no;6.59267;-13.167;180;Top;SJ4
+22;;;7.9502;-2.6212;0;Bottom;Copper Fill21
+23;;;9.12919;-15.5748;0;Bottom;TXT1
+24;;;3.2512;-5.5295;0;Bottom;Copper Fill8
+25;;;5.8674;-18.7502;0;Bottom;Copper Fill15
+26;;;3.5814;-20.6044;0;Bottom;Copper Fill14
+27;;;3.2512;-5.5295;0;Bottom;Copper Fill23
+28;;;22.0218;-5.5295;0;Bottom;Copper Fill10
+29;;;1.4732;-5.5295;0;Bottom;Copper Fill7
+30;;;11.7737;-11.727;90;Bottom;LSM9DS1
+31;;;20.2438;-5.5295;0;Bottom;Copper Fill9
+32;;;15.113;-21.9379;0;Bottom;Copper Fill28
+33;;;14.2621;-21.087;0;Bottom;Copper Fill12
+34;;;7.2136;-14.9148;0;Bottom;Copper Fill18
+35;;;9.24434;-10.48;0;Bottom;TXT1
+36;;;11.7348;-12.324;0;Bottom;Copper Fill19
+37;;THT;21.1938;-11.797;0;Bottom;OUT
+38;;;14.2621;-21.087;0;Bottom;Copper Fill27
+39;;;11.7348;-4.8056;0;Bottom;Copper Fill6
+40;;THT;2.39381;-11.797;0;Bottom;IN
+41;;;5.0298;-7.92946;0;Bottom;TXT1

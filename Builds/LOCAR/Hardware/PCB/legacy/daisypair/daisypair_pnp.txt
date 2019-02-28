@@ -1,0 +1,55 @@
+*Pick And Place List
+*Company=
+*Author=
+*eMail=
+*
+*Project=daisypair
+*Date=15:41:03
+*CreatedBy=Fritzing 0.9.3b.04.19.5c895d327c44a3114e5fcc9d8260daf0cbb52806
+*
+*
+*Coordinates in mm, always center of component
+*Origin 0/0=Lower left corner of PCB
+*Rotation in degree (0-360, math. pos.)
+*
+*No;Value;Package;X;Y;Rotation;Side;Name
+1;;;29.083;-9.2172;0;Bottom;Copper Fill7
+2;;;15.24;-6.0803;0;Bottom;Copper Fill4
+3;;;28.2321;-8.3409;0;Bottom;Copper Fill5
+4;;;17.8181;-21.7775;0;Bottom;Copper Fill12
+5;;;2.2225;-8.3409;0;Bottom;Copper Fill8
+6;;;15.351;-12.4062;90;Bottom;LSM9DS1
+7;;;10.2489;-5.8009;0;Bottom;Copper Fill27
+8;;;25.9505;-16.6749;0;Bottom;TXT1
+9;;;25.8654;-11.6128;0;Bottom;TXT1
+10;;;17.8181;-21.7775;0;Bottom;Copper Fill25
+11;;;15.2654;-12.9637;0;Bottom;Copper Fill3
+12;;THT;2.27097;-12.9762;0;Bottom;IN
+13;;;4.80862;-9.10296;0;Bottom;TXT1
+14;;;28.2321;-8.3409;0;Bottom;Copper Fill18
+15;;;25.8654;-14.1651;0;Bottom;TXT1
+16;;;27.3304;-9.2172;0;Bottom;Copper Fill6
+17;;;18.6944;-22.6284;0;Bottom;Copper Fill26
+18;;;4.79538;-14.1358;0;Bottom;TXT1
+19;;;8.8646;-17.1039;0;Bottom;Copper Fill16
+20;;;25.8214;-9.10628;0;Bottom;TXT1
+21;;;18.6944;-22.6284;0;Bottom;Copper Fill13
+22;;;2.2225;-8.3409;0;Bottom;Copper Fill21
+23;;;1.3208;-9.2172;0;Bottom;Copper Fill9
+24;;;10.541;-5.3056;0;Bottom;Copper Fill28
+25;;;3.0988;-9.2172;0;Bottom;Copper Fill23
+26;;;15.24;-12.2779;0;Bottom;Copper Fill17
+27;;;15.2654;-15.5037;0;Bottom;Copper Fill2
+28;;;1.3208;-9.2172;0;Bottom;Copper Fill22
+29;;;5.3594;-20.4313;0;Bottom;Copper Fill14
+30;;;27.3304;-9.2172;0;Bottom;Copper Fill19
+31;;;4.76608;-11.6128;0;Bottom;TXT1
+32;;;7.5946;-18.3739;0;Bottom;Copper Fill15
+33;;;3.0988;-9.2172;0;Bottom;Copper Fill10
+34;;THT;28.271;-12.9762;0;Bottom;OUT
+35;;sj_2s-notrace;9.85828;-5.24617;0;Top;JGND
+36;;;29.083;-9.2172;0;Bottom;Copper Fill20
+37;;;4.80862;-16.6749;0;Bottom;TXT1
+38;;;17.8181;-23.4285;0;Bottom;Copper Fill11
+39;;;17.8181;-23.4285;0;Bottom;Copper Fill24
+40;;;15.24;-20.4313;0;Bottom;Copper Fill1
