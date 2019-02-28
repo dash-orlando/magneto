@@ -1,6 +1,15 @@
 # MAGNETO
 3D Non-Contact Position Tracking of Magnetic Field Sources
 
+## BUILDS
+Several applications of the **MAGNETO** system are been developed by our team.
+Applications or adaptations of the **MAGNETO** system are referred to **Builds**:
+* 4MAG
+* ENCODER
+* 6MAG
+* [LOCAR]()
+
+
 ### Publications
 Our most recent publications include:
 
