@@ -140,6 +140,11 @@ int main( int argc, char *argv[] )
 			#ifdef DEBUG
 				print_lm_verbose();
 			#else
+				// Calculating end-ffector
+				end_effector(init_guess, end_effector_pos);
+				printf( "%d", test );
+				
+				// Printing output
 				for( uint8_t i = 0; i < m; ++i )
 				{
 					printf( "p[%i] = %.3lf ", i, init_guess[i]*1000 ); 			// Write to stdout

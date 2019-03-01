@@ -21,7 +21,7 @@ cd ../ ; cd Libraries/LSM9DS1_RaspberryPi_Library/
 # ...
 echo "${RED}WARNING: Program will remove previous/old builds...${NC}"
 # Clean libraries
-sudo make clean
+#sudo make clean
 # Make libraries
 sudo make
 # Install libraries
@@ -37,7 +37,7 @@ cd ../ ; cd levmar-2.6/
 # ...
 echo "${RED}WARNING: Program will remove previous/old builds...${NC}"
 # Clean lavmar
-sudo make clean
+#sudo make clean
 # Build levmar
 sudo make
 
