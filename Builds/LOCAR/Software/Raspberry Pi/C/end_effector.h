@@ -14,7 +14,7 @@ double end_effector_pos[NAXES]  = {0};                                  // End E
 double tool_length              = 318;                                  // Length (in mm) of the laparoscopic tool (scissors) --Note that length will change depending on tool
 double tool_shaft_length        = 0;                                    //
 double mag_pos_vector_len       = 0;                                    // Vector length (in mm) from the center of the magnetic tracking array (ring) and the center of the magnet
-int    test                     = 0;
+double test                     = 0;
 
 /*
  *        |          |    -------------------> handle
@@ -50,8 +50,7 @@ int    test                     = 0;
 double end_effector(double* init_guess, double* end_effector_pos)
 {
   // Calculate Magnet Position Vector Length
-  //mag_pos_vector_len = sqrt(( pow(init_guess[0], 2.0) + pow(init_guess[1], 2.0) + pow(init_guess[2], 2.0) ));
-  test = sqrt(9);  
+  mag_pos_vector_len = sqrt(( intpow(init_guess[0], 2) + intpow(init_guess[1], 2) + intpow(init_guess[2], 2) ));
   /*
   double r = 1.0;
   if (b < 0)
@@ -68,5 +67,5 @@ double end_effector(double* init_guess, double* end_effector_pos)
   }
   return r;
   */
-  return test;
+  return mag_pos_vector_len;
 }

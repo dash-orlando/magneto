@@ -141,13 +141,13 @@ int main( int argc, char *argv[] )
 				print_lm_verbose();
 			#else
 				// Calculating end-ffector
-				end_effector(init_guess, end_effector_pos);
-				printf( "%d", test );
+				end_effector(init_guess, end_effector_pos);						// Determine the position of the end-effector
 				
 				// Printing output
 				for( uint8_t i = 0; i < m; ++i )
 				{
-					printf( "p[%i] = %.3lf ", i, init_guess[i]*1000 ); 			// Write to stdout
+					printf( "pm[%i] = %.3lf ", i, init_guess[i]*1000 ); 		// Write magnet position to stdout
+					printf( "pe[%i] = %.3lf ", i, mag_pos_vector_len[i]*1000 ); // Write end-effector position to stdout
 					fprintf( logfile, "p[%i] = %.3lf ", i, init_guess[i]*1000 );// Write to file
 					init_guess[i] =+ dx;
 				} 	printf( " t = %i\n", end_time ); fprintf( logfile, " t = %i\n", end_time );
