@@ -146,10 +146,14 @@ int main( int argc, char *argv[] )
 				// Printing output
 				for( uint8_t i = 0; i < m; ++i )
 				{
-					printf( "pm[%i] = %.3lf ", i, init_guess[i]*1000 ); 		// Write magnet position to stdout
-					printf( "pe[%i] = %.3lf ", i, mag_pos_vector_len[i]*1000 ); // Write end-effector position to stdout
-					fprintf( logfile, "p[%i] = %.3lf ", i, init_guess[i]*1000 );// Write to file
+					//printf( "pm[%i] = %.3lf ", i, init_guess[i]*1000 ); 				// Write magnet position to stdout
+					//printf( "pe[%i] = %.3lf ", i, mag_pos_vector_len*1000 ); 			// Write end-effector position to stdout
+					
+					//fprintf( logfile, "pm[%i] = %.3lf ", i, init_guess[i]*1000 );		// Write to file
+					//fprintf( logfile, "pe[%i] = %.3lf ", i, mag_pos_vector_len*1000 ); 	// Write end-effector position to file
+					
 					init_guess[i] =+ dx;
+					//printf( " dx = %.3lf", dx );										// send email to MO... this counter does not seem to serve any purpose...
 				} 	printf( " t = %i\n", end_time ); fprintf( logfile, " t = %i\n", end_time );
 			#endif
 		}
