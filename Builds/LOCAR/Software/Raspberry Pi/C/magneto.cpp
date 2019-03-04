@@ -15,7 +15,14 @@
 #include "levmar.h"
 
 // Uncomment for debugging
-//#define DEBUG 						1											// Verbose output
+#define DEBU						5											// Verbose output
+/*
+ * DEBUG							1											Verbose Output ALL
+ * "								2											--
+ * "								3											--
+ * "								4											--
+ * "								5											Verbose Output for the END EFFECTOR Function
+ */
 
 // System parameters
 #define NSENS     					6                                       	// Number of sensors
