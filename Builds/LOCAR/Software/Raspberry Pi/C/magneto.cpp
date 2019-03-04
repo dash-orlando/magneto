@@ -15,7 +15,7 @@
 #include "levmar.h"
 
 // Uncomment for debugging
-#define DEBU						5											// Verbose output
+#define DEBUG						5											// Verbose output
 /*
  * DEBUG							1											Verbose Output ALL
  * "								2											--

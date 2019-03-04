@@ -10,18 +10,18 @@
  *    Magnetic-Based Position Tracking
  */
  
-#define DEBUG                     5                                     // Debug only specific to the end effector function
+//#define DEBUG                     5                                     // Debug only specific to the end effector function
 #define PI                        3.14159265                            // Local definition of PI --Need to check correspondance across modules
 
 bool    status                    = true;
 int     error                     = 0;
-double  end_effector_pos[NAXES]          = {0};                                // End Effector Position Array Initialization
+double  end_effector_pos[NAXES]   = {0};                                // End Effector Position Array Initialization
 double  tool_length               = 318;                                // Length (in mm) of the laparoscopic tool (scissors) --Note that length will change depending on tool
 double  calc_tool_length          = 0;                                  // Calculated tool length (in mm) for error calculation
 double  tool_length_error         = 0;
 double  dist_ring_to_effector     = 0;                                  //
 double  mag_pos_vector_len        = 0;                                  // Vector length (in mm) from the center of the magnetic tracking array (ring) and the center of the magnet
-double  alphas[NAXES]                    = {0};
+double  alphas[NAXES]             = {0};
 double  test                      = 0;
 
 /*
