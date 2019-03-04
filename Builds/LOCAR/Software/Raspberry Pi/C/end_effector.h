@@ -78,11 +78,15 @@ double end_effector(double* init_guess, double* end_effector_pos)
   tool_length_error = tool_length - calc_tool_length;
   
   // Printing Statments
-  printf( " alphas = " );
-  for( uint8_t i = 0; i < NAXES; ++i ) printf( "%.3lf, ", alphas[i] );
-  printf( "\n epos = " );
-  for( uint8_t i = 0; i < NAXES; ++i ) printf( "%.3lf ", end_effector_pos[i] );
-  printf( "\n Meas. Tool Length = %.3lf | Calc. = %.3lf | Error = %.3lf \n", tool_length, calc_tool_length, tool_length_error);
+  if( DEBUG == 5 )
+  {
+    printf(" END EFFECTOR DEBUG ============================= \n" );
+    printf( " alphas = " );
+    for( uint8_t i = 0; i < NAXES; ++i ) printf( "%.3lf, ", alphas[i] );
+    printf( "\n epos = " );
+    for( uint8_t i = 0; i < NAXES; ++i ) printf( "%.3lf ", end_effector_pos[i] );
+    printf( "\n Meas. Tool Length = %.3lf | Calc. = %.3lf | Error = %.3lf \n\n", tool_length, calc_tool_length, tool_length_error);
+  }
   
   return tool_length;
 }

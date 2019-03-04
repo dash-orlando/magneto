@@ -122,9 +122,8 @@ int main( int argc, char *argv[] )
 				CAL[i][j] = RAW[i][j] - BASE[i][j]; 							// 	Store CALIBRATED readings
 				norm[ i ] += CAL[i][j] * CAL[i][j]; 							// 	Compute norm (1/2)
 				
-				#ifdef DEBUG													// IF DEBUG
-					print_mag( buff, CAL[i][j], i, j ); 						// 		Construct & print mag field array data
-				#endif
+				if( DEBUG == 1 ) print_mag( buff, CAL[i][j], i, j ); 			//  Construct & print mag field array data
+				
 			}
 			norm[ i ] = sqrt( norm[i] ); 										// Compute norm (2/2)
 		} 	find_max_norm( norm, NSENS, ndx );									// Find sorted indices of sensors with maximum norms
@@ -144,9 +143,12 @@ int main( int argc, char *argv[] )
 		
 		else
 		{
-			#ifdef DEBUG
+			if( DEBUG == 1 )
+			{
 				print_lm_verbose();
-			#else
+			}
+			else
+			{
 				// Calculating end-ffector
 				end_effector(init_guess, end_effector_pos);						// Determine the position of the end-effector
 				
@@ -162,7 +164,7 @@ int main( int argc, char *argv[] )
 					init_guess[i] =+ dx;
 					//printf( " dx = %.3lf", dx );										// send email to MO... this counter does not seem to serve any purpose...
 				} 	printf( " t = %i\n", end_time ); fprintf( logfile, " t = %i\n", end_time );
-			#endif
+			}
 		}
 		
 	} exit(EXIT_SUCCESS);
