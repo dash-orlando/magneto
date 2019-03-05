@@ -1,13 +1,9 @@
-# MAGNETO
-3D Non-Contact Position Tracking of Magnetic Field Sources
+# LOCAR
+## Location-based Trocar System, Laparosciopic Trainer
 
-## BUILDS
-Several applications of the **MAGNETO** system are been developed by our team.
-Applications or adaptations of the **MAGNETO** system are referred to **Builds**:
-* 4MAG
-* ENCODER
-* 6MAG
-* [LOCAR]()
+Laparoscopy has given physicians the opportunity to perform complex operations through small incisions. Although laparoscopic surgery may never replace open surgery in some situations, it has become a very common procedure for physicians across many specialties; worldwide nearly 15 million procedures are performed annually [1]. The complexity of laparoscopic surgery leads to a steep learning curve for physicians in training [2]. Difficulties assimilating concepts such as depth of field, spatial and anatomical orientation can increase time of the operation and lead to mistakes. Laparoscopy simulation and training improves dexterity, speed and fosters the physician’s familiarity with key anatomical features.
+
+Through the analysis of magnetic field vectors, we developed a real-time, non-contacting, and cost-effective method for position tracking [3]. We used this method to develop a laparoscopic trainer that overcomes the obstacles of commercially available systems, at a fraction of their cost Relying on permanent magnets allows the tracking of any laparoscopy tool, including tool swapping without need of resetting the system. Real-time tracking enhances spatial awareness and increase accuracy of movements. As a non-optical method, the system can feature realistic scenarios where the end-effectors are out-of-sight, covered, buried, or submerged. Realistic scenarios feature anatomically correct structures, giving medical students, residents and other physicians a more true-to-life experience. The ability to have an accurate platform that is also very inexpensive, allows more individuals to have access to crucial training. In addition to improvements, future goals include the creation of realistic training scenario and assessment of the technology’s potential beyond the training realm. We will seek applicability during laparoscopic surgery or other minimally-invasive procedures in which live tracking is required or needed.
 
 
 ### Publications
@@ -15,14 +11,9 @@ Our most recent publications include:
 
 1.  _**Odeh, M., Nichols, E. D., Fenoglietto, F. L., & Stubbs, J.** (2018). Real-Time, Non-Contact Position Tracking of Medical Devices and Surgical Tools Through the Analysis of Magnetic Field Vectors. 2018 Design of Medical Devices Conference. doi:10.1115/dmd2018-6862_
 
-
 ### References
-The MAGNETO project was based of the following work:
+1.  _Abbott, T., Fowler, A., Dobbs, T., Harrison, E., Gillies, M., & Pearse, R. (2017). Frequency of surgical treatment and related hospital procedures in the UK: A national ecological study using hospital episode statistics. British Journal of Anaesthesia, 119(2), 249-257. doi:10.1093/bja/aex137_
 
-1.  _Han, X., Seki, H., Kamiya, Y., and Hikizu, M. “Wearable handwriting input device using magnetic field Geomagnetism cancellation in position calculation.” Precision Engineering Vol. 33 Issue 1 (2009), pp: 37-43. DOI 10.1016/j.precisioneng.2008.03.008._
+2.  _Agha, R., & Muir, G. (2003). Does laparoscopic surgery spell the end of the open surgeon? Jrsm, 96(11), 544-546. doi:10.1258/jrsm.96.11.544_
 
-2.  _Han, X., Seki, H., Kamiya, Y., and Hikizu, M. “Wearable handwriting input device using magnetic field 2nd report: Influence of misalignment of magnet and writing plane.” Precision Engineering Vol. 34 Issue 3 (2010), pp: 425-430. DOI 10.1016/j.precisioneng.2009.12.005_
-
-3.  _Chen, K., Lyons, K., White, S., and Patel, S. “uTrack: 3D Input Using Two Magnetic Sensors” In Proceedings of the 26th Annual ACM Symposium on User Interface Software and Technology (UIST 2013). pp: 237-244. St. Andrews, UK, October 8th-11th, 2013. DOI 10.1145/2501988.2502035_
-
-4.  _Chen, K., Patel, S., and Keller, S. “Finexus: Tracking Precise Motions of Multiple Fingertips Using Magnetic Sensing” In Proceedings of the 2016 CHI Conference on Human Factors in Computing Systems (CHI 2016), ACM. pp: 1504-1514. San Jose, California, USA, May 7th-12th, 2016. DOI 10.1145/2858036.2858125_
+3.  _**Odeh, M., Nichols, E. D., Fenoglietto, F. L., & Stubbs, J.** (2018). Real-Time, Non-Contact Position Tracking of Medical Devices and Surgical Tools Through the Analysis of Magnetic Field Vectors. 2018 Design of Medical Devices Conference. doi:10.1115/dmd2018-6862_
