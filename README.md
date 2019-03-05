@@ -7,7 +7,7 @@ Applications or adaptations of the **MAGNETO** system are referred to **Builds**
 * 4MAG
 * ENCODER
 * 6MAG
-* [LOCAR]()
+* [LOCAR](https://github.com/pd3d/magneto/tree/locar/Builds/LOCAR)
 
 
 ### Publications
