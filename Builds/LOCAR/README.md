@@ -7,6 +7,13 @@ Through the analysis of magnetic field vectors, we developed a real-time, non-co
 
 For more information, visit the [project's website](https://pd3d.eecs.ucf.edu/portfolio_page/laparoscopic-trainer/)
 
+### Building LOCAR
+#### Hardware
+To build the **LOCAR**, you will need _(insert link to BOM and build instructions)_
+
+#### Software
+The latest version of **LOCAR** relies on C libraries built specifically for the Raspberry Pi.
+The [following instructions]() will guide you through the proper installation steps.
 
 ### Publications
 Our most recent publications include:
