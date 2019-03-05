@@ -15,7 +15,7 @@
 #include "levmar.h"
 
 // Uncomment for debugging
-#define DEBUG						0											// Verbose output
+#define DEBUG						0											
 /*
  * DEBUG							0											NO DEBUG
  * "								1											Verbose Output ALL
@@ -48,7 +48,6 @@ uint8_t ndx[ NAXES ] 		= {0};												// Store the index of the 3 sensors wit
 // Call auxiliary functions library
 #include "functions.h"
 
-
 int main( int argc, char *argv[] )
 {
 	if( wiringPiSetupGpio() == -1 ) 											// Start the wiringPi library
@@ -77,8 +76,8 @@ int main( int argc, char *argv[] )
 	find_max_norm( norm, NSENS, ndx );											// Find sorted indices of sensors with maximum norms
 	find_init_guess( init_guess, NAXES, XYZ, ndx ); 							// Find initial guess
 	
-	// Create logfile
-	FILE *logfile = fopen( "output.txt", "w" ); 								// Open file for writing
+	// Check for Output Files
+	//FILE *logfile = fopen( "output.txt", "w" ); 								// Open file for writing
 	if( logfile == NULL )
 	{
 		printf( "ERROR! Could not open file\n" );
@@ -132,7 +131,7 @@ int main( int argc, char *argv[] )
 		// Run the LMA to estimate the position of the magnet
 		ret=dlevmar_dif(system_of_eqns, init_guess, sensor_eqn, m, n, 1000, opts, info, NULL, NULL, NULL);  // no Jacobian
 		
-		unsigned int end_time = millis() - t;
+		unsigned int mag_pos_time = millis() - t;
 		
 		// Bound solution to a predetermined volume and Printing Results
 		if( fabs(init_guess[0]*1e3) > X_LIM || fabs(init_guess[0]*1e3) > X_LIM || fabs(init_guess[0]*1e3) > X_LIM )
@@ -157,13 +156,17 @@ int main( int argc, char *argv[] )
 					fprintf( logfile, "pm[%i] = %.3lf ", i, init_guess[i]*1000 );		// Write to file
 					
 					init_guess[i] =+ dx;
-				} 	printf( " t = %i\n", end_time ); fprintf( logfile, " t = %i\n", end_time );
+				} 	printf( " t = %i\n", mag_pos_time ); fprintf( logfile, " t = %i\n", mag_pos_time );
 			}
 		}
 		
+	// ---------------------------------------------------------------------------------------------
+	// --------------------------------- ADDITIONAL FUNCTIONS --------------------------------------
+	// ---------------------------------------------------------------------------------------------
+		
 		// End Effector Calculation ------------------------------------------- //
 		// 		Approximation of the LOCAR end-effector
-		end_effector(init_guess, end_effector_pos);
+		end_effector(init_guess, end_effector_pos, t);
 		
 		
 		

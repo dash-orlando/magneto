@@ -55,7 +55,7 @@ double  test                      = 0;
  * 
  */
 
-double end_effector(double* init_guess, double* end_effector_pos)
+double end_effector(double* init_guess, double* end_effector_pos, unsigned int t)
 {
   // Calculate Magnet Position Vector Length
   mag_pos_vector_len = sqrt(( intpow(init_guess[0], 2) + intpow(init_guess[1], 2) + intpow(init_guess[2], 2) ));
@@ -77,16 +77,27 @@ double end_effector(double* init_guess, double* end_effector_pos)
   // Diff. Error
   tool_length_error = tool_length - calc_tool_length;
   
-  // Printing Statments
-  if( DEBUG == 1 || DEBUG == 5 )
+  // Program Completion Timestamp
+  unsigned int effector_pos_time = millis() - t;
+  
+  // Printing Statments ----------------------------------------------- //
+  if( DEBUG == 0 )
+  {
+    for( uint8_t i = 0; i < NAXES; ++i )
+    {
+      printf( " pe[%i] = %.3lf ", i, end_effector_pos[i] );              // Print end-effector position values
+      fprintf( logfile, "pe[%i] = %.3lf ", i, end_effector_pos[i] );    // Write end-effector position values to file 
+    } printf( " t = %i\n", effector_pos_time ); fprintf( logfile, " t = %i\n", effector_pos_time );
+  }
+  else if( DEBUG == 1 || DEBUG == 5 )
   {
     printf(" END EFFECTOR DEBUG ============================= \n" );
     printf( " alphas = " );
     for( uint8_t i = 0; i < NAXES; ++i ) printf( "%.3lf, ", alphas[i] );
     printf( "\n epos = " );
     for( uint8_t i = 0; i < NAXES; ++i ) printf( "%.3lf ", end_effector_pos[i] );
-    printf( "\n Meas. Tool Length = %.3lf | Calc. = %.3lf | Error = %.3lf \n\n", tool_length, calc_tool_length, tool_length_error);
-  }
+    printf( "\n Meas. Tool Length = %.3lf | Calc. = %.3lf | Error = %.3lf \n", tool_length, calc_tool_length, tool_length_error);
+  } printf( " Execution Time = %i\n\n", effector_pos_time );
   
   return tool_length;
 }
