@@ -5,6 +5,8 @@ Laparoscopy has given physicians the opportunity to perform complex operations t
 
 Through the analysis of magnetic field vectors, we developed a real-time, non-contacting, and cost-effective method for position tracking [3]. We used this method to develop a laparoscopic trainer that overcomes the obstacles of commercially available systems, at a fraction of their cost Relying on permanent magnets allows the tracking of any laparoscopy tool, including tool swapping without need of resetting the system. Real-time tracking enhances spatial awareness and increase accuracy of movements. As a non-optical method, the system can feature realistic scenarios where the end-effectors are out-of-sight, covered, buried, or submerged. Realistic scenarios feature anatomically correct structures, giving medical students, residents and other physicians a more true-to-life experience. The ability to have an accurate platform that is also very inexpensive, allows more individuals to have access to crucial training. In addition to improvements, future goals include the creation of realistic training scenario and assessment of the technology’s potential beyond the training realm. We will seek applicability during laparoscopic surgery or other minimally-invasive procedures in which live tracking is required or needed.
 
+For more information, visit the [project's website](https://pd3d.eecs.ucf.edu/portfolio_page/laparoscopic-trainer/)
+
 
 ### Publications
 Our most recent publications include:
