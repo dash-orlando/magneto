@@ -13,7 +13,7 @@ To build the **LOCAR**, you will need _(insert link to BOM and build instruction
 
 #### Software
 The latest version of **LOCAR** relies on C libraries built specifically for the Raspberry Pi.
-The [following instructions]() will guide you through the proper installation steps.
+The [following instructions](https://github.com/pd3d/magneto/tree/locar/Builds/LOCAR/Software/Raspberry%20Pi/C) will guide you through the proper installation steps.
 
 ### Publications
 Our most recent publications include:
