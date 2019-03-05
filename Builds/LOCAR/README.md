@@ -9,7 +9,7 @@ Through the analysis of magnetic field vectors, we developed a real-time, non-co
 ### Publications
 Our most recent publications include:
 
-1.  _**Odeh, M., Nichols, E. D., Fenoglietto, F. L., & Stubbs, J.** (2018). Real-Time, Non-Contact Position Tracking of Medical Devices and Surgical Tools Through the Analysis of Magnetic Field Vectors. 2018 Design of Medical Devices Conference. doi:10.1115/dmd2018-6862_
+1.  _**Boutelle, M., Odeh, M., Fenoglietto, F. L., & Stubbs, J.** (2019). Cost Effective Laparoscopic Trainer Utilizng Magnetic-Based Position Tracking. 2019 Design of Medical Devices Conference. **Accepted**_
 
 ### References
 1.  _Abbott, T., Fowler, A., Dobbs, T., Harrison, E., Gillies, M., & Pearse, R. (2017). Frequency of surgical treatment and related hospital procedures in the UK: A national ecological study using hospital episode statistics. British Journal of Anaesthesia, 119(2), 249-257. doi:10.1093/bja/aex137_
