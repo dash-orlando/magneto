@@ -15,9 +15,10 @@
 #include "levmar.h"
 
 // Uncomment for debugging
-#define DEBUG						5											// Verbose output
+#define DEBUG						0											// Verbose output
 /*
- * DEBUG							1											Verbose Output ALL
+ * DEBUG							0											NO DEBUG
+ * "								1											Verbose Output ALL
  * "								2											--
  * "								3											--
  * "								4											--
@@ -133,39 +134,38 @@ int main( int argc, char *argv[] )
 		
 		unsigned int end_time = millis() - t;
 		
-		// Bound solution to a predetermined volume
+		// Bound solution to a predetermined volume and Printing Results
 		if( fabs(init_guess[0]*1e3) > X_LIM || fabs(init_guess[0]*1e3) > X_LIM || fabs(init_guess[0]*1e3) > X_LIM )
 		{
 			find_max_norm( norm, NSENS, ndx );									// Find sorted indices of sensors with maximum norms
 			find_init_guess( init_guess, NAXES, XYZ, ndx ); 					// Find initial guess
 			printf( "Out of bounds. Finding initial guess.\n" );
 		}
-		
 		else
 		{
 			if( DEBUG == 1 )
 			{
 				print_lm_verbose();
 			}
-			else
+			else if( DEBUG == 0 )
 			{
-				// Calculating end-ffector
-				end_effector(init_guess, end_effector_pos);						// Determine the position of the end-effector
-				
 				// Printing output
+				//printf( " MAGNET POSITION ---------------------------- \n" );
 				for( uint8_t i = 0; i < m; ++i )
 				{
-					//printf( "pm[%i] = %.3lf ", i, init_guess[i]*1000 ); 				// Write magnet position to stdout
-					//printf( "pe[%i] = %.3lf ", i, mag_pos_vector_len*1000 ); 			// Write end-effector position to stdout
-					
-					//fprintf( logfile, "pm[%i] = %.3lf ", i, init_guess[i]*1000 );		// Write to file
-					//fprintf( logfile, "pe[%i] = %.3lf ", i, mag_pos_vector_len*1000 ); 	// Write end-effector position to file
+					printf( " pm[%i] = %.3lf ", i, init_guess[i]*1000 ); 				// Write magnet position to stdout
+					fprintf( logfile, "pm[%i] = %.3lf ", i, init_guess[i]*1000 );		// Write to file
 					
 					init_guess[i] =+ dx;
-					//printf( " dx = %.3lf", dx );										// send email to MO... this counter does not seem to serve any purpose...
 				} 	printf( " t = %i\n", end_time ); fprintf( logfile, " t = %i\n", end_time );
 			}
 		}
+		
+		// End Effector Calculation ------------------------------------------- //
+		// 		Approximation of the LOCAR end-effector
+		end_effector(init_guess, end_effector_pos);
+		
+		
 		
 	} exit(EXIT_SUCCESS);
 }

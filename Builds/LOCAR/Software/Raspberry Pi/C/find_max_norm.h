@@ -57,8 +57,9 @@ void find_max_norm( double arr[], uint8_t arr_size, uint8_t* sens_ndx )
     
     bubbleSort( sens_ndx, NAXES );
     
-    #ifdef DEBUG
-	    printf( "Three largest elements are %.5f %.5lf %.5lf\n", first, second, third );
-	    printf( "Corresponds to sensors: %i, %i, %i\n", sens_ndx[0]+1, sens_ndx[1]+1, sens_ndx[2]+1 );
-	#endif
+    if( DEBUG == 1 )
+    {
+	printf( "Three largest elements are %.5f %.5lf %.5lf\n", first, second, third );
+	printf( "Corresponds to sensors: %i, %i, %i\n", sens_ndx[0]+1, sens_ndx[1]+1, sens_ndx[2]+1 );
+    }
 }

@@ -78,7 +78,7 @@ double end_effector(double* init_guess, double* end_effector_pos)
   tool_length_error = tool_length - calc_tool_length;
   
   // Printing Statments
-  if( DEBUG == 5 )
+  if( DEBUG == 1 || DEBUG == 5 )
   {
     printf(" END EFFECTOR DEBUG ============================= \n" );
     printf( " alphas = " );
