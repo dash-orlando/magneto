@@ -23,11 +23,11 @@ In order to lower hardware costs without compromising performace, a C version of
     
     1.  Navigate to the **C** directory
         ```
-        cd .../.../magneto/Builds/LOCAR/Software/Raspberry Pi/C
+        cd .../.../magneto/Builds/LOCAR/Software/Raspberry Pi/C/
         ```
     2.  Run _build.sh_
         ```
-        sudo build.sh
+        sudo sh build.sh
         ```
         > **NOTE:** More information and troubleshooting can be found in the **Building magneto, extended** section below
 ---
