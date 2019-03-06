@@ -29,4 +29,8 @@ In order to lower hardware costs without compromising performace, a C version of
         ```
         sudo build.sh
         ```
-        
+        > **NOTE:** More information and troubleshooting can be found in the **Building magneto, extended** section below
+---
+
+### Building magneto, extended...
+
