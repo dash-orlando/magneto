@@ -38,10 +38,8 @@ In order to lower hardware costs without compromising performace, a C version of
 ### Troubleshooting
 
 *   **ERROR:** When executing _**magneto**_ :: `Unable to open I2C device: No such file or directory`
-    
-    **PROBLEM:** I2C interface has not been enabled on the Pi
-    
-    **SOLUTION:** Enable the I2C interface
+    *   **PROBLEM:** I2C interface has not been enabled on the Pi
+    *   **SOLUTION:** Enable the I2C interface
     
 ### Building magneto, extended...
 
