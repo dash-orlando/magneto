@@ -9,7 +9,10 @@ In order to lower hardware costs without compromising performace, a C version of
         > **NOTE:** The following guide was tested on **2018-11-13-raspbian-stretch**
         
         > **NOTE:** Our team has not evaluated the program's performance on Raspbian Lite or other optimized variants of the Raspbian OS
-    
+        
+    2.  Eanble I2C Communication
+        1.  ```Applications Menu (Start) > Preferences > Raspberry Pi Configuration```
+        2.  Under the **Interfaces** tab, check the **enable** button next to **I2C**
     
 1.  **Clone the _nagneto_ repo.**
     ```
