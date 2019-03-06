@@ -32,7 +32,19 @@ In order to lower hardware costs without compromising performace, a C version of
         ```
         sudo sh build.sh
         ```
+        After the build process has terminated successfully, **magneto** and **LOCAR** will be ready to run!
+        
         > **NOTE:** More information and troubleshooting can be found in the **Building magneto, extended** section below
+
+## Execution
+1.  Navigate to the **C** directory
+    ```
+    cd .../.../magneto/Builds/LOCAR/Software/Raspberry Pi/C/
+    ```
+2.  Execute _**magneto**_
+    ```
+    ./magneto
+    ```
 
 ---
 ### Troubleshooting
