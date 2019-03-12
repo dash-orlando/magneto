@@ -83,6 +83,11 @@ Find the line with #DAEMON_CONF, and replace it with this:
 ```
 DAEMON_CONF="/etc/hostapd/hostapd.conf"
 ```
+Ensure hostapd is part of the boot sequence [2]
+```
+sudo update-rc.d hostapd enable
+```
+
 
 #### Start it up
 Now start up the remaining services:
@@ -143,7 +148,10 @@ Consolidated lis of installation **ERRORS** and **SOLUTIONS**, with additional i
     3.  Unmask `hostapd` service: `sudo systemctl unmask hostapd`
         
     4.  Try starting service again...
-        
+
+---
+
 #### References
 1. [**Setting up a Raspberry Pi as an access point in a standalone network (NAT)**](https://www.raspberrypi.org/documentation/configuration/wireless/access-point.md)
 
+2. [**Run hostapd service on boot**](http://hawksites.newpaltz.edu/myerse/2018/06/08/hostapd-on-raspberry-pi/)
