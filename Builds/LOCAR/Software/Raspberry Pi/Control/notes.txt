@@ -1,0 +1,1 @@
+This folder will house the programs that handle MQtt communication and camera operations, etc.
