@@ -1,0 +1,9 @@
+Adafruit-Blinka==1.2.8
+Adafruit-PlatformDetect==1.0.0
+Adafruit-PureIO==0.2.3
+numpy==1.16.2
+picamera==1.13
+rpi-ws281x==4.1.0
+RPi.GPIO==0.6.5
+spidev==3.4
+sysv-ipc==1.0.0
