@@ -64,7 +64,7 @@ pip3 install virtualenv virtualenvwrapper
 >>We will be using ```mkvirtualenv [-a project_path] [-r requirements_file] [virtualenv options] ENVNAME```
 >>for creating our environment
 
-### Change ~/.bashrc profile
+### Change ~/.profile
 use nano to add these lines to the end of the file```nano ~/.profile```
 ```
 # virtualenv and virtualenvwrapper
@@ -86,7 +86,9 @@ from the _controls/python/_ directory**
 >
 >```mkvirtualenv magneto -p python3 -r requirements.txt -a "/home/pi/pd3d/magneto/Builds/LOCAR```
 ```/Software/RaspberryPi/Control/Python/scripts"```
+>
 >-r pip installs all libraries with their respective versions
+>
 >-a sets the project dir, so when workon is called it auto cd's to that location
 **If you want to install libraries from scratch**
 ```
