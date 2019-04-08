@@ -15,7 +15,7 @@ parser.add_argument("-res", "--resolution", nargs='*', default=[1920,1080],
                     then height seperated by space\
                     (default set to 1920*1080)")
 group = parser.add_mutually_exclusive_group()
-group.add_argument("-full", "--fullscreen", help="runs the stream in fullscreen bordeless mode",
+group.add_argument("-f", "--fullscreen", help="runs the stream in fullscreen bordeless mode",
                     action="store_true")
 group.add_argument("-half", "--halfscreen", help="runs the stream with window taking up half of the screen",
                     action="store_true")
@@ -60,7 +60,7 @@ pixels = neopixel.NeoPixel(pixel_pin, num_pixels, brightness=0.2,
 
 
 # Sets the native screen resolution, default 1920*1080
-native_screen_res = (args.resolution[0], args.resolution[1])
+native_screen_res = (int(args.resolution[0]), int(args.resolution[1]))
 
 # Creates window for video depending on flag
 if args.fullscreen:
@@ -69,7 +69,7 @@ if args.fullscreen:
     cv2.createTrackbar( "Brightness", "Video Stream", 128, 255, placeholder )
 elif args.halfscreen:
     cv2.namedWindow("Video Stream", cv2.WINDOW_KEEPRATIO)
-    cv2.resizeWindow("Video Stream", native_screen_res[0]/2, native_screen_res[1])
+    cv2.resizeWindow("Video Stream", (int(native_screen_res[0]/2), int(native_screen_res[1])))
     cv2.moveWindow("Video Stream", 0, 0)
     cv2.createTrackbar( "Brightness", "Video Stream", 128, 255, placeholder )
 elif args.custom:
@@ -95,10 +95,10 @@ for frame in camera.capture_continuous(rawCapture, format='bgr', use_video_port=
     elif args.halfscreen:
         # Scales the image to half the native width keeping aspect ratio
         scale = (native_screen_res[0]/2)/image.shape[0]
-        image = cv2.resize(image, (native_screen_res[0]/2, image.shape[1]*scale), cv2.INTER_AREA)
+        image = cv2.resize(image, (int(native_screen_res[0]/2), int(image.shape[1]*scale)), cv2.INTER_AREA)
     elif args.custom:
         # Scales image to set resolution
-        image = cv2.resize(image, (args.x, args.y ), cv2.INTER_AREA)
+        image = cv2.resize(image, (int(args.x), int(args.y) ), cv2.INTER_AREA)
     
     brightness = brightness_update()
     pixels.fill((0, 0, 0, brightness))
