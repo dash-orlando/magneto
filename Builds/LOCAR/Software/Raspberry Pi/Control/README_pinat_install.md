@@ -1,4 +1,5 @@
-# Raspberry Pi / Manual Installation
+# Control Pi Installation
+## Setting-up LOCAR Control Raspberry Pi as an access point in a standalone network (NAT)
 
 The **manual** installation for the Raspberry Pi follows the steps discussed in [1], [..], and [..]
 ```
