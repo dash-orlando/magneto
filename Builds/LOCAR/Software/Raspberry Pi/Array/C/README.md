@@ -14,7 +14,7 @@ In order to lower hardware costs without compromising performace, a C version of
         1.  ```Applications Menu (Start) > Preferences > Raspberry Pi Configuration```
         2.  Under the **Interfaces** tab, check the **enable** button next to **I2C**
     
-1.  **Clone the _nagneto_ repo.**
+1.  **Clone the _magneto_ repo.**
     ```
     git clone https://github.com/pd3d/magneto
     ```

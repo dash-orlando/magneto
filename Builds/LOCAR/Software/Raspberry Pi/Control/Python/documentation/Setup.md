@@ -1,6 +1,7 @@
-####documentation for lapro pi video streamer
+# Setup for Raspberry Pi to Work with Opencv, PiCamera, and Neopixel
 
-install open cv for python 3
+## Install opencv 3.4 for python 3 with bash script or follow along
+
 remeber to change and link virtualenv to install
 ```
 cd /usr/local/lib/python3.5/site-packages/
