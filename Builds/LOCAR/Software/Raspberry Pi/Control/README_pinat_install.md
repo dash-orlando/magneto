@@ -1,10 +1,20 @@
 # Control Pi Installation
 ## Setting-up LOCAR Control Raspberry Pi as an access point in a standalone network (NAT)
 
-The **manual** installation for the Raspberry Pi follows the steps discussed in [1], [..], and [..]
-```
-sudo apt-get install dnsmasq hostapd
-```
+The **manual** installation for the Raspberry Pi follows the steps discussed in [1](https://www.raspberrypi.org/documentation/configuration/wireless/access-point.md), with some application-specific modifications.
+Follow steps carefully:
+
+0.  Perform an update/upgrade sequence
+    ```
+    sudo apt update
+    sudo apt upgrade
+    ```
+
+1.  Install **dnsmasq** and **hostapd** libraries
+    ```
+    sudo apt install dnsmasq hostapd
+    ```
+
 Since the configuration files are not ready yet, turn the new software off as follows:
 ```
 sudo systemctl stop dnsmasq
