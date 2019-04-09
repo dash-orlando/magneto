@@ -66,78 +66,88 @@ The DHCP service is provided by dnsmasq. By default, the configuration file cont
     So for `wlan0`, we are going to provide IP addresses between 192.168.4.2 and 192.168.4.20, with a lease time of 24 hours. If you are     providing DHCP services for other network devices (e.g. eth0), you could add more sections with the appropriate interface header,       with the range of addresses you intend to provide to that interface.
 
 #### Configuring the access point host software (hostapd)
-You need to edit the hostapd configuration file, located at /etc/hostapd/hostapd.conf, to add the various parameters for your wireless network. After initial install, this will be a new/empty file.
-```
-sudo nano /etc/hostapd/hostapd.conf
-```
-Add the information below to the configuration file. This configuration assumes we are using channel 7, with a network name of NameOfNetwork, and a password AardvarkBadgerHedgehog. Note that the name and password should not have quotes around them. The passphrase should be between 8 and 64 characters in length.
 
-To use the 5 GHz band, you can change the operations mode from hw_mode=g to hw_mode=a. Possible values for hw_mode are:
+9.  Edit the hostapd configuration file to add the specific networks parameters (below)
+    > **NOTE:** After initial install, `hostapd.conf` will be a new/empty file.
+    ```
+    sudo nano /etc/hostapd/hostapd.conf
+    ```
+    The following configuration parameters assume:
+    *   The network uses channel 7
+    *   The network name is **magneto_locar**
+    *   The network password is **magneto_locar**
+        > **NOTE:** The name and password should not have quotes around them. The password/passphrase should be between 8 and 64 characters in length.
 
-*   a = IEEE 802.11a (5 GHz)
-*   b = IEEE 802.11b (2.4 GHz)
-*   g = IEEE 802.11g (2.4 GHz)
-*   ad = IEEE 802.11ad (60 GHz)
+        > **NOTE:** To use the 5 GHz band, you can change the operations mode from hw_mode=g to hw_mode=a. Possible values for hw_mode   are:
+        > *   a = IEEE 802.11a (5 GHz)
+        > *   b = IEEE 802.11b (2.4 GHz)
+        > *   g = IEEE 802.11g (2.4 GHz)
+        > *   ad = IEEE 802.11ad (60 GHz)
 
-```
-interface=wlan0
-driver=nl80211
-ssid=NameOfNetwork
-hw_mode=g
-channel=7
-wmm_enabled=0
-macaddr_acl=0
-auth_algs=1
-ignore_broadcast_ssid=0
-wpa=2
-wpa_passphrase=AardvarkBadgerHedgehog
-wpa_key_mgmt=WPA-PSK
-wpa_pairwise=TKIP
-rsn_pairwise=CCMP
-```
-We now need to tell the system where to find this configuration file.
-```
-sudo nano /etc/default/hostapd
-```
-Find the line with #DAEMON_CONF, and replace it with this:
-```
-DAEMON_CONF="/etc/hostapd/hostapd.conf"
-```
-Ensure hostapd is part of the boot sequence [2]
-```
-sudo update-rc.d hostapd enable
-```
+    ```
+    interface=wlan0
+    driver=nl80211
+    ssid=NameOfNetwork
+    hw_mode=g
+    channel=7
+    wmm_enabled=0
+    macaddr_acl=0
+    auth_algs=1
+    ignore_broadcast_ssid=0
+    wpa=2
+    wpa_passphrase=AardvarkBadgerHedgehog
+    wpa_key_mgmt=WPA-PSK
+    wpa_pairwise=TKIP
+    rsn_pairwise=CCMP
+    ```
 
+10. We now need to tell the system where to find this configuration file.
+    ```
+    sudo nano /etc/default/hostapd
+    ```
+
+11. Find the line with #DAEMON_CONF, and replace it with this:
+    ```
+    DAEMON_CONF="/etc/hostapd/hostapd.conf"
+    ```
+
+12. Ensure hostapd is part of the boot sequence [2]
+    ```
+    sudo update-rc.d hostapd enable
+    ```
 
 #### Start it up
-Now start up the remaining services:
-```
-sudo systemctl start hostapd
-sudo systemctl start dnsmasq
-```
->   **ERROR 001:** `Failed to start hostapd.service: Unit hostapd.service is masked.`
+
+13. Now start up the remaining services:
+    ```
+    sudo systemctl start hostapd
+    sudo systemctl start dnsmasq
+    ```
+    >   **ERROR 001:** `Failed to start hostapd.service: Unit hostapd.service is masked.`
 
 #### Add routing and masquerade
-Edit `/etc/sysctl.conf` and uncomment this line:`net.ipv4.ip_forward=1`
 
-Add a masquerade for outbound traffic on eth0:
-```
-sudo iptables -t nat -A  POSTROUTING -o eth0 -j MASQUERADE
-```
+14. Edit `/etc/sysctl.conf` and uncomment this line:`net.ipv4.ip_forward=1`
 
-Save the iptables rule.
-```
-sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
-```
+15. Add a masquerade for outbound traffic on eth0:
+    ```
+    sudo iptables -t nat -A  POSTROUTING -o eth0 -j MASQUERADE
+    ```
+    
+16. Save the iptables rule.
+    ```
+    sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
+    ```
 
-Edit `/etc/rc.local` and add this just above "exit 0" to install these rules on boot.
-```
-iptables-restore < /etc/iptables.ipv4.nat
-```
-Reboot
-```
-sudo reboot
-```
+17. Edit `/etc/rc.local` and add this just above "exit 0" to install these rules on boot.
+    ```
+    iptables-restore < /etc/iptables.ipv4.nat
+    ```
+
+18. Reboot
+    ```
+    sudo reboot
+    ```
 
 #### Verification
 Using a wireless device, search for networks. The network SSID you specified in the hostapd configuration should now be present, and it should be accessible with the specified password.
