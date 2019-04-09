@@ -7,6 +7,13 @@ Through the analysis of magnetic field vectors, we developed a real-time, non-co
 
 For more information, visit the [project's website](https://pd3d.eecs.ucf.edu/portfolio_page/laparoscopic-trainer/)
 
+---
+
+### Overview of the System
+Here a quick summary and pictures of the major components... intro to the terminology...
+
+---
+
 ### Building LOCAR
 #### Hardware
 To build the **LOCAR**, you will need _(insert link to BOM and build instructions)_
@@ -15,10 +22,14 @@ To build the **LOCAR**, you will need _(insert link to BOM and build instruction
 The latest version of **LOCAR** relies on C libraries built specifically for the Raspberry Pi.
 The [following instructions](https://github.com/pd3d/magneto/edit/locar/Builds/LOCAR/Software/Raspberry%20Pi/Array/C/) will guide you through the proper installation steps.
 
+---
+
 ### Publications
 Our most recent publications include:
 
 1.  _**Boutelle, M., Odeh, M., Fenoglietto, F. L., & Stubbs, J.** (2019). Cost Effective Laparoscopic Trainer Utilizng Magnetic-Based Position Tracking. 2019 Design of Medical Devices Conference. **Accepted**_
+
+---
 
 ### References
 1.  _Abbott, T., Fowler, A., Dobbs, T., Harrison, E., Gillies, M., & Pearse, R. (2017). Frequency of surgical treatment and related hospital procedures in the UK: A national ecological study using hospital episode statistics. British Journal of Anaesthesia, 119(2), 249-257. doi:10.1093/bja/aex137_
