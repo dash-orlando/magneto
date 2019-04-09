@@ -7,7 +7,7 @@ clone this repo and make note of its directory for later linking to virtual envi
 such as 
 `"/home/pi/pd3d/magneto/Builds/LOCAR/Software/Raspberry Pi/Control/Python/scripts"`
 
-change `/home/pi/pd3d/` as needed based on where you cloned in parts that ask for full path
+change `/home/pi/pd3d/` as needed based on where you cloned in commands that ask for full path
 
 ### Step 1: Prepare system
 purge unneeded programs
