@@ -94,7 +94,9 @@ from the `/controls/python/` directory**
 Using -r requirements.txt to install libraries
 >change the directory to the scripts folder in the magneto repo
 **make sure your directory is correct for your Pi**
-```cd "/home/pi/pd3d/magneto/Builds/LOCAR/Software/Raspberry Pi/Control/Python/scripts"
+
+```
+cd "/home/pi/pd3d/magneto/Builds/LOCAR/Software/Raspberry Pi/Control/Python/scripts"
 
 mkvirtualenv magneto -p python3 -r requirements.txt -a "/home/pi/pd3d/magneto/Builds/LOCAR
 /Software/RaspberryPi/Control/Python/scripts"
