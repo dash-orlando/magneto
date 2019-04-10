@@ -4,7 +4,8 @@ source ~/.profile
 echo "Profile set"
 
 workon magneto
-echo "Working on magneto virtual environment"
-echo "Running program now"
-echo "Press q to exit"
+echo -e "Working on \e[4mmagneto virtual environment\e[0m"
+echo -e "Running program now"
+echo -e "\e[92mPress 'q' to exit on stream window"
+
 sudo python3 pi_camera.py
