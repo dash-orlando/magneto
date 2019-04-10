@@ -5,7 +5,7 @@ The raspberry pi is set to run a virtual environment called "magneto" with openc
 ## Installation
 clone this repo and make note of its directory for later linking to virtual environment
 such as 
-`"/home/pi/pd3d/magneto/Builds/LOCAR/Software/Raspberry Pi/Control/Python/scripts"`
+`"/home/pi/pd3d/magneto/Builds/LOCAR/Software/Raspberry Pi/Control/Python"`
 
 change `/home/pi/pd3d/` as needed based on where you cloned in commands that ask for full path
 
@@ -96,10 +96,10 @@ Using -r requirements.txt to install libraries
 **make sure your directory is correct for your Pi**
 
 ```
-cd "/home/pi/pd3d/magneto/Builds/LOCAR/Software/Raspberry Pi/Control/Python/scripts"
+cd "/home/pi/pd3d/magneto/Builds/LOCAR/Software/Raspberry Pi/Control/Python"
 
 mkvirtualenv magneto -p python3 -r requirements.txt -a "/home/pi/pd3d/magneto/Builds/LOCAR
-/Software/RaspberryPi/Control/Python/scripts"
+/Software/RaspberryPi/Control/Python"
 ```
 
 >`-r` pip installs all libraries with their respective versions
@@ -109,7 +109,7 @@ mkvirtualenv magneto -p python3 -r requirements.txt -a "/home/pi/pd3d/magneto/Bu
 Install libraries from scratch
 ```
 mkvirtualenv magneto -p python3
-cd "/home/pi/pd3d/magneto/Builds/LOCAR/Software/Raspberry Pi/Control/Python/scripts"
+cd "/home/pi/pd3d/magneto/Builds/LOCAR/Software/Raspberry Pi/Control/Python"
 setvirtualenvproject
 pip3 install RPI.GPIO
 pip3 install adafruit-blinka
@@ -152,6 +152,15 @@ try running led test code (needs root access)
 
 ## Execution
 >**NOTE** all scripts with neopixel lighting need to be run as ROOT with sudo command
+>
+>**IMPORTANT** there is a "Stream Start.desktop" file in the `/controls/bash` folder, drag this to the desktop to run the program via executable
+
+### Double click **Stream Start** on desktop to run
+press `q` to exit stream
+
+adjust brightness of LED ring via slider bar
+
+### Or run via terminal for additional options
 
 ensure system variable are set correctly for terminal, run 
 ```
@@ -164,12 +173,12 @@ workon magneto
 ```
 >if this worked properly you should now see _magneto_ in front of the cwd
 
->like such, ```(magneto) pi@raspberrypi:~/pd3d/magneto/Builds/LOCAR/Software/Raspberry Pi/Control
-/Python/scripts```
+>like such, `(magneto) pi@raspberrypi:~/pd3d/magneto/Builds/LOCAR/Software/Raspberry Pi/Control
+/Python`
 >
 >this should change the directory to the scripts folder, if not change the directory yourself
 ```
-cd "/home/pi/pd3d/magneto/Builds/LOCAR/Software/Raspberry Pi/Control/Python/scripts"
+cd "/home/pi/pd3d/magneto/Builds/LOCAR/Software/Raspberry Pi/Control/Python"
 ```
 
 now run the _pi_camera.py_ script **WITH SUDO**
@@ -194,3 +203,5 @@ you can run the script along with these arguments to change the window size
 >
 >use`-c` for custom window size with`-x width` and `-y height` (in pixels)
 
+## Troubleshooting
+if LED lights are buggy do full restart of pi
