@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Stream Start
+Comment=Test hello world script
+Exec="/home/pi/pd3d/magneto/Builds/LOCAR/Software/Raspberry Pi/Control/Bash/Stream_Start.sh"
+Icon=/usr/share/icons/gnome/48x48/actions/gnome-run.png
+Terminal=true
+Type=Application
