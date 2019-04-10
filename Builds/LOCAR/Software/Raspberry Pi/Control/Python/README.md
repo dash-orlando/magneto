@@ -152,6 +152,15 @@ try running led test code (needs root access)
 
 ## Execution
 >**NOTE** all scripts with neopixel lighting need to be run as ROOT with sudo command
+>
+>**IMPORTANT** there is a "Stream Start.desktop" file in the `/controls/bash` folder, drag this to the desktop to run the program via executable
+
+### Double click **Stream Start** on desktop to run
+press `q` to exit stream
+
+adjust brightness of LED ring via slider bar
+
+### Or run via terminal for additional options
 
 ensure system variable are set correctly for terminal, run 
 ```
@@ -194,3 +203,5 @@ you can run the script along with these arguments to change the window size
 >
 >use`-c` for custom window size with`-x width` and `-y height` (in pixels)
 
+## Troubleshooting
+if LED lights are buggy do full restart of pi
