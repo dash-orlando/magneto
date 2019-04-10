@@ -153,7 +153,7 @@ try running led test code (needs root access)
 ## Execution
 >**NOTE** all scripts with neopixel lighting need to be run as ROOT with sudo command
 >
->**IMPORTANT** there is a "Stream Start.desktop" file in the `/controls/bash` folder, drag this to the desktop to run the program via executable
+>**IMPORTANT** there is a "Stream Start.desktop" file in the `/Control/Bash` folder, drag this to the desktop to run the program via executable
 
 ### Double click **Stream Start** on desktop to run
 press `q` to exit stream
