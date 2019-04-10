@@ -155,7 +155,9 @@ try running led test code (needs root access)
 >
 >**IMPORTANT** there are **"Stream Start.desktop"** and **"Shutdown SSH.desktop"** files in the `/Control/Bash` folder, drag these to the desktop to run the program via Stream Start and shutdown via Shutdown SSH
 
-### Double click **Stream Start** on desktop to run
+### Start with executable
+double click **Stream Start** on desktop to run
+
 press `q` to exit stream
 
 adjust brightness of LED ring via slider bar
@@ -186,8 +188,12 @@ now run the _pi_camera.py_ script **WITH SUDO**
 sudo python3 pi_camera.py
 ```
 
+press `q` to exit stream
 
-### Double click **Shutdown SSH** on desktop to shutdown connected Pis and control Pi
+### Shutdown procedure
+make sure program is shut with `q`
+
+double click **Shutdown SSH** on desktop to shutdown connected Pis and control Pi
 
 ### Operation
 a screen with the video stream and a slider should appear
