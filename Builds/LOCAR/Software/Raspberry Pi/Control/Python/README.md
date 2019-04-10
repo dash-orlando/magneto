@@ -181,6 +181,8 @@ sudo python3 pi_camera.py
 a screen with the video stream and a slider should appear
 >the slider controls brightness of the LED's, from off to full brightnessof (0-255)
 
+to **shutdown** or "quit" the script press the `q` or `Q` key while focused on the stream window
+
 you can run the script along with these arguments to change the window size
 >**NOTE** by default the script runs with a re-sizable window
 >
