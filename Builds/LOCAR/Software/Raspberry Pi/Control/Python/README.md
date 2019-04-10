@@ -186,6 +186,9 @@ now run the _pi_camera.py_ script **WITH SUDO**
 sudo python3 pi_camera.py
 ```
 
+
+### Double click **Shutdown SSH** on desktop to shutdown connected Pis and control Pi
+
 ### Operation
 a screen with the video stream and a slider should appear
 >the slider controls brightness of the LED's, from off to full brightnessof (0-255)
