@@ -138,12 +138,15 @@ if you see this you should have it working properly
 
 Test I2C and SPI
 run blinkatest.py script
+
 `python3 blinkatest.py`
 
 Test LED's
 try running led test code (needs root access)
+
 `sudo python3 led_test.py`
-**NOTE** if LED's look odd try reversing pixel color order from RGBW tp GRBW
+
+**NOTE** if LED's look odd try reversing pixel color order from RGBW to GRBW
 >it should function in a sequence of red, green, blue, then a rainbow wave
 
 
@@ -178,10 +181,12 @@ sudo python3 pi_camera.py
 a screen with the video stream and a slider should appear
 >the slider controls brightness of the LED's, from off to full brightnessof (0-255)
 
+to **shutdown** or "quit" the script press the `q` or `Q` key while focused on the stream window
+
 you can run the script along with these arguments to change the window size
 >**NOTE** by default the script runs with a re-sizable window
 >
->use`-f` to run **fullscreen** 
+>use`-f` to run fullscreen 
 >
 >use`-half` to run half screen
 >> **NOTE** the default native resolution is 1920x1080 if the screen used is different you need to run
