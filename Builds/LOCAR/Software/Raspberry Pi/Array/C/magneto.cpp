@@ -152,11 +152,13 @@ int main( int argc, char *argv[] )
 				//printf( " MAGNET POSITION ---------------------------- \n" );
 				for( uint8_t i = 0; i < m; ++i )
 				{
-					printf( " pm[%i] = %.3lf ", i, init_guess[i]*1000 ); 				// Write magnet position to stdout
-					fprintf( logfile, "pm[%i] = %.3lf ", i, init_guess[i]*1000 );		// Write to file
+					printf( " Pm[%i] = %.1lf ", i, init_guess[i]*1000 ); 				// Write magnet position to stdout
+					//fprintf( logfile, "pm[%i] = %.3lf ", i, init_guess[i]*1000 );		// Write to file
 					
-					init_guess[i] =+ dx;
-				} 	printf( " t = %i\n", mag_pos_time ); fprintf( logfile, " t = %i\n", mag_pos_time );
+					//end_effector(init_guess, end_effector_pos, t);
+					
+					//init_guess[i] =+ dx;
+				} 	//printf( " t = %i \n", mag_pos_time ); fprintf( logfile, " t = %i\n", mag_pos_time );
 			}
 		}
 		
@@ -168,6 +170,8 @@ int main( int argc, char *argv[] )
 		// 		Approximation of the LOCAR end-effector
 		end_effector(init_guess, end_effector_pos, t);
 		
+		
+		for( uint8_t i = 0; i < m; ++i ) init_guess[i] =+ dx;
 		
 		
 	} exit(EXIT_SUCCESS);
