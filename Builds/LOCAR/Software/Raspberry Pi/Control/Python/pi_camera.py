@@ -45,7 +45,7 @@ def brightness_update():
 # Initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
 camera.resolution = (640, 480)
-camera.framerate = 30
+camera.framerate = 24
 rawCapture = PiRGBArray(camera, size=(640,480))
 
 # Allow the camera to warmup

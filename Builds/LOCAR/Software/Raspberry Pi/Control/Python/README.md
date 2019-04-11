@@ -5,7 +5,7 @@ The raspberry pi is set to run a virtual environment called "magneto" with openc
 ## Installation
 clone this repo and make note of its directory for later linking to virtual environment
 such as 
-`"/home/pi/pd3d/magneto/Builds/LOCAR/Software/Raspberry Pi/Control/Python/scripts"`
+`"/home/pi/pd3d/magneto/Builds/LOCAR/Software/Raspberry Pi/Control/Python"`
 
 change `/home/pi/pd3d/` as needed based on where you cloned in commands that ask for full path
 
@@ -96,10 +96,10 @@ Using -r requirements.txt to install libraries
 **make sure your directory is correct for your Pi**
 
 ```
-cd "/home/pi/pd3d/magneto/Builds/LOCAR/Software/Raspberry Pi/Control/Python/scripts"
+cd "/home/pi/pd3d/magneto/Builds/LOCAR/Software/Raspberry Pi/Control/Python"
 
 mkvirtualenv magneto -p python3 -r requirements.txt -a "/home/pi/pd3d/magneto/Builds/LOCAR
-/Software/RaspberryPi/Control/Python/scripts"
+/Software/RaspberryPi/Control/Python"
 ```
 
 >`-r` pip installs all libraries with their respective versions
@@ -109,7 +109,7 @@ mkvirtualenv magneto -p python3 -r requirements.txt -a "/home/pi/pd3d/magneto/Bu
 Install libraries from scratch
 ```
 mkvirtualenv magneto -p python3
-cd "/home/pi/pd3d/magneto/Builds/LOCAR/Software/Raspberry Pi/Control/Python/scripts"
+cd "/home/pi/pd3d/magneto/Builds/LOCAR/Software/Raspberry Pi/Control/Python"
 setvirtualenvproject
 pip3 install RPI.GPIO
 pip3 install adafruit-blinka
@@ -138,17 +138,31 @@ if you see this you should have it working properly
 
 Test I2C and SPI
 run blinkatest.py script
+
 `python3 blinkatest.py`
 
 Test LED's
 try running led test code (needs root access)
+
 `sudo python3 led_test.py`
-**NOTE** if LED's look odd try reversing pixel color order from RGBW tp GRBW
+
+**NOTE** if LED's look odd try reversing pixel color order from RGBW to GRBW
 >it should function in a sequence of red, green, blue, then a rainbow wave
 
 
 ## Execution
 >**NOTE** all scripts with neopixel lighting need to be run as ROOT with sudo command
+>
+>**IMPORTANT** there are **"Stream Start.desktop"** and **"Shutdown SSH.desktop"** files in the `/Control/Bash` folder, drag these to the desktop to run the program via Stream Start and shutdown via Shutdown SSH
+
+### Start with executable
+double click **Stream Start** on desktop to run
+
+press `q` to exit stream
+
+adjust brightness of LED ring via slider bar
+
+### Or run via terminal for additional options
 
 ensure system variable are set correctly for terminal, run 
 ```
@@ -161,12 +175,12 @@ workon magneto
 ```
 >if this worked properly you should now see _magneto_ in front of the cwd
 
->like such, ```(magneto) pi@raspberrypi:~/pd3d/magneto/Builds/LOCAR/Software/Raspberry Pi/Control
-/Python/scripts```
+>like such, `(magneto) pi@raspberrypi:~/pd3d/magneto/Builds/LOCAR/Software/Raspberry Pi/Control
+/Python`
 >
 >this should change the directory to the scripts folder, if not change the directory yourself
 ```
-cd "/home/pi/pd3d/magneto/Builds/LOCAR/Software/Raspberry Pi/Control/Python/scripts"
+cd "/home/pi/pd3d/magneto/Builds/LOCAR/Software/Raspberry Pi/Control/Python"
 ```
 
 now run the _pi_camera.py_ script **WITH SUDO**
@@ -174,14 +188,23 @@ now run the _pi_camera.py_ script **WITH SUDO**
 sudo python3 pi_camera.py
 ```
 
+press `q` to exit stream
+
+### Shutdown procedure
+make sure program is shut with `q`
+
+double click **Shutdown SSH** on desktop to shutdown connected Pis and control Pi
+
 ### Operation
 a screen with the video stream and a slider should appear
 >the slider controls brightness of the LED's, from off to full brightnessof (0-255)
 
+to **shutdown** or "quit" the script press the `q` or `Q` key while focused on the stream window
+
 you can run the script along with these arguments to change the window size
 >**NOTE** by default the script runs with a re-sizable window
 >
->use`-f` to run **fullscreen** 
+>use`-f` to run fullscreen 
 >
 >use`-half` to run half screen
 >> **NOTE** the default native resolution is 1920x1080 if the screen used is different you need to run
@@ -189,3 +212,5 @@ you can run the script along with these arguments to change the window size
 >
 >use`-c` for custom window size with`-x width` and `-y height` (in pixels)
 
+## Troubleshooting
+If the LED lights are buggy do full restart of pi and powercycle the LED Ring

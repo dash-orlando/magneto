@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Shutdown SSH
+Comment=shutdown SSH on Pis that are connected
+Exec="/home/pi/pd3d/magneto/Builds/LOCAR/Software/Raspberry Pi/Control/Bash/Shutdown_ssh.sh"
+Icon=/usr/share/icons/gnome/48x48/status/network-error.png
+Terminal=true
+Type=Application
